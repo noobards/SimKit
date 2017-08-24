@@ -1,0 +1,385 @@
+@charset "UTF-8";
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,500,600,700&subset=latin,latin-ext);
+
+@font-face {
+  font-family: 'IPL_Light';  
+  src: url('../fonts/IPL_Light.otf')  format('truetype');
+}
+@font-face {
+  font-family: 'IPL';  
+  src: url('../fonts/IPL_Normal.otf')  format('truetype');
+}
+html, body, div.viewport, div.viewport > div { width:100%; height:100%; margin:0;  }
+body{
+	background: transparent url("../images/body_bg.png") repeat center center;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	color: #33414e;
+}
+.top10{
+	margin-top: 10px;
+}
+.top20{
+	margin-top: 20px;
+}
+.top30{
+	margin-top: 30px;
+}
+.red{
+	color: #ff0000;
+	font-weight: bold;
+}
+.subheading{
+	font-size: 19px;
+	margin-bottom: 7px;
+	color: #33414e;
+	font-weight: 300;
+}
+a{
+	color: #33414e;
+	font-size: 12px;
+}
+.boxed, .boxed_white{	
+	padding: 10px;
+	border-radius: 3px;
+}
+.boxed_white{
+	background-color: #fff;
+}
+.single{
+	margin-top: 20px;
+}
+.split-container{
+	height: 100%;
+}
+.left-column{
+	background-color: rgb(45,57,69);
+	height: 100%;
+	width: 20%;
+	padding-right: 0;
+	padding-left: 0;
+	float: left;
+	color: #fff;
+}
+.right-column{	
+	height: 100%;
+	padding-right: 0;
+	padding-left: 0;		
+	width: 80%;
+	float: left;
+}
+.vscroll{
+	overflow-y: auto;
+}
+.h250{
+	height: 250px;
+}
+.h400{
+	height: 400px;
+}
+.h500{
+	height: 500px;
+}
+.pad10{
+	padding: 10px;
+}
+.white-bg{
+	background-color: #fff;
+}
+.filter-table{
+	margin-bottom: 10px;
+}
+.filter-table td{
+	padding: 10px;
+}
+.normal-anchor{
+	font-size: 100%;
+	color: #00bc80;
+}
+
+
+#mobile-nav{
+	display: none;
+}
+#mobile-nav.menu-expanded{
+	display: block;
+}
+.mobile-nav-trigger{
+	cursor: pointer;
+	color: #fff;
+	font-weight: bold;
+	padding-left: 10px;
+	margin-top: 10px;
+	visibility: hidden;
+}
+
+
+/*	LEFT COLUMN CSS	*/
+.site-name{
+	background-color: rgb(0,188,128);
+	color: #fff;
+	font-family: "IPL", 'Open Sans', sans-serif;
+}
+.site-name h1{
+	margin: 0;
+	font-size: 200%;
+	line-height: 50px;
+	text-align: center;
+	height: 50px;
+	margin-bottom: 10px;
+}
+
+
+
+
+.profile_pic{
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	padding: 5px;
+	border: 2px solid #ccc;
+}
+.profile-user-name{
+	font-size: 110%;
+}
+.grey-text{
+	color: #999;
+	font-size: 90%;
+}
+
+
+.left-nav{
+	padding: 0;
+	margin: 15px 0 0 0;
+}
+.left-nav li{
+	margin-bottom: 1px;
+}
+.nav-icon{
+	font-size: 120%;	
+	margin-right: 10px;
+}
+.left-nav li a{
+	display: block;
+	color: #fff;
+	padding: 8px 0;
+	background-color: rgb(51,65,78);	
+	padding-left: 10px;	
+}
+.left-nav li a:hover, .left-nav li a.active-anchor{
+	text-decoration: none;
+	background-color: #3d4e5d;
+}
+.left-nav li a:hover .nav-icon, .left-nav li a.active-anchor .nav-icon{
+	color: #ffd559;
+}
+/*	LEFT COLUMN CSS	*/
+
+
+
+/*	RIGHT COLUMN CSS	*/
+.top-bar{	
+	background-color: rgb(45,57,69);
+}
+
+
+.power-off{
+	color: #fff;
+	line-height: 50px;
+	font-size: 30px;
+}
+.power-off:hover{
+	color: #f0f0f0;
+}
+
+
+
+.site-breadcrumbs{
+	background-color: #f0f0f0;
+	margin-bottom: 10px;
+	padding: 5px 0;
+	font-size: 90%;
+}
+.bradcrumbs-static-text{
+	color: #656d78;
+}
+.site-breadcrumbs i.fa{
+	font-size: 70%;
+}
+.site-breadcrumbs a {
+	font-size: 110%;
+	color: #00BC80;
+	font-weight: bold;
+}
+
+
+
+.dashboard-stats-box{
+	color: #434a54;
+	background: #f5f5f5;
+	height: 120px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	border: 1px solid #eee;	
+}
+
+
+.stats-box-icon{
+	border-right: 1px solid #eee;
+	text-align: center;
+	line-height: 120px;
+}
+.dash-stats{
+	width: 60px;
+	height: 60px;
+}
+.stats-box-text > p{
+	margin-bottom: 0;
+}
+.stats-main-number{
+	font-size: 40px;
+	font-family: IPL, 'Open Sans', sans-serif;	
+}
+.stats-side-text{
+	font-size: 130%;	
+}
+
+
+.box{
+	margin: 20px 0 10px 0;
+	border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+	border-top: 3px solid #00BC80;
+}
+.box-title{
+	background-color: #F5F5F5;
+	padding: 10px;
+}
+.box-main-text{
+	font-size: 120%;
+	font-weight: bold;
+}
+.box-helping-text{
+	color: #a7adb5;	
+}
+.box-body{
+	background-color: #fff;
+	padding: 10px;
+	height: 274px;
+}
+.box-body-max{
+	min-height: 274px;
+	height: auto;
+}
+.box-body .table{
+	margin-bottom: 0;
+}
+.box-body .table a i.fa{
+	margin-right: 8px;
+}
+
+
+
+.form-subtitle{
+	margin: 0 0 10px 0;
+	font-size: 105%;
+	border-bottom: 1px solid #eee;
+}
+
+
+
+.notification-box{
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.notification-box ul{
+
+}
+.notification-box ul li{
+	margin-bottom: 10px;
+}
+.notification-box ul li a{
+	color: #05AAE5;
+	font-weight: bold;
+}
+.when{
+	color: #94ABBA;
+	font-size: 11px;
+	margin-top: 5px;
+	width: 100%;
+}
+/*	RIGHT COLUMN CSS	*/
+
+
+
+
+/*	BOOTSTRAP OVERRIDE 	*/
+.form-control{
+	background: #FFF;
+  	color: #33414e;
+  	border: 1px solid #D5D5D5;  	
+  	line-height: 20px;    
+    -webkit-border-radius: 0;
+	 -moz-border-radius: 0;
+	 border-radius: 0;
+	 -webkit-box-shadow: none;
+	 -moz-box-shadow: none;
+	 box-shadow: none;
+}
+.modal-footer.modal_center{
+	text-align: center;
+}
+.modal-header{
+	padding: 10px;
+}
+.modal-footer{
+	padding: 5px;
+}
+
+.input-group-addon{
+  background: #FFF;
+  color: #33414e;
+  line-height: 27px;
+  font-size: 21px;
+  border-color: #D5D5D5;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+ -moz-box-shadow: none;
+ box-shadow: none;
+ padding-top: 2px;
+ padding-bottom: 2px;
+}
+.input-group > .form-control{
+	border-left: 0;
+}
+
+/* Mobile phones (portrait and landscape) ---------- */
+@media screen and (max-width: 767px){
+    .left-column {
+        width: 0%; 
+        display: none;       
+    }
+    .right-column{
+    	width: 100%;
+    }
+    .mobile-nav-trigger{
+    	visibility: visible;
+    }
+}
+/* Tablets and iPads (portrait and landscape) ---------- */
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    
+}
+/* Low resolution desktops and laptops ---------- */
+@media screen and (min-width: 1024px) {
+   
+}
+/* High resolution desktops and laptops ---------- */
+@media screen and (min-width: 1280px) {
+    
+}
