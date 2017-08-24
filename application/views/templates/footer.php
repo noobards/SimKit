@@ -1,8 +1,2 @@
-				</div> <!-- .container-fluid -->
-			</div>
-		</div>
-	</div>
-</div>
-
-</body>
+	</div><!-- .container-fluid --></body>
 </html>
