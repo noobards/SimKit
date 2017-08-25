@@ -44,7 +44,10 @@
 						<a href="<?php echo site_url(); ?>/Logout"><i class="fa fa-power-off">&nbsp;</i></a>
 					</div>
 				</div>
-			</div>
+			</div>			
 		</div>
+	</div>
+	<div id="mobile_menu" class="is_collapsed">
+		
 	</div>
 	<div class="container-fluid">

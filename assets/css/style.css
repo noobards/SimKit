@@ -94,96 +94,9 @@ a{
 .normal-anchor{
 	font-size: 100%;
 	color: #00bc80;
-}/*	HEADER TOP BAR*/.header{	background-color: #2D3945;		padding: 5px 0;	height: 70px;}.mobile_menu_bars{	display: none;	vertical-align: middle;	margin-left: 10px;	cursor: pointer;}.site_logo img{	height: 60px;	width: auto;	}.main_menu{	height: 60px;}.main_menu ul{	padding: 0; 	margin: 0;	list-style: none;}.main_menu ul li{	float: left;	margin-left: 20px;	line-height: 60px;}.main_menu ul li:first-child{	margin-left: 0;}.main_menu ul li a{	color: #aaa;	font-size: 16px;	display: block;	padding: 0 5px;}.main_menu ul li a.menu_active{	color: #fff;	background-color: #3D4E5D;}.main_menu ul li a.menu_active i{	color: #FFD457;}.main_menu ul li a:hover{	color: #FFD457;	text-decoration: none;	}.power-off{	text-align: right;	height: 60px;}.power-off a{	color: #fff;	font-size: 30px;	line-height: 60px;}.power-off a:hover{	color: #f0f0f0;}
-
-
-#mobile-nav{
-	display: none;
-}
-#mobile-nav.menu-expanded{
-	display: block;
-}
-.mobile-nav-trigger{
-	cursor: pointer;
-	color: #fff;
-	font-weight: bold;
-	padding-left: 10px;
-	margin-top: 10px;
-	visibility: hidden;
-}
-
-
-/*	LEFT COLUMN CSS	*/
-.site-name{
-	background-color: rgb(0,188,128);
-	color: #fff;
-	font-family: "IPL", 'Open Sans', sans-serif;
-}
-.site-name h1{
-	margin: 0;
-	font-size: 200%;
-	line-height: 50px;
-	text-align: center;
-	height: 50px;
-	margin-bottom: 10px;
-}
-
-
-
-
-.profile_pic{
-	border-radius: 50%;
-	width: 100px;
-	height: 100px;
-	padding: 5px;
-	border: 2px solid #ccc;
-}
-.profile-user-name{
-	font-size: 110%;
-}
-.grey-text{
-	color: #999;
-	font-size: 90%;
-}
-
-
-.left-nav{
-	padding: 0;
-	margin: 15px 0 0 0;
-}
-.left-nav li{
-	margin-bottom: 1px;
-}
-.nav-icon{
-	font-size: 120%;	
-	margin-right: 10px;
-}
-.left-nav li a{
-	display: block;
-	color: #fff;
-	padding: 8px 0;
-	background-color: rgb(51,65,78);	
-	padding-left: 10px;	
-}
-.left-nav li a:hover, .left-nav li a.active-anchor{
-	text-decoration: none;
-	background-color: #3d4e5d;
-}
-.left-nav li a:hover .nav-icon, .left-nav li a.active-anchor .nav-icon{
-	color: #ffd559;
-}
-/*	LEFT COLUMN CSS	*/
-
-
-
-/*	RIGHT COLUMN CSS	*/
-.top-bar{	
-	background-color: rgb(45,57,69);
-}
-
-
-
-
+}/*	HEADER TOP BAR*/.header{	background-color: #2D3945;		padding: 5px 0;	height: 70px;}.mobile_menu_bars{	display: none;	vertical-align: middle;	margin-left: 10px;	cursor: pointer;}.site_logo img{	height: 60px;	width: auto;	}.main_menu{	height: 60px;}.main_menu ul, .mobile_menu{	padding: 0; 	margin: 0;	list-style: none;}.main_menu ul li{	float: left;	margin-left: 20px;	line-height: 60px;}.main_menu ul li:first-child{	margin-left: 0;}.main_menu ul li a{	color: #aaa;	font-size: 16px;	display: block;	padding: 0 5px;}.main_menu ul li a.menu_active, .mobile_menu li a.menu_active{	color: #fff;	background-color: #3D4E5D;}.main_menu ul li a.menu_active i, .mobile_menu li a.menu_active i{	color: #FFD457;}.main_menu ul li a:hover{	color: #FFD457;	text-decoration: none;	}.power-off{	text-align: right;	height: 60px;}.power-off a{	color: #fff;	font-size: 30px;	line-height: 60px;}.power-off a:hover{	color: #f0f0f0;}
+
+/*	MOBILE MENU*/#mobile_menu.is_collapsed{	display: none;}.mobile_menu{	background-color: #2D3945;}.mobile_menu li{	display: block;	border-bottom: 1px solid #fff;}.mobile_menu li:last-child{	border-bottom: 0;}.mobile_menu li a{	padding: 10px;	display: block;	color: #aaa;}
 
 .site-breadcrumbs{
 	background-color: #f0f0f0;
@@ -301,13 +214,12 @@ a{
 	font-size: 11px;
 	margin-top: 5px;
 	width: 100%;
-}
-/*	RIGHT COLUMN CSS	*/
+}
 
 
 
 
-/*	BOOTSTRAP OVERRIDE 	*/
+/*		BOOTSTRAP OVERRIDE 	*/
 .form-control{
 	background: #FFF;
   	color: #33414e;
@@ -347,30 +259,4 @@ a{
 }
 .input-group > .form-control{
 	border-left: 0;
-}
-
-/* Mobile phones (portrait and landscape) ---------- */
-@media screen and (max-width: 767px){
-    .left-column {
-        width: 0%; 
-        display: none;       
-    }
-    .right-column{
-    	width: 100%;
-    }
-    .mobile-nav-trigger{
-    	visibility: visible;
-    }
-}
-/* Tablets and iPads (portrait and landscape) ---------- */
-@media screen and (min-width: 768px) and (max-width: 1023px){
-    
-}
-/* Low resolution desktops and laptops ---------- */
-@media screen and (min-width: 1024px) {
-   
-}
-/* High resolution desktops and laptops ---------- */
-@media screen and (min-width: 1280px) {
-    
 }
