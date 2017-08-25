@@ -13,9 +13,9 @@ class Teams extends CI_Controller {
 		} 	
     }
 
-	public function index()
-	{		
-		$this->load->view('templates/logged_in', array('page'=>'teams'));
+	public function index()
+	{				
+		$this->load->view('templates/logged_in', array('page'=>'teams'));
 	}
 
 	public function getTeamTypes()
@@ -41,7 +41,7 @@ class Teams extends CI_Controller {
 		{			
 			$this->load->model("Team", "team_model");
 			$this->load->model("Utils", "utils");
-			$is_owner = $this->team_model->hasTeamPermission($logged_in_user, $team_id);
+			$is_owner = $this->team_model->hasTeamPermission($team_id);
 			$team = $this->team_model->getTeamObject($team_id);
 			$team_type_options = $this->utils->getTeamTypes();
 			$this->load->view('templates/logged_in', array('page'=>'edit_team', 'is_owner'=>$is_owner, 'team'=>$team, 'options'=>$team_type_options));
@@ -57,7 +57,7 @@ class Teams extends CI_Controller {
 	{
 		$post = json_decode(file_get_contents("php://input"));
 		$this->load->model("Team");
-		$hasPermission = $this->Team->hasTeamPermission($this->session->logged_user, $post->tid);
+		$hasPermission = $this->Team->hasTeamPermission($post->tid);
 		if($hasPermission == "YES")
 		{
 			$data = array(
@@ -211,13 +211,13 @@ class Teams extends CI_Controller {
 			echo json_encode(array('status'=>'NOTOK', 'msg'=>'Input is not in correct format.'));
 			exit;
 		}
-	}
+	}		public function removeTeam()	{		$post = json_decode(file_get_contents("php://input"));		$team_id = (int) $post->tid;		if($team_id == 0)		{			echo json_encode(array('status'=>'NOTOK', 'msg'=>'Team ID not found.'));			exit;		}				if((int) $this->session->logged_user == 0)		{			echo json_encode(array('status'=>'NOTOK', 'msg'=>'You are not logged in. Please logout and log back in again.'));			exit;		}				$this->load->model("Team");		if($this->Team->hasTeamPermission($team_id))		{			$team_name = $this->Team->getTeamName($team_id);			if($this->Team->removeTeam($team_id))			{				$this->session->set_flashdata('flash', $team_name.' has been removed successfully.');				echo json_encode(array('status'=>'OK'));				exit;			}			else			{				echo json_encode(array('status'=>'NOTOK', 'msg'=>'Could not process the action. Please contact the developer.'));				exit;			}		}		else		{			echo json_encode(array('status'=>'NOTOK', 'msg'=>'You do not have permission to modify the team.'));			exit;		}			}
 
 	public function getTeamPlayers()
 	{
 		$post = json_decode(file_get_contents("php://input"));
 		$this->load->model("Team");
-		if($this->Team->hasTeamPermission($this->session->logged_user, $post->tid))
+		if($this->Team->hasTeamPermission($post->tid))
 		{
 			$this->db->select("p.player_id, p.first_name, p.last_name, p.gender, c.country_name");
 			$this->db->from("players p");			
@@ -225,35 +225,27 @@ class Teams extends CI_Controller {
 			$this->db->join("squads s", "s.player_id = p.player_id", "left");
 			$this->db->where(array('p.owner'=>$this->session->logged_user, 's.team_id'=>$post->tid));
 			$this->db->order_by("s.batting_position", "ASC");
-			$query = $this->db->get();
-			if($query->num_rows() > 0)
-			{
-				$players = array();
-				foreach($query->result() as $row)
-				{
-					$players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name);
-				}
-				echo json_encode(array('status'=>'OK', 'players'=>$players));
-				exit;
-			}
-			else
-			{
-				echo json_encode(array('status'=>'NOTOK', 'msg'=>'No players in squad.'));
-				exit;
-			}
-		}
-		else
-		{
-			echo json_encode(array('status'=>'NOTOK', 'msg'=>'You do not have permission to view/modify the team.'));
-			exit;
+			$query = $this->db->get();			$players = array();
+			if($query->num_rows() > 0)
+			{
+				foreach($query->result() as $row)
+				{
+					$players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name);
+				}				
+			}			echo json_encode(array('status'=>'OK', 'players'=>$players));			exit;
+		}
+		else
+		{
+			echo json_encode(array('status'=>'NOTOK', 'msg'=>'You do not have permission to view/modify the team.'));
+			exit;
 		}
 	}
 
 	public function removeFromSquad()
 	{
-		$post = json_decode(file_get_contents("php://input"));
+		$post = json_decode(file_get_contents("php://input"));				if(! isset($post->selectedPlayers) || count($post->selectedPlayers) == 0)		{			echo json_encode(array('status'=>'NOTOK', 'msg'=>'Nothing to remoe.'));			exit;		}
 		$this->load->model("Team");
-		if($this->Team->hasTeamPermission($this->session->logged_user, $post->tid))
+		if($this->Team->hasTeamPermission($post->tid))
 		{
 			$deleted_rows = 0;
 			$to_delete_rows = 0;

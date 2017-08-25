@@ -11,7 +11,7 @@
 		?>
 		<div class="row">
 			<div class="col-md-12">
-				<div class="alert alert-success" style="margin-bottom: 0;"><i class="fa fa-check-circle">&nbsp;</i><?php echo $this->session->flashdata('flash'); ?></div>
+				<div class="alert alert-info" style="margin-bottom: 0;"><i class="fa fa-check-circle">&nbsp;</i><?php echo $this->session->flashdata('flash'); ?></div>
 			</div>
 		</div>
 	<?php
@@ -107,10 +107,10 @@
 					<div class="box-helping-text">Teams added by you.</div>
 				</div>
 				<div class="box-body">
-					<table class="table table-bordered table-striped">
+					<table class="table table-striped">
 						<thead>
 							<tr class="alert-warning">
-								<th>S.No</th>
+								
 								<th>Team Name</th>
 								<th>Team Type</th>
 								<th># Players</th>
@@ -118,8 +118,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-if="my_teams.length > 0" ng-repeat="team in my_teams">
-								<td>{{$index + 1}}</td>
+							<tr ng-if="my_teams.length > 0" ng-repeat="team in my_teams">
+								
 								<td>{{team.name}}</td>
 								<td>{{team.type}}</td>
 								<td>{{team.nop}}</td>
@@ -130,12 +130,14 @@
 									  </button>
 									  <ul class="dropdown-menu">
 									    <li><a ng-click="addPlayersToTeamModal($event,team.team_id, team.name)" href="#">Add Players</a></li>
-									    <li><a href="Teams/Edit/{{team.team_id}}">Edit Team</a></li>
+									    <li><a href="Teams/Edit/{{team.team_id}}">Edit Team</a></li>
+										
+										<li><a ng-click="removeTeam($event,team.team_id, team.name)" href="#">Delete Team</a></li>
 									  </ul>
 									</div>
 								</td>
 							</tr>
-							<tr ng-if="my_teams.length == 0"><td colspan="4">No records found.</td></tr>
+							<tr ng-if="my_teams.length == 0"><td colspan="3">No records found.</td></tr>
 						</tbody>
 					</table>
 				</div>

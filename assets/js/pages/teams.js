@@ -26,7 +26,7 @@ app.controller("addNewTeam", function($scope, $http){
 		}).then(function successCallback(response) {
 			if(response.statusText == "OK")
 			{				
-				window.location.href = "teams";
+				window.location.href = "Teams";
 			}
 			else
 			{
@@ -83,7 +83,7 @@ app.controller("myTeams", function($scope, $http){
 		}, function errorCallback(response) {			
 		    alert("Ajax Error: "+response.statusText);
 		});
-	};
+	};		$scope.removeTeam = function(e, team_id, team_name){		e.preventDefault();		if(window.confirm('Are you sure you want to remove '+team_name+'?'))		{			$http({			  method: 'POST',			  data: {				tid: team_id			  },			  url: simkit.baseUrl+'Teams/removeTeam'			}).then(function successCallback(response) {				if(response.statusText == "OK")				{					if(response.data.status == 'OK')					{						window.location.href = "Teams";					}					else					{						alert(response.data.msg);					}								}				else				{					alert("Ajax Error: "+response.statusText);				}			}, function errorCallback(response) {							alert("Ajax Error: "+response.statusText);			});		}	};
 
 	$scope.addToTeam = function(e){
 		var button = $(e.target);
@@ -100,7 +100,7 @@ app.controller("myTeams", function($scope, $http){
 			{
 				if(response.data.status == 'OK')
 				{
-					window.location.href = "teams";
+					window.location.href = "Teams";
 				}
 				else
 				{

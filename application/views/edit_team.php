@@ -84,7 +84,7 @@
 								<span ng-show="data.atLeastOneChecked" class="red">{{data.totalSelected}} selected</span>
 							</div>
 							<div class="vscroll" style="height: 82%;">
-								<table class="table table-striped table-bordered">
+								<table class="table table-striped">
 									<thead>
 										<tr class="alert-warning">
 											<th><input type="checkbox" class="allCB" ng-click="allSquadPlayers($event)" /></th>
@@ -99,6 +99,10 @@
 											<td>{{player.name}} ({{player.id}})</td>
 											<td>{{player.gender}}</td>
 											<td>{{player.country}}</td>
+										</tr>
+										
+										<tr ng-show="data.players.length == 0">
+											<td colspan="3">No players in squad. Click <a class="normal-anchor" href="<?php echo site_url(); ?>/Teams">here</a> to add them.</td>
 										</tr>
 									</tbody>
 								</table>
@@ -248,7 +252,7 @@
 					else
 					{
 						button.removeAttr('disabled').html("Remove");
-						alert("Ajax Error: "+response.data.msg);
+						alert(response.data.msg);
 					}
 				}
 				else
