@@ -1,5 +1,4 @@
-var app = angular.module("SimKit", []);
-app.controller("addNewPlayer", function($scope, $http){	
+simkit.app.controller("addNewPlayer", function($scope, $http){	
 	/*$scope.data = {
 		"fn": "John",
 		"ln": "Smith",
@@ -220,7 +219,7 @@ app.controller("addNewPlayer", function($scope, $http){
 });
 
 
-app.controller("recentlyAddedPlayers", function($scope, $http){
+simkit.app.controller("recentlyAddedPlayers", function($scope, $http){
 	$http({
 		  method: 'POST',		  
 		  url: simkit.baseUrl+'Players/getPlayerList'

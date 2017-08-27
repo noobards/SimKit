@@ -1,5 +1,4 @@
-var app = angular.module("SimKit", []);
-app.controller("listSiteMembers", function($scope, $http){	
+simkit.app.controller("listSiteMembers", function($scope, $http){	
 	
 	$scope.data = {};
 	$http({

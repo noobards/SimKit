@@ -140,9 +140,8 @@
 
 
 
-<script type="text/javascript">
-	var app = angular.module("SimKit", []);
-	app.controller("updateTeam", function($scope, $http, $location){
+<script type="text/javascript">
+	simkit.app.controller("updateTeam", function($scope, $http, $location){
 		$scope.data = {};
 		$scope.data.tn = '<?php echo $team->team_name; ?>';
 		$scope.data.tt = '<?php echo $team->team_type_id; ?>';
@@ -182,7 +181,7 @@
 		};
 	});
 
-	app.controller("squadPlayers", function($scope, $http, $location){
+	simkit.app.controller("squadPlayers", function($scope, $http, $location){
 		$scope.data = {};
 		$scope.data.checkThis = false;
 		$scope.data.tid = document.getElementById('tid').value;

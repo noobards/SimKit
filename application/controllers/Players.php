@@ -232,7 +232,7 @@ class Players extends CI_Controller {
 		{
 			foreach ($query->result() as $row)
 			{
-			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
+			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
 			}
 		}
 		echo json_encode($players);
@@ -255,7 +255,7 @@ class Players extends CI_Controller {
 		{
 			foreach ($query->result() as $row)
 			{
-			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
+			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
 			}
 		}
 		echo json_encode($players);

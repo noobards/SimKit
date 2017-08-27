@@ -128,7 +128,7 @@ class Teams extends CI_Controller {
 		
 		$logged_in_user = $this->session->logged_user;
 		$query = $this->db->query("SELECT 
-			`p`.`player_id`, `p`.`first_name`, `p`.`last_name`, `p`.`gender`, `pt`.`type_name`, `c`.`country_name`
+			`p`.`player_id`, `p`.`first_name`, `p`.`last_name`, `p`.`gender`, `pt`.`type_name`, `pt`.`type_icon`, `c`.`country_name`
 			FROM `players` `p`
 			LEFT JOIN `player_types` `pt` ON `pt`.`player_type_id`=`p`.`player_type`
 			LEFT JOIN `countries` `c` ON `c`.`country_id`=`p`.`country`
@@ -139,7 +139,7 @@ class Teams extends CI_Controller {
 		{			
 			foreach ($query->result() as $row)
 			{
-			    $my_players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'type'=>$row->type_name, 'country'=>$row->country_name);
+			    $my_players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'country'=>$row->country_name);
 			}
 		}
 		echo json_encode($my_players);

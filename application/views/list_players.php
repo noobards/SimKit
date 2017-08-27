@@ -37,7 +37,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<div class="vscroll h500 pad10 white-bg">					
+				<div class="pad10 white-bg">					
 					<table class="table table-striped">
 						<thead>
 							<tr class="alert-warning">
@@ -59,7 +59,7 @@
 								<td>{{player.age}}</td>
 								<td>{{player.gender}}</td>
 								<td>{{player.country}}</td>
-								<td>{{player.player_type}}</td>								
+								<td><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /></td>								
 								<td>{{player.created}}</td>
 							</tr>
 							<tr ng-if="filtered.length == 0">

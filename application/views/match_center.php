@@ -1,0 +1,17 @@
+<div class="row site-breadcrumbs">
+	<div class="col-xs-12">
+		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> Match Center
+	</div>
+</div><div class="row">	<div class="col-md-12">		<div class="box">			<div class="box-title">				<div class="box-main-text">Matches in Progress</div>				<div class="box-helping-text">Start from where you left off earlier</div>			</div>			<div class="box-body box-body-max ajax-loading" ng-controller="savedMatches">				<div class="table-mockup">					<div class="thead">						<div class="tr">							<div class="th">Match</div>							<div class="th">Title</div>							<div class="th">Stage</div>							<div class="th">Updated</div>						</div>					</div>					<div class="tbody">						<div class="tr" ng-repeat="match in matches">							<div class="td"><a href="<?php echo site_url(); ?>/MatchCenter/SquadSelection/{{match.match_id}}" class="normal-anchor"><strong>{{match.team1}}</strong> vs <strong>{{match.team2}}</strong></a></div>							<div class="td">{{match.title ? match.title : "Untitled"}}</div>							<div class="td">{{match.stage_label}}</div>							<div class="td">{{match.updated_on | readableDateTime}}</div>						</div>					</div>				</div>							</div>		</div>		</div>	</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="box">
+			<div class="box-title">
+				<div class="box-main-text">Create New Match</div>
+				<div class="box-helping-text">Choose teams and make them compete against each other</div>
+			</div>
+			<div class="box-body box-body-max" ng-controller="listTeams">								<div class="row">					<div class="col-xs-9" id="team_box_cont">						<p>Click on any two teams to proceed further. Click again to unselect</p>						<div class="row" ng-repeat="row in teams">							<div class="col-md-3 col-sm-6 bot10" ng-repeat="team in row">								<div class="team_box" ng-click="selectTeam($event)" data-team-id="{{team.team_id}}" data-team-name="{{team.team_name}}" data-player-count="{{team.player_count}}">									<strong>{{team.team_name}} ({{team.team_id}})</strong>									<span>{{team.player_count}} player(s)</span>								</div>							</div>						</div>					</div>					<div class="col-xs-3">						<strong>Match Profile</strong>						<div ng-class="team1_text != 'Not selected' ? 'green top10' : 'red top10'">Team 1: {{team1_text}}</div>						<div ng-class="team2_text != 'Not selected' ? 'green' : 'red'">Team 2: {{team2_text}}</div>												<div class="top10" ng-show="data.selected_teams.length == 2">							<label for="mt">Match Type:</label>							<select class="form-control" id="mt" ng-model="data.match_type">								<option value="">Choose One</option>								<option value="1">ODI</option>								<option value="2">T20I</option>							</select>						</div>						<div class="top10">							<button ng-show="(data.match_type != null && data.match_type != '') && data.selected_teams.length == 2" ng-click="processForm($event)" class="btn btn-primary">Proceed</button>						</div>					</div>				</div>
+			</div>
+		</div>
+	</div>	
+</div><script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/match_center.js"></script>

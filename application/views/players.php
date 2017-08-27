@@ -215,7 +215,7 @@
 								<td>{{player.name}}</td>
 								<td>{{player.gender}}</td>
 								<td>{{player.country}}</td>
-								<td>{{player.type}}</td>
+								<td class="text-center"><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></td>
 								<td>{{player.created}}</td>
 							</tr>
 							<tr ng-if="players.length == 0">

@@ -1,5 +1,4 @@
-var app = angular.module("SimKit", []);
-app.controller("listPlayers", function($scope, $http, $window){
+simkit.app.controller("listPlayers", function($scope, $http, $window){
 	$scope.my_players = [];
 	$scope.showDeleteButton = false;
 

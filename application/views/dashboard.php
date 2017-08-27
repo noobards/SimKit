@@ -61,4 +61,4 @@
 			</div>
 		</div>
 	</div>	
-</div><script type="text/javascript">angular.module('SimKit', []);</script>
+</div>

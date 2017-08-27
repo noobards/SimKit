@@ -1,5 +1,4 @@
-var app = angular.module("SimKit", []);
-app.controller("editPlayer", function($scope, $http){
+simkit.app.controller("editPlayer", function($scope, $http){
 	$scope.data = {speciality:{}};
 	$scope.data.player_id = $.trim($('#pid').val());
 

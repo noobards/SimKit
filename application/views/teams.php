@@ -73,7 +73,7 @@
 	      				<table class="table table-striped table-bordered">
 				        	<thead>
 				        		<tr class="alert-warning">
-				        			<th class="text-center"><input type="checkbox" ng-model="check_all" /></th>
+				        			<th class="text-center"><input type="checkbox" ng-click="toCheckAll($event)" /></th>
 				        			<th>Player Name</th>
 				        			<th>Gender</th>
 				        			<th>Type</th>
@@ -82,10 +82,10 @@
 				        	</thead>
 				        	<tbody>
 				        		<tr ng-repeat="player in my_players | filter: search_filter">
-				        			<td class="text-center"><input type="checkbox" ng-checked="check_all" ng-click="allCheck($event)" ng-model="players.selected[player.id]" /></td>
+				        			<td class="text-center"><input type="checkbox" class="toCheckAll" ng-click="allCheck($event)" ng-model="players.selected[player.id]" /></td>
 				        			<td>{{player.name}}</td>
 				        			<td>{{player.gender}}</td>
-				        			<td>{{player.type}}</td>
+				        			<td class="text-center"><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></td>
 				        			<td>{{player.country}}</td>
 				        		</tr>
 				        		<tr ng-if="(my_players | filter: search_filter).length == 0"><td colspan="5">No matches found.</td></tr>
@@ -106,7 +106,7 @@
 					<div class="box-main-text">Team List</div>
 					<div class="box-helping-text">Teams added by you.</div>
 				</div>
-				<div class="box-body">
+				<div class="box-body vscroll">
 					<table class="table table-striped">
 						<thead>
 							<tr class="alert-warning">

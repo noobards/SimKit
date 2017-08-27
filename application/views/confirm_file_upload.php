@@ -30,12 +30,11 @@
 					foreach($table['values'] as $row_number => $values_array)
 					{
 						if(isset($values_array['A']) && trim($values_array['A']) != '')						
-						{
+						{							
 							echo '<tr>';
 							echo '<td>'.($row_number - 1).'</td>';
 							foreach($values_array as $colname => $colvalue)
-							{
-								echo '<td>'.$colvalue.'</td>';
+							{								if(in_array($colname, range("A", "L")))								{									echo '<td>'.$colvalue.'</td>';								}								
 							}
 							echo '</tr>';
 						}						

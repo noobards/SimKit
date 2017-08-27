@@ -1,5 +1,4 @@
-var app = angular.module("SimKit", []);
-app.controller("addNewTeam", function($scope, $http){
+simkit.app.controller("addNewTeam", function($scope, $http){
 	$http({
 	  method: 'POST',		  
 	  url: simkit.baseUrl+'Teams/getTeamTypes'
@@ -40,7 +39,7 @@ app.controller("addNewTeam", function($scope, $http){
 	};
 });
 
-app.controller("myTeams", function($scope, $http){
+simkit.app.controller("myTeams", function($scope, $http){
 
 	$scope.players = {};	
 
@@ -116,7 +115,7 @@ app.controller("myTeams", function($scope, $http){
 		    alert("Ajax Error: "+response.statusText);
 		});
 	};
-
+	$scope.toCheckAll = function(e){				var cb = jQuery(e.target);				jQuery('.toCheckAll').trigger('click');	};
 	$scope.allCheck = function(e){
 		var cb = $(e.target);
 		//console.log($scope.selected_players);
