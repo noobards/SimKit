@@ -21,13 +21,13 @@
 	<div class="header">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-3 col-sm-3 col-xs-8">
+				<div class="col-md-1 col-sm-2 col-xs-8">
 					<div class="site_logo">
 						<i class="fa fa-bars fa-3x mobile_menu_bars" style="color:#fff;">&nbsp;</i>
 						<a href="<?php echo site_url(); ?>/Dashboard"><?php echo img(array('src'=>'assets/images/site_logo_white.png', 'alt'=> 'SimKit')); ?></a>
 					</div>
 				</div>
-				<div class="col-md-7 col-sm-8 hidden-xs">
+				<div class="col-md-9 col-sm-8 hidden-xs">
 					<div class="main_menu">					
 						<ul class="clearfix">						
 							<li><a href="<?php echo site_url(); ?>/Dashboard" class="<?php echo ($page == 'dashboard' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-dashboard">&nbsp;</i>Dashboard</a></li>
@@ -37,10 +37,11 @@
 							<li><a href="<?php echo site_url(); ?>/MatchCenter" class="<?php echo ($page == 'match_center' || $page == 'squad_selection' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-gavel">&nbsp;</i>Match Center</a></li>							
 							<li><a href="<?php echo site_url(); ?>/Admin/SiteMembers" class="<?php echo ($page == 'admin/site_members' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-user">&nbsp;</i>Members</a></li>
 							<?php }	?>
+							<li><a href="<?php echo site_url(); ?>/Community" class="<?php echo ($page == 'coummunity' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-handshake-o">&nbsp;</i>Community</a></li>
 						</ul>
 					</div>
 				</div>
-				<div class="col-md-2 col-sm-1 col-xs-4">
+				<div class="col-md-2 col-sm-2 col-xs-4">
 					<div class="power-off">
 						<a href="<?php echo site_url(); ?>/Logout"><i class="fa fa-power-off">&nbsp;</i></a>
 					</div>
