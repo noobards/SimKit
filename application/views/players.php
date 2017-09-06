@@ -26,19 +26,9 @@
 
 				<div class="col-md-12">
 
-					<div class="alert alert-success" style="margin-bottom: 0;">
+					<div class="alert alert-info" style="margin-bottom: 0;">
 
-						<p>Summary of records: </p>
-
-						<ul>
-
-							<li><strong>Total records: </strong><?php echo $flash['total'] ; ?></li>
-
-							<li><strong>Successfull inserts: </strong><?php echo $flash['inserted'] ; ?></li>
-
-							<li><strong>Failed inserts: </strong><?php echo $flash['failed'] ; ?></li>
-
-						</ul>										
+						<?= $flash['msg'];	?>
 
 					</div>
 
@@ -118,7 +108,7 @@
 
 				<div class="box-title">
 
-					<div class="box-main-text">Add New Player(s)</div>
+					<div class="box-main-text">Add New Player</div>
 
 					<div class="box-helping-text">Define the player.</div>
 
@@ -127,12 +117,14 @@
 				<div class="box-body box-body-max">
 
 					<form class="form-horizontal" name="add_new_player_form" onsubmit="return false;" autocomplete="off" novalidate>
-
+					<div class="bot10">
+						<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>
+					</div>
 						<h3 class="form-subtitle">Demographics</h3>											
 
 						<div class="form-group">
 
-							<label for="fn" class="control-label col-md-6">First Name: </label>
+							<label for="fn" class="control-label col-md-6">First Name: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -144,7 +136,7 @@
 
 						<div class="form-group">
 
-							<label for="ln" class="control-label col-md-6">Last Name: </label>
+							<label for="ln" class="control-label col-md-6">Last Name: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -168,7 +160,7 @@
 
 						<div class="form-group">
 
-							<label for="age" class="control-label col-md-6">Age: </label>
+							<label for="age" class="control-label col-md-6">Age: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -180,7 +172,7 @@
 
 						<div class="form-group">
 
-							<label for="gen" class="control-label col-md-6">Gender: </label>
+							<label for="gen" class="control-label col-md-6">Gender: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -200,7 +192,7 @@
 
 						<div class="form-group">
 
-							<label for="country" class="control-label col-md-6">Country: </label>
+							<label for="country" class="control-label col-md-6">Country: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -222,7 +214,7 @@
 
 						<div class="form-group">
 
-							<label for="player_type" class="control-label col-md-6">Player Type: </label>
+							<label for="player_type" class="control-label col-md-6">Player Role: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -240,7 +232,7 @@
 
 						<div class="form-group" ng-if="hasBowlingAbility()">
 
-							<label for="bowler_type" class="control-label col-md-6">Bowler Type: </label>
+							<label for="bowler_type" class="control-label col-md-6">Bowler Type: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -258,7 +250,7 @@
 
 						<div class="form-group">
 
-							<label class="control-label col-md-6">Batting Hand: </label>
+							<label class="control-label col-md-6">Batting Hand: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -272,7 +264,7 @@
 
 						<div class="form-group" ng-if="hasBowlingAbility()">
 
-							<label class="control-label col-md-6">Bowling Hand: </label>
+							<label class="control-label col-md-6">Bowling Hand: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -286,7 +278,7 @@
 
 						<div class="form-group">
 
-							<label class="control-label col-md-6">Modes: </label>
+							<label class="control-label col-md-6">Modes: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -301,45 +293,51 @@
 						</div>		
 
 						<h3 class="form-subtitle">Rating Points</h3>
-						<div class="alert alert-danger">								
-							<i class="fa fa-warning">&nbsp;</i> The below attributes cannot be changed once saved. Make sure you're absolute certain while assigning the rating points to the player.
+						<div class="alert alert-warning">								
+							<i class="fa fa-exclamation-circle">&nbsp;</i> You have <strong>120</strong> rating points to be distributed among batting, bowling and fielding. The maximum points that a single attribute can be allocated is <strong>60</strong>. For ex: Batting cannot have <strong>more than 60</strong> rating points. Same goes for bowling and fielding. This is to ensure that there is scope for training and upgrades to a player in future.
 						</div>
-
+						<div class="text-center">
+							Use <strong><i class="fa fa-minus">&nbsp;</i></strong> or <strong><i class="fa fa-plus">&nbsp;</i></strong> to change the rating points of a player. Alternatively, you can also <strong>manually type in the value</strong> into the textbox.
+						</div>
 						<div class="text-right red bot10">
 							Rating Points available: {{data.available_rp}}
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Batting Points: </label>
+							<label class="control-label col-md-6">Batting: </label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="batting" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
-								  <input type="text" class="form-control" data-type="batting" ng-blur="checkRPValidity($event)" ng-change="recalculateRP()" ng-model="data.batting_rp" />
+								  <input type="text" class="form-control text-center" data-type="batting" ng-blur="checkRPValidity($event)" ng-change="recalculateRP()" ng-model="data.batting_rp" />
 								  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="batting" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Bowling Points: </label>
+							<label class="control-label col-md-6">Bowling: </label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="bowling" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
-								  <input type="text" class="form-control" data-type="bowling" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.bowling_rp" />
+								  <input type="text" class="form-control text-center" data-type="bowling" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.bowling_rp" />
 								  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="bowling" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Fielding Points: </label>
+							<label class="control-label col-md-6">Fielding: </label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="fielding" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
-								  <input type="text" class="form-control" data-type="fielding" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.fielding_rp" />
+								  <input type="text" class="form-control text-center" data-type="fielding" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.fielding_rp" />
 								  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="fielding" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
 								</div>
 							</div>
+						</div>
+
+						<div class="alert alert-danger">								
+							<i class="fa fa-warning">&nbsp;</i> The above attributes <strong>cannot be changed</strong> once saved. Make sure you're absolute certain while assigning the rating points to the player.
 						</div>
 
 						<div class="form-group text-center">												
@@ -371,56 +369,25 @@
 				</div>
 
 				<div class="box-body">					
-
-					<table class="table table-bordered table-striped">
-
-						<thead>
-
-							<tr class="alert-success">
-
-								<th>S.No</th>
-
-								<th>Player Name</th>
-
-								<th>Gender</th>
-
-								<th>Country</th>
-
-								<th>Player Type</th>
-
-								<th>Added On</th>
-
-							</tr>
-
-						</thead>
-
-						<tbody>
-
-							<tr ng-if="players.length > 0" ng-repeat="player in players">
-
-								<td>{{$index + 1}}</td>
-
-								<td>{{player.name}}</td>
-
-								<td>{{player.gender}}</td>
-
-								<td>{{player.country}}</td>
-
-								<td class="text-center"><img class="player_type_icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></td>
-
-								<td>{{player.created}}</td>
-
-							</tr>
-
-							<tr ng-if="players.length == 0">
-
-								<td colspan="6">No records found</td>
-
-							</tr>
-
-						</tbody>
-
-					</table>					
+					<div class="table-mockup">
+						<div class="thead">
+							<div class="tr">
+								<div class="th">Name</div>
+								<div class="th">Country</div>
+								<div class="th">Role</div>
+								<div class="th">Added</div>
+							</div>
+						</div>
+						<div class="tbody">
+							<div class="tr" ng-if="players.length > 0" ng-repeat="player in players">
+								<div class="td text-center">{{player.name}}</div>
+								<div class="td text-center">{{player.country}}</div>
+								<div class="td text-center"><img class="player_type_icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></div>
+								<div class="td text-center">{{player.created}}</div>
+							</div>
+							<div class="tr" ng-if="players.length == 0"><div class="td text-center">No records found</div></div>
+						</div>
+					</div>
 
 					<div class="text-right"><a href="<?php echo site_url(); ?>/Players/ListPlayers"><i class="fa fa-search">&nbsp;</i>View All</a></div>
 

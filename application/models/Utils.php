@@ -19,6 +19,81 @@ class Utils extends CI_Model {
 		return $options;
 	}
 
+	public function playerRating($player_id)
+	{
+		if($player_id && (int) $player_id > 0)
+		{
+			$permission = $this->hasPlayerPermission($player_id);
+			if($permission == "YES")
+			{
+				$this->db->select("batting_rp, bowling_rp, fielding_rp");
+				$this->db->from('players');
+				$this->db->where('player_id', $player_id);
+				$query = $this->db->get();
+				if($query->num_rows() == 1)
+				{
+					foreach($query->result() as $row)
+					{
+						$total_rp = (int) $row->batting_rp + (int) $row->bowling_rp + (int) $row->fielding_rp;
+						if($total_rp > 0)
+						{							
+							return number_format(($total_rp*10/300), 2);
+						}
+					}
+				}
+			}
+		}
+		return "0.00";
+	}
+
+	public function communityTeamList()
+	{
+		$data = array();
+		$logged_in_user = (int) $this->session->logged_user;
+		if($logged_in_user > 0)
+		{
+			$this->db->select("t.team_id, t.team_name, tt.type_name");
+			$this->db->from("teams t");
+			$this->db->join("team_types tt", "tt.team_type_id = t.team_type", "left");
+			$this->db->where(array('t.owner != '=>$logged_in_user));
+			$this->db->order_by("t.updated_time", "DESC");
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				foreach($query->result() as $row)
+				{
+					$data[] = $row;
+				}
+			}
+		}
+		return $data;
+	}
+
+	public function communityPlayerList()
+	{
+		$data = array();
+		$logged_in_user = (int) $this->session->logged_user;
+		if($logged_in_user > 0)
+		{
+			$this->db->select('*');
+			$this->db->from("players p");
+			$this->db->join("countries c", "c.country_id=p.country", "left");
+	        $this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
+	        $this->db->join("bowler_types bt", "bt.bowler_type_id=p.bowler_type", "left");
+			$this->db->order_by("p.updated_time", "DESC");
+			$this->db->where(array('p.owner != '=>$logged_in_user));
+			$query = $this->db->get();			
+			if($query->num_rows() > 0)
+			{				
+				foreach ($query->result() as $row)
+				{					
+				    $data[] = $row;
+				}
+			}
+		}
+		return $data;
+	}
+
 	public function myPlayerCount()
 	{
 		$logged_in_user = (int) $this->session->logged_user;

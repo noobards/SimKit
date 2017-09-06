@@ -176,7 +176,7 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 		table += "<tbody>";
 
-		table += $scope.getObjectName("Player Type", $scope.data.player_type, $scope.player_types);
+		table += $scope.getObjectName("Player Role", $scope.data.player_type, $scope.player_types);
 
 		table += $scope.createRow("Batting Hand", $scope.data.bat_hand);
 
@@ -383,7 +383,7 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 			{				
 
-				window.location.href = "players";
+				window.location.href = "Players";
 
 			}
 

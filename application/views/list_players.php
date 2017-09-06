@@ -17,11 +17,10 @@
 	<?php
 	}
 	?>
-
 	<div ng-controller="listPlayers">
 		<div class="row">
 			<div class="col-md-12">
-				<p>Click on a player name to edit his/her details.</p>
+				<div class="alert alert-info"><i class="fa fa-exclamation-circle">&nbsp;</i>Click on a <strong>player name</strong> to edit his/her details. Alternatively, you can select the players that need to be removed by clicking on the <strong>checkbox</strong> next to their name.</div>
 				<table class="filter-table">
 					<tbody>
 						<tr>
@@ -36,38 +35,32 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-12">
-				<div class="pad10 white-bg">					
-					<table class="table table-striped">
-						<thead>
-							<tr class="alert-warning">
-								<th><input type="checkbox" ng-click="selectAll()" ng-model="check_all" /></th>
-								<th>S.No</th>
-								<th>Player Name</th>						
-								<th>Age</th>
-								<th>Gender</th>
-								<th>Country</th>
-								<th>Player Type</th>								
-								<th>Added On</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-if="my_players.length > 0" ng-repeat="player in my_players | filter : searchKW as filtered">
-								<td><input type="checkbox" ng-model="player.selected" class="nl-checkbox" ng-click="selectSingle($event)" value="{{player.id}}" /></td>
-								<td>{{$index + 1}}</td>
-								<td><a class="normal-anchor" href="Edit/{{player.id}}">{{player.name}}</a></td>
-								<td>{{player.age}}</td>
-								<td>{{player.gender}}</td>
-								<td>{{player.country}}</td>
-								<td><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /></td>								
-								<td>{{player.created}}</td>
-							</tr>
-							<tr ng-if="filtered.length == 0">
-								<td colspan="8">No records found</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+			<div class="col-md-12">				
+				<div class="table-mockup">
+					<div class="thead">
+						<div class="tr">
+							<div class="th"><input type="checkbox" ng-click="selectAll()" ng-model="check_all" /></div>
+							<div class="th">Name</div>							
+							<div class="th">Country</div>
+							<div class="th">Role</div>
+							<div class="th">Rating</div>
+							<div class="th">Added</div>
+						</div>
+					</div>
+					<div class="tbody">
+						<div class="tr" ng-repeat="player in my_players | filter : searchKW as filtered">
+							<div class="td text-center"><input type="checkbox" ng-model="player.selected" class="nl-checkbox" ng-click="selectSingle($event)" value="{{player.id}}" /></div>
+							<div class="td text-center"><a class="normal-anchor" href="Edit/{{player.id}}">{{player.name}}</a></div>							
+							<div class="td text-center">{{player.country}}</div>
+							<div class="td text-center"><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
+							<div class="td">
+								<div class='outer_bar'><div style="width:{{(player.avg*10)}}%" class='inner_bar'></div><span class='bar_value'>{{player.avg}}</span></div>
+							</div>
+							<div class="td text-center">{{player.created}}</div>
+						</div>
+						<div class="tr" ng-if="my_players.length == 0"><div class="td text-center">No records found</div></div>
+					</div>
+				</div>				
 			</div>
 		</div>
 	</div>		
