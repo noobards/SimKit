@@ -49,12 +49,15 @@
 					<div class="box-body box-body-max">
 
 						<form class="form-horizontal" name="edit_player_form" onsubmit="return false;" autocomplete="off" novalidate>
+							<div class="bot10">
+								<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>
+							</div>
 
 							<h3 class="form-subtitle">Demographics</h3>											
 
 							<div class="form-group">
 
-								<label for="fn" class="control-label col-md-6">First Name: </label>
+								<label for="fn" class="control-label col-md-6">First Name: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -66,7 +69,7 @@
 
 							<div class="form-group">
 
-								<label for="ln" class="control-label col-md-6">Last Name: </label>
+								<label for="ln" class="control-label col-md-6">Last Name: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -90,7 +93,7 @@
 
 							<div class="form-group">
 
-								<label for="age" class="control-label col-md-6">Age: </label>
+								<label for="age" class="control-label col-md-6">Age: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -102,7 +105,7 @@
 
 							<div class="form-group">
 
-								<label for="gen" class="control-label col-md-6">Gender: </label>
+								<label for="gen" class="control-label col-md-6">Gender: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -122,7 +125,7 @@
 
 							<div class="form-group">
 
-								<label for="country" class="control-label col-md-6">Country: </label>
+								<label for="country" class="control-label col-md-6">Country: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -144,7 +147,7 @@
 
 							<div class="form-group">
 
-								<label for="player_type" class="control-label col-md-6">Player Role: </label>
+								<label for="player_type" class="control-label col-md-6">Player Role: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -162,7 +165,7 @@
 
 							<div class="form-group" ng-if="hasBowlingAbility()">
 
-								<label for="bowler_type" class="control-label col-md-6">Bowler Type: </label>
+								<label for="bowler_type" class="control-label col-md-6">Bowler Type: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -180,7 +183,7 @@
 
 							<div class="form-group">
 
-								<label class="control-label col-md-6">Batting Hand: </label>
+								<label class="control-label col-md-6">Batting Hand: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -194,7 +197,7 @@
 
 							<div class="form-group" ng-if="hasBowlingAbility()">
 
-								<label class="control-label col-md-6">Bowling Hand: </label>
+								<label class="control-label col-md-6">Bowling Hand: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -208,7 +211,7 @@
 
 							<div class="form-group">
 
-								<label class="control-label col-md-6">Modes: </label>
+								<label class="control-label col-md-6">Modes: <span class="red">*</span></label>
 
 								<div class="col-md-6">
 
@@ -223,38 +226,45 @@
 							</div>
 
 							<h3 class="form-subtitle">Rating Points</h3>
-							<div class="row bot10">
-								<div class="col-xs-4">
-									<div class="text-center"><strong>Batting</strong></div>
-									<div class="c100 p{{data.batting_rp}} center">
-								        <span>{{data.batting_rp}}</span>
-								        <div class="slice">
-								            <div class="bar"></div>
-								            <div class="fill"></div>
-								        </div>
-								    </div>
+							<div class="text-center">
+								Use <strong><i class="fa fa-minus">&nbsp;</i></strong> or <strong><i class="fa fa-plus">&nbsp;</i></strong> to change the rating points of a player. Alternatively, you can also <strong>manually type in the value</strong> into the textbox.
+							</div>
+							<div class="text-right bot10">
+								<span class="red">Available Rating Points: {{data.available_rp}}</span>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-6">Batting: <span class="red">*</span></label>
+								<div class="col-md-6">
+									<div class="input-group">
+									  <span ng-click="minusRP($event)" data-type="batting" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
+									  <input type="text" class="form-control text-center" data-type="batting" ng-blur="checkRPValidity($event)" ng-change="recalculateRP()" ng-model="data.batting_rp" />
+									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="batting" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
+									</div>
 								</div>
-								<div class="col-xs-4">
-									<div class="text-center"><strong>Bowling</strong></div>
-									<div class="c100 p{{data.bowling_rp}} center">
-								        <span>{{data.bowling_rp}}</span>
-								        <div class="slice">
-								            <div class="bar"></div>
-								            <div class="fill"></div>
-								        </div>
-								    </div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-6">Bowling: <span class="red">*</span></label>
+								<div class="col-md-6">
+									<div class="input-group">
+									  <span ng-click="minusRP($event)" data-type="bowling" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
+									  <input type="text" class="form-control text-center" data-type="bowling" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.bowling_rp" />
+									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="bowling" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
+									</div>
 								</div>
-								<div class="col-xs-4">
-									<div class="text-center"><strong>Fielding</strong></div>
-									<div class="c100 p{{data.fielding_rp}} center">
-								        <span>{{data.fielding_rp}}</span>
-								        <div class="slice">
-								            <div class="bar"></div>
-								            <div class="fill"></div>
-								        </div>
-								    </div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-6">Fielding: <span class="red">*</span></label>
+								<div class="col-md-6">
+									<div class="input-group">
+									  <span ng-click="minusRP($event)" data-type="fielding" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
+									  <input type="text" class="form-control text-center" data-type="fielding" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.fielding_rp" />
+									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="fielding" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
+									</div>
 								</div>
-							</div>														
+							</div>
 
 							<div class="form-group text-center top20">												
 

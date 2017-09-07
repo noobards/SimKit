@@ -33,12 +33,12 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 	};*/
 
 	$scope.data = {};
-	$scope.data.max_rp = 60;
-	$scope.data.initial_rp = 40;
+	$scope.data.max_rp = 100;
+	$scope.data.initial_rp = 60;
 	$scope.data.batting_rp = angular.copy($scope.data.initial_rp);
 	$scope.data.bowling_rp = angular.copy($scope.data.initial_rp);
 	$scope.data.fielding_rp = angular.copy($scope.data.initial_rp);
-	$scope.data.available_rp = $scope.data.max_rp*2 - ($scope.data.batting_rp + $scope.data.bowling_rp + $scope.data.fielding_rp);
+	$scope.data.available_rp = $scope.data.max_rp*3 - ($scope.data.batting_rp + $scope.data.bowling_rp + $scope.data.fielding_rp);
 	
 
 
@@ -232,7 +232,7 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 		table += "</div></div>";
 
-		table += "<div class='row'><div class='col-md-12'>";
+		table += "<div class='row'><div class='col-md-8'>";
 		table += "<table class='table'>";
 		table += "<thead>";
 		table += "<tr class='alert-warning'><th colspan='2'>Rating Points</th>";
@@ -253,6 +253,18 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 		table += "</tr>";
 		
 		
+		table += "</tbody>";
+		table += "</table>";
+		table += "</div><div class='col-md-4'>";
+		
+		table += "<table class='table'>";
+		table += "<thead>";
+		table += "<tr class='alert-warning'><th>Overall Rating</th>";
+		table += "</thead>";
+		table += "<tbody>";
+		table += "<tr><td>";
+		table += '<div class="c100 p'+Math.ceil( (parseInt($scope.data.batting_rp) + parseInt($scope.data.bowling_rp) + parseInt($scope.data.fielding_rp))*100/300 )+' center"><span>'+( (parseInt($scope.data.batting_rp) + parseInt($scope.data.bowling_rp) + parseInt($scope.data.fielding_rp))*10/300 ).toFixed(2)+'</span><div class="slice"><div class="bar"></div><div class="fill"></div></div></div>';
+		table += "</td></tr>";
 		table += "</tbody>";
 		table += "</table>";
 		table += '</div></div>';
@@ -411,6 +423,17 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 	};
 
+	$scope.randomizeRP = function(e){
+		var min = 20;
+		var max = 99;
+		var bat = Math.floor(Math.random()*(max-min+1)+min);
+		var bowl = Math.floor(Math.random()*(max-min+1)+min);
+		var field = Math.floor(Math.random()*(max-min+1)+min);
+		$scope.data.batting_rp = bat;
+		$scope.data.bowling_rp = bowl;
+		$scope.data.fielding_rp = field;
+		$scope.recalculateRP();
+	};
 
 	$scope.plusRP = function(e){
 		var obj = jQuery(e.target);
@@ -533,12 +556,12 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 	$scope.recalculateRP = function()	{		
 		var total = parseInt($scope.data.batting_rp, 10) + parseInt($scope.data.bowling_rp, 10) + parseInt($scope.data.fielding_rp, 10);
-		$scope.data.available_rp = $scope.data.max_rp*2 - total;
+		$scope.data.available_rp = $scope.data.max_rp*3 - total;
 	};
 
 	$scope.checkRPValidity = function(e){
 		var val = jQuery(e.target).val();
-		if(val > $scope.data.max_rp || (parseInt($scope.data.batting_rp, 10) + parseInt($scope.data.bowling_rp, 10) + parseInt($scope.data.fielding_rp, 10) > $scope.data.max_rp*2) )
+		if(val > $scope.data.max_rp || (parseInt($scope.data.batting_rp, 10) + parseInt($scope.data.bowling_rp, 10) + parseInt($scope.data.fielding_rp, 10) > $scope.data.max_rp*3) )
 		{
 			var type = jQuery(e.target).attr('data-type');
 			if(type == 'batting')

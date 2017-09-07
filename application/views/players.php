@@ -292,19 +292,16 @@
 
 						</div>		
 
-						<h3 class="form-subtitle">Rating Points</h3>
-						<div class="alert alert-warning">								
-							<i class="fa fa-exclamation-circle">&nbsp;</i> You have <strong>120</strong> rating points to be distributed among batting, bowling and fielding. The maximum points that a single attribute can be allocated is <strong>60</strong>. For ex: Batting cannot have <strong>more than 60</strong> rating points. Same goes for bowling and fielding. This is to ensure that there is scope for training and upgrades to a player in future.
-						</div>
+						<h3 class="form-subtitle">Rating Points</h3>						
 						<div class="text-center">
 							Use <strong><i class="fa fa-minus">&nbsp;</i></strong> or <strong><i class="fa fa-plus">&nbsp;</i></strong> to change the rating points of a player. Alternatively, you can also <strong>manually type in the value</strong> into the textbox.
 						</div>
-						<div class="text-right red bot10">
-							Rating Points available: {{data.available_rp}}
+						<div class="text-right bot10">
+							<span class="red">Available Rating Points: {{data.available_rp}}</span>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Batting: </label>
+							<label class="control-label col-md-6">Batting: <span class="red">*</span></label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="batting" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
@@ -315,7 +312,7 @@
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Bowling: </label>
+							<label class="control-label col-md-6">Bowling: <span class="red">*</span></label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="bowling" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
@@ -326,7 +323,7 @@
 						</div>
 
 						<div class="form-group">
-							<label class="control-label col-md-6">Fielding: </label>
+							<label class="control-label col-md-6">Fielding: <span class="red">*</span></label>
 							<div class="col-md-6">
 								<div class="input-group">
 								  <span ng-click="minusRP($event)" data-type="fielding" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
@@ -336,14 +333,10 @@
 							</div>
 						</div>
 
-						<div class="alert alert-danger">								
-							<i class="fa fa-warning">&nbsp;</i> The above attributes <strong>cannot be changed</strong> once saved. Make sure you're absolute certain while assigning the rating points to the player.
-						</div>
-
 						<div class="form-group text-center">												
 
 							<button class="btn btn-primary" ng-disabled="add_new_player_form.$invalid" ng-click="showPlayerModal()">Add Player</button>
-
+							<button class="btn btn-default" ng-click="randomizeRP($event)"><i class="fa fa-random">&nbsp;</i>Randomize Rating Points</button>
 						</div>
 
 					</form>

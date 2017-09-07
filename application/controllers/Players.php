@@ -57,26 +57,26 @@ class Players extends CI_Controller {
 		if($logged_in_user > 0)
 		{
 			$_POST = json_decode(file_get_contents('php://input'), true);
-			if((int) $_POST['batting_rp'] > 60 || (int) $_POST['bowling_rp'] > 60 || (int) $_POST['fielding_rp'] > 60)
+			if((int) $_POST['batting_rp'] > 100 || (int) $_POST['bowling_rp'] > 100 || (int) $_POST['fielding_rp'] > 100)
 			{
-				if((int) $_POST['batting_rp'] > 60)
+				if((int) $_POST['batting_rp'] > 100)
 				{
-					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Batting rating points cannot be greater than 60.'));
+					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Batting rating points cannot be greater than 100.'));
 				}
-				else if((int) $_POST['bowling_rp'] > 60)
+				else if((int) $_POST['bowling_rp'] > 100)
 				{
-					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Bowling rating points cannot be greater than 60.'));
+					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Bowling rating points cannot be greater than 100.'));
 				}
-				else if((int) $_POST['fielding_rp'] > 60)
+				else if((int) $_POST['fielding_rp'] > 100)
 				{
-					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Fielding rating points cannot be greater than 60.'));
+					echo json_encode(array('status'=>'NOTOK', 'msg'=>'Fielding rating points cannot be greater than 100.'));
 				}
 			}
 			else
 			{
-				if( ( (int) $_POST['batting_rp'] + (int) $_POST['bowling_rp'] + (int) $_POST['fielding_rp'] > 120 ) )
+				if( ( (int) $_POST['batting_rp'] + (int) $_POST['bowling_rp'] + (int) $_POST['fielding_rp'] > 300 ) )
 				{
-					echo json_encode(array('status'=>'NOTOK', 'msg'=>'The sum of all three (batting, bowling, fielding) rating points cannot be greater than 120.'));
+					echo json_encode(array('status'=>'NOTOK', 'msg'=>'The sum of all three (batting, bowling, fielding) rating points cannot be greater than 300.'));
 				}
 				else
 				{
@@ -269,14 +269,14 @@ class Players extends CI_Controller {
 	}
 
 	public function getMyPlayers()
-	{
+	{		
 		$logged_in_user = $this->session->logged_user;
 		$this->db->select('*');
 		$this->db->from("players p");
 		$this->db->join("countries c", "c.country_id=p.country", "left");
         $this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
         $this->db->join("bowler_types bt", "bt.bowler_type_id=p.bowler_type", "left");
-		$this->db->order_by("p.created_time", "DESC");		
+		$this->db->order_by("p.updated_time", "DESC");		
 		$this->db->where(array('p.owner'=>$logged_in_user));
 		$query = $this->db->get();
 		$players = array();
@@ -286,7 +286,7 @@ class Players extends CI_Controller {
 			foreach ($query->result() as $row)
 			{
 				$avg = $this->Utils->playerRating($row->player_id);
-			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
+			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'updated'=>date('m/d/y h:i a', strtotime($row->updated_time)), 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
 			}
 		}
 		echo json_encode($players);
@@ -381,6 +381,9 @@ class Players extends CI_Controller {
 			'test'			=>	($post->speciality->test ? 1 : 0),
 			'odi'			=>	($post->speciality->odi ? 1 : 0),
 			't20'			=>	($post->speciality->t20 ? 1 : 0),
+			'batting_rp'	=>	$post->batting_rp,
+			'bowling_rp'	=>	$post->bowling_rp,
+			'fielding_rp'	=>	$post->fielding_rp,
 			'updated_time'	=>	date("Y-m-d H:i:s")
 		);
 		if(in_array($post->player_type, array(2,3,4)))
@@ -400,7 +403,7 @@ class Players extends CI_Controller {
 		}
 		else
 		{
-			$this->session->set_flashdata('flash', $post->fn.' '.$post->ln.' has been updated successfully.');
+			$this->session->set_flashdata('flash', '<i class="fa fa-check">&nbsp;</i>'.$post->fn.' '.$post->ln.' has been updated successfully.');
 			echo json_encode(array('status'=>'OK'));
 		}		
 		exit;

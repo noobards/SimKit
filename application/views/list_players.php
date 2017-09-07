@@ -15,7 +15,7 @@
 			</div>
 		</div>
 	<?php
-	}
+	}	
 	?>
 	<div ng-controller="listPlayers">
 		<div class="row">
@@ -44,7 +44,7 @@
 							<div class="th">Country</div>
 							<div class="th">Role</div>
 							<div class="th">Rating</div>
-							<div class="th">Added</div>
+							<div class="th">Updated</div>
 						</div>
 					</div>
 					<div class="tbody">
@@ -56,7 +56,7 @@
 							<div class="td">
 								<div class='outer_bar'><div style="width:{{(player.avg*10)}}%" class='inner_bar'></div><span class='bar_value'>{{player.avg}}</span></div>
 							</div>
-							<div class="td text-center">{{player.created}}</div>
+							<div class="td text-center">{{player.updated}}</div>
 						</div>
 						<div class="tr" ng-if="my_players.length == 0"><div class="td text-center">No records found</div></div>
 					</div>
