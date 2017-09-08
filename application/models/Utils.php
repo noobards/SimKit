@@ -48,7 +48,7 @@ class Utils extends CI_Model {
 
 	public function passwordReset($em)
 	{
-		$this->db->select('user_id, email, first_name, last_name');
+		$this->db->select('user_id, email, first_name, last_name, username');
 		$this->db->from('members');
 		$this->db->where('email', trim($em));
 		$query = $this->db->get();
@@ -61,10 +61,11 @@ class Utils extends CI_Model {
 			$row = $query->result();
 			$pass = $this->generatePassword();
 			$this->load->library("EmailMailer");
+			$un = $row[0]->username;
 			$to = $row[0]->email;
 			$name = $row[0]->first_name.' '.$row[0]->last_name;
 			$subject = "New Password for SimKit";
-			$body = "Your new password is ".$pass."<br /> You can now use this password to login into the application";
+			$body = "Your username is ".$un."<br /> Your new password is ".$pass."<br /> You can now use this password to login into the application";
 			$email = $this->emailmailer->sendEmail($to, $name, $subject, $body);
 			if($email['status'] == 'OK')
 			{				
