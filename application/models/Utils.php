@@ -46,6 +46,110 @@ class Utils extends CI_Model {
 		return "0.00";
 	}
 
+	public function passwordReset($em)
+	{
+		$this->db->select('user_id, email, first_name, last_name');
+		$this->db->from('members');
+		$this->db->where('email', trim($em));
+		$query = $this->db->get();
+		if($query->num_rows() == 0)
+		{
+			return array('status'=>'NOTOK', 'msg'=>'Email was not found in our records.');
+		}
+		else if($query->num_rows() == 1)
+		{
+			$row = $query->result();
+			$pass = $this->generatePassword();
+			$this->load->library("EmailMailer");
+			$to = $row[0]->email;
+			$name = $row[0]->first_name.' '.$row[0]->last_name;
+			$subject = "New Password for SimKit";
+			$body = "Your new password is ".$pass."<br /> You can now use this password to login into the application";
+			$email = $this->emailmailer->sendEmail($to, $name, $subject, $body);
+			if($email['status'] == 'OK')
+			{				
+				$this->db->where("user_id", $row[0]->user_id);
+				if($this->db->update("members", array('password'=>sha1($pass)) ))
+				{
+					return array('status'=>'OK', 'msg'=>"Password has been sent to ".$em.".");	
+				}
+				else
+				{
+					return array('status'=>'NOTOK', 'msg'=>$this->db->error()['message']);
+				}
+			}
+			else
+			{
+				return $email;
+			}
+		}
+		else
+		{
+			return array('status'=>'NOTOK', 'msg'=>'Multiple records found.');
+		}
+	}
+
+	public function isValidPassword($pw)
+	{
+		$user = (int) $this->session->logged_user;
+		if($user > 0)
+		{
+			$this->db->select("password");
+			$this->db->from("members");
+			$this->db->where("user_id", $user);
+			$query = $this->db->get();
+			if($query->num_rows() == 1)
+			{
+				$row = $query->result();
+				$pass = $row[0]->password;
+				if($pass === sha1($pw))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public function setNewPassword($pw)
+	{
+		$user = (int) $this->session->logged_user;
+		if($user > 0)
+		{
+			if(trim($pw) != '')
+			{
+				$this->db->where("user_id", $user);
+				if($this->db->update('members', array('password'=>sha1($pw))))
+				{
+					return array('status'=>'OK', 'msg'=>'Password has been changed successfully. It will take effect from your next login.');
+				}
+				else
+				{
+					return array('status'=>'NOTOK', 'msg'=>$this->db->error()['message']);
+				}
+			}
+			else
+			{
+				return array('status'=>'NOTOK', 'msg'=>'New Password cannot be blank/empty.');
+			}			
+		}
+		else
+		{
+			return array('status'=>'NOTOK', 'msg'=>'Your session has expired. Please logout and log back in.');
+		}
+	}
+
+	public function generatePassword($len = 6)
+	{
+		$characters = '123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $len; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
+	}
+
 	public function communityTeamList()
 	{
 		$data = array();

@@ -28,7 +28,7 @@
 						<a href="<?php echo site_url(); ?>/Dashboard"><?php echo img(array('src'=>'assets/images/site_logo_white.png', 'alt'=> 'SimKit')); ?></a>
 					</div>
 				</div>
-				<div class="col-md-9 col-sm-8 hidden-xs">
+				<div class="col-md-10 col-sm-9 hidden-xs">
 					<div class="main_menu">					
 						<ul class="clearfix">						
 							<li><a href="<?php echo site_url(); ?>/Dashboard" class="<?php echo ($page == 'dashboard' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-dashboard">&nbsp;</i>Dashboard</a></li>
@@ -42,9 +42,16 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-md-2 col-sm-2 col-xs-4">
-					<div class="power-off">
-						<a href="<?php echo site_url(); ?>/Logout"><i class="fa fa-power-off">&nbsp;</i></a>
+				<div class="col-md-1 col-sm-1 col-xs-4 text-right">
+					<div class="dropdown" style="margin-top: 10px;">
+					  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+					    <i class="fa fa-cog">&nbsp;</i>
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu dropdown-menu-right">
+					    <li><a href="<?php echo site_url(); ?>/Dashboard/NewPassword"><i class="fa fa-lock">&nbsp;</i>Change Password</a></li>
+					    <li><a href="<?php echo site_url(); ?>/Logout"><i class="fa fa-power-off">&nbsp;</i>Logout</a></li>			    
+					  </ul>
 					</div>
 				</div>
 			</div>			
