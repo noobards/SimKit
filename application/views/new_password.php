@@ -64,6 +64,7 @@ simkit.app.controller("changePassword", function($scope, $http){
 		{
 			if($scope.data.opw)
 			{
+				button.attr('disabled', 'disabled').html('Processing...');
 				$http({
 				  method: 'POST',
 				  data:$scope.data,
