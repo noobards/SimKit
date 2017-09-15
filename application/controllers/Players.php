@@ -80,6 +80,8 @@ class Players extends CI_Controller {
 				}
 				else
 				{
+					date_default_timezone_set("UTC");
+					$time = date("Y-m-d H:i:s");
 					$data = array(
 						'first_name'	=>	$_POST['fn'],
 						'last_name'		=>	$_POST['ln'],
@@ -97,7 +99,9 @@ class Players extends CI_Controller {
 						'batting_rp'	=>	$_POST['batting_rp'],
 						'bowling_rp'	=>	$_POST['bowling_rp'],
 						'fielding_rp'	=>	$_POST['fielding_rp'],
-						'owner'			=>	$logged_in_user
+						'owner'			=>	$logged_in_user,
+						'created_time'	=>  $time,
+						'updated_time'	=>  $time
 					);
 
 					if($this->db->insert('players', $data))
@@ -119,125 +123,6 @@ class Players extends CI_Controller {
 		exit;
 	}
 
-	public function FileUpload()
-	{
-		$this->load->library('Excel');
-		try {
-		    $inputFile = $_FILES['file_input']['tmp_name'];
-    		$objPHPExcel = PHPExcel_IOFactory::load($inputFile);
-    		$cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
-
-    		foreach ($cell_collection as $cell) {
-			    $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
-			    $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
-			    $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
-			    //header will/should be in row 1 only. of course this can be modified to suit your need.
-			    if ($row == 1) {
-			        $header[$row][$column] = $data_value;
-			    } else {			    	
-			        $arr_data[$row][$column] = $data_value;
-			    }
-			}
-			//send the data in an array format
-			$data['header'] = $header;
-			$data['values'] = $arr_data;
-			$this->session->set_userdata("file_upload_data",$data);			
-			redirect("players/ConfirmFileUpload");
-		} catch(Exception $e) {
-		    die($e->getMessage());
-		}
-	}
-
-	public function ConfirmFileUpload()
-	{
-		$this->load->view('templates/logged_in', array('page'=>'confirm_file_upload'));
-	}
-
-	public function ImportPlayers()
-	{		
-		if($this->session->logged_user > 0)
-		{
-			$table = $this->session->userdata('file_upload_data');
-			if(count($table) > 0)
-			{				
-				$this->load->model("Utils");			
-				$insert_count = 0;
-				$failed_count = 0;
-				$total_count = 0;
-				foreach($table['values'] as $row_number => $values_array)
-				{
-					if(isset($values_array['A']) && trim($values_array['A']) != '')						
-					{
-						$total_count++;
-						$first_name = $values_array['A'];
-						$last_name = $values_array['B'];
-						$age = $values_array['C'];
-						$gender = $values_array['D'];
-						$country = (int) $this->Utils->getMenuID("countries", "country_id", array("country_name"=>trim($values_array['E'])));
-						$player_type = (int) $this->Utils->getMenuID("player_types", "player_type_id", array("type_name"=>trim($values_array['F'])));
-						$batting_hand = $values_array['G'];
-						if($player_type == 2 || $player_type == 3 || $player_type == 4)
-						{
-							$bowling_hand = $values_array['H'];
-							$bowler_type = (int) $this->Utils->getMenuID("bowler_types", "bowler_type_id", array("bowler_type_name"=>trim($values_array['I'])));
-						}
-
-						$test = (strtoupper(trim($values_array['J'])) == "YES" ? 1 : 0);
-						$odi = (strtoupper(trim($values_array['K'])) == "YES" ? 1 : 0);
-						$t20 = (strtoupper(trim($values_array['L'])) == "YES" ? 1 : 0);
-
-						$data = array(
-							'first_name'	=>	$first_name,
-							'last_name'		=>	$last_name,
-							'age'			=>	$age,
-							'gender'		=>	$gender,
-							'country'		=>	$country,
-							'player_type'	=>	$player_type,
-							'batting_hand'	=>	$batting_hand,																
-							'test'			=>	$test,
-							'odi'			=>	$odi,
-							't20'			=>	$t20,
-							'owner'			=>	$this->session->logged_user
-						);
-
-						if($player_type == 2 || $player_type == 3 || $player_type == 4)
-						{
-							$data['bowling_hand'] = $bowling_hand;
-							$data['bowler_type'] = $bowler_type;							
-						}
-						else
-						{
-							$data['bowling_hand'] = null;
-							$data['bowler_type'] = null;
-						}
-
-						
-						if($this->db->insert('players', $data))
-						{
-							$insert_count++;
-						}
-						else
-						{
-							echo $this->db->error()['message'];							
-							$failed_count++;
-						}						
-					}
-				}
-				$this->session->set_flashdata('flash', array('total'=>$total_count, 'failed'=>$failed_count, 'inserted'=>$insert_count, 'status'=>'OK'));				
-				
-			}
-			else
-			{
-				$this->session->set_flashdata('flash', array('status'=>'NOTOK', 'msg'=>'Upload session data not found.'));
-			}
-		}
-		else
-		{
-			$this->session->set_flashdata('flash', array('status'=>'NOTOK', 'msg'=>'Session expired. Please logout and log back in.'));
-			redirect("../");
-		}
-		redirect("Players");
-	}
 
 	public function ListPlayers()
 	{
@@ -259,9 +144,12 @@ class Players extends CI_Controller {
 		$players = array();
 		if($query->num_rows() != 0)
 		{
+
 			foreach ($query->result() as $row)
 			{
-			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
+				$date = new DateTime($row->created_time, new DateTimeZone('UTC'));
+				$date->setTimeZone(new DateTimeZone($this->session->timezone));
+			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'created'=>$date->format('m/d/y h:i a'));
 			}
 		}
 		echo json_encode($players);
@@ -285,8 +173,13 @@ class Players extends CI_Controller {
 			$this->load->model("Utils");
 			foreach ($query->result() as $row)
 			{
+				$created = new DateTime($row->created_time, new DateTimeZone("UTC"));
+				$created->setTimeZone(new DateTimeZone($this->session->timezone));
+
+				$updated = new DateTime($row->updated_time, new DateTimeZone("UTC"));
+				$updated->setTimeZone(new DateTimeZone($this->session->timezone));
 				$avg = $this->Utils->playerRating($row->player_id);
-			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'updated'=>date('m/d/y h:i a', strtotime($row->updated_time)), 'created'=>date('m/d/y h:i a', strtotime($row->created_time)));
+			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'updated'=>$updated->format("m/d/y h:i a"), 'created'=>$created->format('m/d/y h:i a'));
 			}
 		}
 		echo json_encode($players);
@@ -369,6 +262,7 @@ class Players extends CI_Controller {
 	{
 
 		$post = json_decode(file_get_contents("php://input"));
+		date_default_timezone_set("UTC");
 		$data = array(
 			'first_name'	=>	$post->fn,
 			'last_name'		=>	$post->ln,

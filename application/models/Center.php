@@ -40,6 +40,7 @@ class Center extends CI_Model {
 		{
 			$team1 = $selected_teams[0];
 			$team2 = $selected_teams[1];
+			date_default_timezone_set("UTC");
 			$insert = array(
 				'match_type'	=>	$match_type,
 				'owner'			=>	$this->session->logged_user,
@@ -47,7 +48,9 @@ class Center extends CI_Model {
 				'team1'			=>	$team1,
 				'team2'			=>	$team2,
 				'match_stage'	=>	1,
-				'match_status'	=>	1				
+				'match_status'	=>	1,
+				'created_on'	=> date("Y-m-d H:i:s"),
+				'updated_on'	=> date("Y-m-d H:i:s")
 			);
 			if($this->db->insert('match_center', $insert))
 			{
