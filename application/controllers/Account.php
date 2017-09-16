@@ -39,5 +39,55 @@ class Account extends CI_Controller {
 		}
 		exit;
 	}
-
+	
+	public function Profile()
+	{
+		$this->load->view("templates/logged_in", array('page'=>'profile'));
+	}
+	
+	public function getProfileData()
+	{
+		$user = (int) $this->session->logged_user;
+		if($user == 0)
+		{
+			echo json_encode(array('status'=>'NOTOK', 'msg'=>'Your session has expired. Please logout and log back in.'));
+			exit;
+		}
+		else
+		{
+			$this->db->from('members');
+			$this->db->where('user_id', $user);
+			$query = $this->db->get();
+			if($query->num_rows() == 0)
+			{
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>'User not found. Please logout and log back in.'));
+				exit;
+			}
+			else if($query->num_rows() > 1)
+			{
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>'Multiple rows found.'));
+				exit;
+			}
+			else if($query->num_rows() == 1)
+			{
+				$row = $query->result()[0];
+				$data = array(
+					'username'	=> $row->username,
+					'email'	=>	$row->email,
+					'dob'	=>	($row->dob != '0000-00-00' ? $row->dob : null),
+					'gender'	=>	$row->gender,
+					'first_name'	=>	$row->first_name,
+					'last_name'	=>	$row->last_name,
+					'timezone'	=>	$row->timezone
+				);
+				echo json_encode(array('status'=>'OK', 'user'=>$data));
+				exit;
+			}
+			else
+			{
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>'Unknown error.'));
+				exit;
+			}
+		}		
+	}
 }

@@ -39,6 +39,33 @@ simkit.app.controller("template", function($scope, $http){
 		}
 	};
 	
+	$scope.loading = function(element_id){
+		if(element_id && jQuery.trim(element_id) != '' && element_id != undefined)
+		{
+			var obj = jQuery('#'+element_id);
+			if(obj.length > 0)
+			{
+				obj.addClass('relative').append('<div id="overlay"></div>');
+			}
+		}
+		else
+		{
+			jQuery('body').append('<div id="overlay"></div>');
+		}
+	};
+	
+	$scope.finish = function(element_id){
+		if(element_id && jQuery.trim(element_id) != '' && element_id != undefined)
+		{
+			var obj = jQuery('#'+element_id);
+			if(obj.length > 0)
+			{
+				obj.removeClass('relative');
+			}
+		}		
+		jQuery('#overlay').remove();
+	};
+	
 	$scope.ajax = function(obj){
 		$http({
 		  method: obj.type ? obj.type : 'POST',		  

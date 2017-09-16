@@ -49,6 +49,7 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu dropdown-menu-right">
+						<li><a href="<?php echo site_url(); ?>/Account/Profile"><i class="fa fa-drivers-license">&nbsp;</i>Profile</a></li>
 					    <li><a href="<?php echo site_url(); ?>/Dashboard/NewPassword"><i class="fa fa-lock">&nbsp;</i>Change Password</a></li>
 					    <li><a href="<?php echo site_url(); ?>/Logout"><i class="fa fa-power-off">&nbsp;</i>Logout</a></li>			    
 					  </ul>
