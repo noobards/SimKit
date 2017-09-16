@@ -90,4 +90,44 @@ class Account extends CI_Controller {
 			}
 		}		
 	}
+	
+	public function saveProfileData()
+	{
+		$post = json_decode(file_get_contents("php://input"));
+		if(trim($post->fn) != '' && trim($post->ln) && trim($post->tz))
+		{
+			$data = array(
+				'first_name'	=>	$post->fn,
+				'last_name'		=>	$post->ln,
+				'timezone'		=>	$post->tz,
+				'dob'			=>	$post->dob ? $post->dob : '0000-00-00',
+				'gender'		=>	$post->gender
+			);
+			
+			$user = (int) $this->session->logged_user;
+			if($user == 0)
+			{
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>'Your session has expired. Please logout and log back in.'));
+				exit;
+			}
+			$this->db->where('user_id', $user);
+			if($this->db->update('members', $data))
+			{
+				$this->session->set_flashdata('flash', array('status'=>'OK', 'msg'=>'Account updated successfully.'));
+				$this->session->timezone = $post->tz;
+				echo json_encode(array('status'=>'OK'));
+				exit;
+			}
+			else
+			{
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>$this->db->error()['message']));
+				exit;
+			}
+		}
+		else
+		{
+			echo json_encode(array('status'=>'NOTOK', 'msg'=>'First Name, Last Name and Timezone values cannot be empty.'));
+			exit;
+		}
+	}
 }

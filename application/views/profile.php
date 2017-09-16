@@ -3,37 +3,37 @@
 			<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> Profile
 		</div>
 	</div>
-
-	<?php
-
-	if($this->session->flashdata('flash'))
-	{
-
-		$flash = $this->session->flashdata('flash');
-		if($flash['status'] == 'OK')
-		{	?>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-info" style="margin-bottom: 0;">
-						<?= $flash['msg'];	?>
-					</div>
-				</div>
-			</div>
-	<?php
-		}
-		else
-		{	?>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-danger" style="margin-bottom: 0;"><i class="fa fa-exclamation-triangle">&nbsp;</i><?php echo $flash['msg']; ?></div>
-				</div>
-			</div>
-	<?php		
-		}		
-	}
-	?>
+	
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3" ng-controller="profile">			
+			<?php
+
+			if($this->session->flashdata('flash'))
+			{
+
+				$flash = $this->session->flashdata('flash');
+				if($flash['status'] == 'OK')
+				{	?>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-info" style="margin-bottom: 0;">
+								<i class="fa fa-check">&nbsp;</i><?= $flash['msg'];	?>
+							</div>
+						</div>
+					</div>
+			<?php
+				}
+				else
+				{	?>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-danger" style="margin-bottom: 0;"><i class="fa fa-exclamation-triangle">&nbsp;</i><?php echo $flash['msg']; ?></div>
+						</div>
+					</div>
+			<?php		
+				}		
+			}
+			?>
 			<div class="box">
 				<div class="box-title">
 					<div class="box-main-text">My Profile</div>
@@ -186,7 +186,7 @@
 							</div>
 						</div>
 						<div class="form-group text-center">												
-							<button class="btn btn-primary" ng-disabled="save_preferences_form.$invalid" ng-click="savePreferences()">Save Preferences</button>							
+							<button class="btn btn-primary" ng-disabled="save_preferences_form.$invalid" ng-click="savePreferences($event)">Save Preferences</button>							
 						</div>
 					</form>
 				</div>
