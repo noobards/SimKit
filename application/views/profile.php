@@ -68,7 +68,7 @@
 								<input type="text" id="ln" ng-model="data.ln" ng-required="true" class="form-control" />
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group hide">
 							<label for="dob" class="control-label col-md-6">Date of Birth: </label>
 							<div class="col-md-6">
 								<input type="text" id="dob" ng-model="data.dob" ng-required="false" class="form-control" />

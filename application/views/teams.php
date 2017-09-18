@@ -52,12 +52,14 @@
 				</div>
 
 				<div class="box-body">	
-
+					<div class="bot10">
+						<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>
+					</div>
 					<form class="form-horizontal" name="add_new_team_form" onsubmit="return false;" autocomplete="off" novalidate>						
 
 						<div class="form-group">
 
-							<label for="tn" class="control-label col-md-6">Team Name: </label>
+							<label for="tn" class="control-label col-md-6">Team Name: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -69,7 +71,7 @@
 
 						<div class="form-group">
 
-							<label for="tt" class="control-label col-md-6">Team Type: </label>
+							<label for="tt" class="control-label col-md-6">Team Type: <span class="red">*</span></label>
 
 							<div class="col-md-6">
 
@@ -84,6 +86,14 @@
 							</div>
 
 						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-6">Logo File: </label>
+							<div class="col-md-6">
+								<input type="file" file-model="myFile" class="hide" /><div ng-click="fireBrowse($event)" class="file_button">Choose file</div>
+								<div><small>For best results, make sure the image is of 200x200 (px) dimension.</small><br /><small>Only png/jpg/jpeg/gif file allowed.</small><br /><small class="red">File size must be less than or equal to 200KB.</small></div>
+							</div>
+						</div>	
 
 						<div class="form-group text-center">												
 

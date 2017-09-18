@@ -1,123 +1,1 @@
-simkit.app.controller("addNewTeam", function($scope, $http){
-	$http({
-	  method: 'POST',		  
-	  url: simkit.baseUrl+'Teams/getTeamTypes'
-	}).then(function successCallback(response) {
-		if(response.statusText == "OK")
-		{				
-			$scope.team_types = response.data;
-		}
-		else
-		{
-			alert("Ajax Error: "+response.statusText);
-		}			
-	}, function errorCallback(response) {			
-	    alert("Ajax Error: "+response.statusText);
-	});
-
-	$scope.addTeam = function(event){
-		var button = $(event.target);
-		button.html("Processing...").attr("disabled", "disabled");		
-		$http({
-		  method: 'POST',
-		  data: $scope.data,
-		  url: simkit.baseUrl+'Teams/save'
-		}).then(function successCallback(response) {
-			if(response.statusText == "OK")
-			{				
-				window.location.href = "Teams";
-			}
-			else
-			{
-				alert("Ajax Error: "+response.statusText);
-			}
-			button.html("Save").removeAttr("disabled");			
-		}, function errorCallback(response) {
-			button.html("Save").removeAttr("disabled");			
-		    alert("Ajax Error: "+response.statusText);
-		});
-	};
-});
-
-simkit.app.controller("myTeams", function($scope, $http){
-
-	$scope.players = {};	
-
-	$http({
-	  method: 'POST',		  
-	  url: simkit.baseUrl+'Teams/getTeamList'
-	}).then(function successCallback(response) {
-		if(response.statusText == "OK")
-		{				
-			$scope.my_teams = response.data;			
-		}
-		else
-		{
-			alert("Ajax Error: "+response.statusText);
-		}			
-	}, function errorCallback(response) {			
-	    alert("Ajax Error: "+response.statusText);
-	});
-
-	$scope.addPlayersToTeamModal = function(e, team_id, team_name){
-		e.preventDefault();
-		$scope.selected_team = team_name;
-		$scope.selected_team_id = team_id;
-
-		$http({
-		  method: 'POST',
-		  data: {tid:team_id},
-		  url: simkit.baseUrl+'Teams/getAvailablePlayers'
-		}).then(function successCallback(response) {
-			if(response.statusText == "OK")
-			{
-				$scope.my_players = response.data;				
-				$('#listPlayers').modal('show');
-			}
-			else
-			{
-				alert("Ajax Error: "+response.statusText);
-			}
-			
-		}, function errorCallback(response) {			
-		    alert("Ajax Error: "+response.statusText);
-		});
-	};		$scope.removeTeam = function(e, team_id, team_name){		e.preventDefault();		if(window.confirm('Are you sure you want to remove '+team_name+'?'))		{			$http({			  method: 'POST',			  data: {				tid: team_id			  },			  url: simkit.baseUrl+'Teams/removeTeam'			}).then(function successCallback(response) {				if(response.statusText == "OK")				{					if(response.data.status == 'OK')					{						window.location.href = "Teams";					}					else					{						alert(response.data.msg);					}								}				else				{					alert("Ajax Error: "+response.statusText);				}			}, function errorCallback(response) {							alert("Ajax Error: "+response.statusText);			});		}	};
-
-	$scope.addToTeam = function(e){
-		var button = $(e.target);
-
-		$http({
-		  method: 'POST',
-		  data: {
-		  	players: $scope.players,
-		  	tid: $scope.selected_team_id
-		  },
-		  url: simkit.baseUrl+'Teams/addToTeam'
-		}).then(function successCallback(response) {
-			if(response.statusText == "OK")
-			{
-				if(response.data.status == 'OK')
-				{
-					window.location.href = "Teams";
-				}
-				else
-				{
-					alert(response.data.msg);
-				}				
-			}
-			else
-			{
-				alert("Ajax Error: "+response.statusText);
-			}
-			
-		}, function errorCallback(response) {			
-		    alert("Ajax Error: "+response.statusText);
-		});
-	};
-	$scope.toCheckAll = function(e){				var cb = jQuery(e.target);				jQuery('.toCheckAll').trigger('click');	};
-	$scope.allCheck = function(e){
-		var cb = $(e.target);
-		//console.log($scope.selected_players);
-	};
-});
+simkit.app.controller("addNewTeam", function($scope, $http, $window){	$http({	  method: 'POST',		  	  url: simkit.baseUrl+'Teams/getTeamTypes'	}).then(function successCallback(response) {		if(response.statusText == "OK")		{							$scope.team_types = response.data;		}		else		{			alert("Ajax Error: "+response.statusText);		}				}, function errorCallback(response) {				    alert("Ajax Error: "+response.statusText);	});	$scope.fireBrowse = function(e){		var button = jQuery(e.target);		var file = button.siblings('input:file');		file.trigger('click');	};	$scope.fileSelected = function(file, fake_button){		if(file.size > 204800)		{			alert("File size must be less than 200KB. The current filesize is "+(Math.floor(file.size/1024))+'KB');			fake_button.html('Choose file');		}		else		{			if($scope.validImage(file.type))			{				fake_button.html(file.name);			}			else			{				alert("Uploaded file is not in supported format. The current format is "+file.type);			}					}			};	$scope.validImage = function(name){		if(! name){			return false;		}		var split = name.split("/");		if(split.length < 2){			return false;		} else if(split.length > 2){			return false;		} else {			var ext = split[1];			if(ext == 'jpg' || ext == 'jpeg' || ext == 'png' || ext == 'gif'){				return true;			} else {				return false;			}		}	};	$scope.addTeam = function(event){		if( window.FormData !== undefined )		{			var fd = new FormData();			fd.append('file', $scope.myFile);			fd.append('form', JSON.stringify($scope.data));			var button = $(event.target);			button.html("Processing...").attr("disabled", "disabled");			$http({			  method: 'POST',			  data: fd,			  url: simkit.baseUrl+'Teams/save',			  transformRequest: angular.identity,              headers: {'Content-Type': undefined, 'Process-Data': false}			}).then(function successCallback(response) {				if(response.statusText == "OK")				{									if(response.data.status == 'OK')					{						button.html("Redirecting...");						$window.location.href = "Teams";						}					else					{						alert("Ajax Error: "+response.data.msg);					}														}				else				{					alert("Ajax Error: "+response.statusText);				}				button.html("Save").removeAttr("disabled");						}, function errorCallback(response) {				button.html("Save").removeAttr("disabled");						    alert("Ajax Error: "+response.statusText);			});		}		else		{			alert("Please use a browser that supports HTML5 (Firefox/Chrom/Safari/IE10+");		}	};}).directive('fileModel', function ($parse) {    return {       restrict: 'A',       link: function(scope, element, attrs) {          var model = $parse(attrs.fileModel);          var modelSetter = model.assign;                    element.bind('change', function(){             scope.$apply(function(){                modelSetter(scope, element[0].files[0]);                scope.fileSelected(element[0].files[0], jQuery(element[0]).siblings('.file_button'));             });          });       }    }; });simkit.app.controller("myTeams", function($scope, $http){	$scope.players = {};		$http({	  method: 'POST',		  	  url: simkit.baseUrl+'Teams/getTeamList'	}).then(function successCallback(response) {		if(response.statusText == "OK")		{							$scope.my_teams = response.data;					}		else		{			alert("Ajax Error: "+response.statusText);		}				}, function errorCallback(response) {				    alert("Ajax Error: "+response.statusText);	});	$scope.addPlayersToTeamModal = function(e, team_id, team_name){		e.preventDefault();		$scope.selected_team = team_name;		$scope.selected_team_id = team_id;		$http({		  method: 'POST',		  data: {tid:team_id},		  url: simkit.baseUrl+'Teams/getAvailablePlayers'		}).then(function successCallback(response) {			if(response.statusText == "OK")			{				$scope.my_players = response.data;								$('#listPlayers').modal('show');			}			else			{				alert("Ajax Error: "+response.statusText);			}					}, function errorCallback(response) {					    alert("Ajax Error: "+response.statusText);		});	};		$scope.removeTeam = function(e, team_id, team_name){		e.preventDefault();		if(window.confirm('Are you sure you want to remove '+team_name+'?'))		{			$http({			  method: 'POST',			  data: {				tid: team_id			  },			  url: simkit.baseUrl+'Teams/removeTeam'			}).then(function successCallback(response) {				if(response.statusText == "OK")				{					if(response.data.status == 'OK')					{						window.location.href = "Teams";					}					else					{						alert(response.data.msg);					}								}				else				{					alert("Ajax Error: "+response.statusText);				}			}, function errorCallback(response) {							alert("Ajax Error: "+response.statusText);			});		}	};	$scope.addToTeam = function(e){		var button = $(e.target);		$http({		  method: 'POST',		  data: {		  	players: $scope.players,		  	tid: $scope.selected_team_id		  },		  url: simkit.baseUrl+'Teams/addToTeam'		}).then(function successCallback(response) {			if(response.statusText == "OK")			{				if(response.data.status == 'OK')				{					window.location.href = "Teams";				}				else				{					alert(response.data.msg);				}							}			else			{				alert("Ajax Error: "+response.statusText);			}					}, function errorCallback(response) {					    alert("Ajax Error: "+response.statusText);		});	};	$scope.toCheckAll = function(e){				var cb = jQuery(e.target);				jQuery('.toCheckAll').trigger('click');	};	$scope.allCheck = function(e){		var cb = $(e.target);		//console.log($scope.selected_players);	};});
