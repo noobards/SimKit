@@ -94,7 +94,7 @@
 										if(trim($team->logo) != '')
 										{
 											$src = base_url().'assets/images/uploads/user_'.$this->session->logged_user.'/teams/'.$team->logo;
-											$path = FCPATH.'\assets\images\uploads\user_'.$this->session->logged_user.'\teams\\'.$team->logo;
+											$path = FCPATH.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'user_'.$this->session->logged_user.DIRECTORY_SEPARATOR.'teams'.DIRECTORY_SEPARATOR.$team->logo;
 											if(! file_exists($path)) // value present in DB but image not present in file system
 											{
 												$src = base_url().'assets/images/no_team_logo.png';
