@@ -38,7 +38,7 @@
 							<li><a href="<?php echo site_url(); ?>/MatchCenter" class="<?php echo ($page == 'match_center' || $page == 'squad_selection' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-gavel">&nbsp;</i>Match Center</a></li>							
 							<li><a href="<?php echo site_url(); ?>/Admin/SiteMembers" class="<?php echo ($page == 'admin/site_members' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-user">&nbsp;</i>Members</a></li>
 							<?php }	?>
-							<li><a href="<?php echo site_url(); ?>/Community" class="<?php echo ($page == 'coummunity' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-handshake-o">&nbsp;</i>Community</a></li>
+							<li><a href="<?php echo site_url(); ?>/Community" class="<?php echo ($page == 'community' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-handshake-o">&nbsp;</i>Community</a></li>
 						</ul>
 					</div>
 				</div>

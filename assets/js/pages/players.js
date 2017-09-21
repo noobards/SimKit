@@ -263,7 +263,7 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 		table += "</thead>";
 		table += "<tbody>";
 		table += "<tr><td>";
-		table += '<div class="c100 p'+Math.ceil( (parseInt($scope.data.batting_rp) + parseInt($scope.data.bowling_rp) + parseInt($scope.data.fielding_rp))*100/300 )+' center"><span>'+( (parseInt($scope.data.batting_rp) + parseInt($scope.data.bowling_rp) + parseInt($scope.data.fielding_rp))*10/300 ).toFixed(2)+'</span><div class="slice"><div class="bar"></div><div class="fill"></div></div></div>';
+		table += '<div class="c100 p'+Math.ceil( $scope.ratingCombo(parseInt($scope.data.batting_rp), parseInt($scope.data.bowling_rp), parseInt($scope.data.fielding_rp), $scope.data.player_type)*100/300 )+' center"><span>'+( (parseInt($scope.data.batting_rp) + parseInt($scope.data.bowling_rp) + parseInt($scope.data.fielding_rp))*10/300 ).toFixed(2)+'</span><div class="slice"><div class="bar"></div><div class="fill"></div></div></div>';
 		table += "</td></tr>";
 		table += "</tbody>";
 		table += "</table>";
@@ -275,6 +275,34 @@ simkit.app.controller("addNewPlayer", function($scope, $http){
 
 		
 
+	};
+
+	$scope.ratingCombo = function(bat, bowl, field, type)
+	{
+		if(type == 1) // pure batsman
+		{			
+			return ( (100*bat)/100  + (100*bowl)/100 + (100*field)/100 );
+		}
+		else if(type == 2) // pure bowler
+		{			
+			return ( (100*bat)/100  + (100*bowl)/100 + (100*field)/100 );
+		}
+		else if(type == 3) // batting allrounder
+		{			
+			return ( (100*bat)/100  + (100*bowl)/100 + (100*field)/100 );	
+		}
+		else if(type == 4) // bowling allrounder
+		{			
+			return ( (100*bat)/100  + (100*bowl)/100 + (100*field)/100 );
+		}
+		else if(type == 5) // wicket keeper
+		{			
+			return ( (100*bat)/100  + (100*bowl)/100 + (100*field)/100 );
+		}
+		else
+		{
+			return 0;	
+		}		
 	};
 
 

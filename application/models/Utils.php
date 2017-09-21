@@ -24,26 +24,81 @@ class Utils extends CI_Model {
 		if($player_id && (int) $player_id > 0)
 		{
 			$permission = $this->hasPlayerPermission($player_id);
-			if($permission == "YES")
+			// no need to check permission since we are only getting rating, hence dummy condition
+			if($permission == "YES" || $permission == "NO")
 			{
-				$this->db->select("batting_rp, bowling_rp, fielding_rp");
+				$this->db->select("batting_rp, bowling_rp, fielding_rp, player_type");
 				$this->db->from('players');
 				$this->db->where('player_id', $player_id);
 				$query = $this->db->get();
 				if($query->num_rows() == 1)
 				{
-					foreach($query->result() as $row)
-					{
-						$total_rp = (int) $row->batting_rp + (int) $row->bowling_rp + (int) $row->fielding_rp;
-						if($total_rp > 0)
-						{							
-							return number_format(($total_rp*10/300), 2);
-						}
-					}
+					$row = $query->result()[0];
+					$total_rp = $this->ratingCombo((int) $row->batting_rp, (int) $row->bowling_rp, (int) $row->fielding_rp, $row->player_type);
+					if($total_rp > 0)
+					{							
+						return number_format(($total_rp*10/300), 2);
+					}					
 				}
 			}
 		}
 		return "0.00";
+	}
+
+	public function ratingCombo($bat, $bowl, $field, $type)
+	{
+		if($type == 1) // pure batsman
+		{			
+			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+		}
+		else if($type == 2) // pure bowler
+		{			
+			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+		}
+		else if($type == 3) // batting allrounder
+		{			
+			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );	
+		}
+		else if($type == 4) // bowling allrounder
+		{			
+			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+		}
+		else if($type == 5) // wicket keeper
+		{			
+			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+		}
+		else
+		{
+			return 0;	
+		}
+	}
+
+	public function getPlayerOwner($mid)
+	{
+		if((int) $mid == 0)
+		{
+			return "N/A";
+		}
+
+		$this->db->select('username');
+		$this->db->from('members');
+		$this->db->where('user_id', $mid);
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+		{
+			return $query->result()[0]->username;
+		}
+		else
+		{
+			return "Undefined";
+		}
+	}
+
+	public function localTimeZone($datetime, $format = null)
+	{
+		$dt = new DateTime($datetime, new DateTimeZone("UTC"));
+		$dt->setTimeZone(new DateTimeZone($this->session->timezone ? $this->session->timezone : "Asia/Kolkata"));
+		return $dt->format(($format ? $format : "M d @ h:i a"));
 	}
 
 	public function passwordReset($em)
