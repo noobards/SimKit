@@ -1,4 +1,4 @@
-simkit.app.controller('communityPlayers', function($scope, $http){
+simkit.app.controller('communityPlayers', function($scope, $http, $window){
 	$scope.loading("list");
 	$scope.page_load_message = "Click on a name on the left panel to see details of the player.";
 	$scope.no_player_data = true;
@@ -106,7 +106,14 @@ simkit.app.controller('communityPlayers', function($scope, $http){
 			data:$scope.data.cart
 		}).then(function success(resp){
 			if(resp.statusText == 'OK'){
-				console.log(resp.data);
+				if(resp.data.status == 'OK')
+				{
+					$window.location.href = 'Community';
+				}
+				else
+				{
+					alert(resp.data.msg);
+				}
 			} else {
 				alert(resp.statusText);
 			}

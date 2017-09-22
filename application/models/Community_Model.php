@@ -56,4 +56,22 @@ class Community_Model extends CI_Model {
 			return array('status'=>'NOTOK', 'msg'=>'Selected player not found in database.');
 		}
 	}
+
+	public function isAlreadyDownloaded($pid)
+	{
+		$owner = (int) $this->session->logged_user;
+		if($owner > 0)
+		{
+			$this->db->select('player_id');
+			$this->db->from('players');
+			$this->db->where(array('owner'=>$owner, 'source_player'=>$pid));
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

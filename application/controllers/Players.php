@@ -149,7 +149,7 @@ class Players extends CI_Controller {
 			{
 				$date = new DateTime($row->created_time, new DateTimeZone('UTC'));
 				$date->setTimeZone(new DateTimeZone($this->session->timezone));
-			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'created'=>$date->format('m/d/y h:i a'));
+			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'created'=>$date->format('M d @ h:i a'));
 			}
 		}
 		echo json_encode($players);
@@ -179,7 +179,7 @@ class Players extends CI_Controller {
 				$updated = new DateTime($row->updated_time, new DateTimeZone("UTC"));
 				$updated->setTimeZone(new DateTimeZone($this->session->timezone));
 				$avg = $this->Utils->playerRating($row->player_id);
-			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'updated'=>$updated->format("m/d/y h:i a"), 'created'=>$created->format('m/d/y h:i a'));
+			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'updated'=>$updated->format("M d @ h:i a"), 'created'=>$created->format('M d @ h:i a'));
 			}
 		}
 		echo json_encode($players);

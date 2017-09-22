@@ -94,6 +94,27 @@ class Utils extends CI_Model {
 		}
 	}
 
+	public function getOwnerId($pid)
+	{
+		if((int) $pid == 0)
+		{
+			return 0;
+		}
+
+		$this->db->select('owner');
+		$this->db->from('players');
+		$this->db->where('player_id', $pid);
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+		{
+			return $query->result()[0]->owner;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 	public function localTimeZone($datetime, $format = null)
 	{
 		$dt = new DateTime($datetime, new DateTimeZone("UTC"));

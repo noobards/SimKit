@@ -9,6 +9,21 @@
 	</div>
 </div>
 
+<?php
+	if($this->session->flashdata('flash'))
+	{
+		?>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-info">
+					<?= $this->session->flashdata('flash');	?>
+				</div>
+			</div>
+		</div>
+<?php
+	}
+?>
+
 <div class="row">
 	<div class="col-sm-6">
 		<div class="dashboard-stats-box">
@@ -99,7 +114,7 @@
 								</div>
 								<div class="tbody">
 									<div class="tr" ng-repeat="player in data.players">
-										<div class="td text-center"><a class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="Downloaded Player">&nbsp;</i></div>
+										<div class="td text-center"><a class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="Downloaded Player">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check green" title="Already Downloaded">&nbsp;</i></div>
 										<div class="td text-center">{{player.author}}</div>
 										<div class="td text-center">{{player.time}}</div>
 										<div class="td text-center"><button type="button" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
@@ -122,7 +137,7 @@
 			</div>
 		</div>
 		<div class="col-md-6 top10" id="player_placeholder" style="background-color: #fff;">
-			<span ng-show="no_player_data">{{page_load_message}}</span>
+			<div class="alert alert-warning" ng-show="no_player_data">{{page_load_message}}</div>
 			<div ng-hide="no_player_data">
 				<div class="row">
 					<div class="col-md-4">									
