@@ -114,8 +114,8 @@
 								</div>
 								<div class="tbody">
 									<div class="tr" ng-repeat="player in data.players">
-										<div class="td text-center"><a ng-if="player.already == 'NO'" class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a><span ng-if="player.already == 'YES'">{{player.name}}</span>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red hide" title="Downloaded Player">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check green" title="You downloaded this player">&nbsp;</i></div>
-										<div class="td text-center">{{player.author}}</div>
+										<div class="td text-center"><a ng-if="player.already == 'NO'" class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a><span ng-if="player.already == 'YES'">{{player.name}}</span>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="This player was downloaded">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check green" title="You downloaded this player">&nbsp;</i></div>
+										<div class="td text-center">{{player.author}} <span style="font-size: 10px;" ng-if="player.source_owner">({{player.source_owner}})</span></div>
 										<div class="td text-center">{{player.time}}</div>
 										<div class="td text-center"><button type="button" ng-disabled="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
 									</div>

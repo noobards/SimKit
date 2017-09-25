@@ -26,7 +26,7 @@ class Community extends CI_Controller {
 	public function fetchPlayers()
 	{
 		$user = (int) $this->session->logged_user;
-		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded');
+		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner');
 		$this->db->from('players p');
 		$this->db->join('members m', 'm.user_id = p.owner', 'left');
 		$this->db->where(array('p.owner !=' => $user));
@@ -36,6 +36,7 @@ class Community extends CI_Controller {
 		if($query->num_rows() > 0)
 		{
 			$this->load->model('Community_Model');
+			$this->load->model('Utils');
 			foreach($query->result() as $row)
 			{
 				// check if the current player in loop has already been downloaded by the logged in user
@@ -43,13 +44,24 @@ class Community extends CI_Controller {
 
 				$time = new DateTime($row->updated_time, new DateTimeZone('UTC'));
 				$time->setTimeZone(new DateTimeZone($this->session->timezone));
+
+				// get the original author name
+				if($row->is_downloaded == '1')
+				{
+					$source_owner = $this->Utils->getPlayerOwner($row->source_owner);
+				}
+				else
+				{
+					$source_owner = null;
+				}
 				$players[] = array(
-								'pid'		=>	$row->player_id,
-								'name'		=>	$row->first_name.' '.$row->last_name,
-								'author'	=>	$row->username,
-								'time'		=>	$time->format('M j @ h:i a'),
-								'download'	=>	$row->is_downloaded,
-								'already'	=>	$already ? 'YES' : 'NO'
+								'pid'			=>	$row->player_id,
+								'name'			=>	$row->first_name.' '.$row->last_name,
+								'author'		=>	$row->username,
+								'time'			=>	$time->format('M j @ h:i a'),
+								'download'		=>	$row->is_downloaded,
+								'already'		=>	$already ? 'YES' : 'NO',
+								'source_owner'	=>	$source_owner
 							);
 			}
 		}
