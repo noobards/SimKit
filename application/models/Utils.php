@@ -144,7 +144,12 @@ class Utils extends CI_Model {
 			$body = "Your username is ".$un."<br /> Your new password is ".$pass."<br /> You can now use this password to login into the application";
 			$email = $this->emailmailer->sendEmail($to, $name, $subject, $body);
 			if($email['status'] == 'OK')
-			{				
+			{
+				date_default_timezone_set("UTC");
+				if($this->db->insert('emails', array('who'=>$un, 'who_id'=>$row[0]->user_id, 'sent_when'=>date("Y-m-d H:i:s"))))
+				{
+					// do nothing
+				}
 				$this->db->where("user_id", $row[0]->user_id);
 				if($this->db->update("members", array('password'=>sha1($pass)) ))
 				{
