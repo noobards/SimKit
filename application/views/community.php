@@ -94,7 +94,7 @@
   </div>
 </div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<div class="box" style="margin-top: 10px;">
 				<div class="box-title">
 					<div class="box-main-text">Players</div>
@@ -102,7 +102,7 @@
 				</div>
 				<div class="box-body box-body-max" id="list">				
 					<div class="row">
-						<div class="col-md-12 vscroll" style="height: 280px;">
+						<div class="col-md-12 vscroll" style="height: 400px;">
 							<div class="table-mockup">
 								<div class="thead">
 									<div class="tr">
@@ -128,7 +128,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row top10">
+			<div class="row top10 bot10">
 				<div class="col-md-12">
 					<div class="text-center">
 						<button data-toggle="modal" data-target="#confirm" type="button" ng-click="confirmDownloadPlayers($event)" class="btn btn-default"><strong><i class="fa fa-user">&nbsp;</i> {{data.cart.length}} players in queue <span ng-show="data.cart.length > 0"><br /><i class="fa fa-download">&nbsp;</i>Click to Download</span></strong></button>
@@ -136,11 +136,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6 top10" id="player_placeholder" style="background-color: #fff;">
+		<div class="col-md-5 top10" id="player_placeholder" style="background-color: #fff;">
 			<div class="alert alert-warning" ng-show="no_player_data">{{page_load_message}}</div>
 			<div ng-hide="no_player_data">
 				<div class="row">
-					<div class="col-md-4">									
+					<div class="col-md-6">									
 						<div class="bar_heading">Personal Information</div>
 						<table class="table table-striped table-condensed">											
 							<tbody>
@@ -171,7 +171,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-6">
 						<div class="bar_heading">Attributes</div>
 						<table class="table table-striped table-condensed">											
 							<tbody>
@@ -206,7 +206,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-12">
 						<div class="bar_heading">Author Information</div>
 						<table class="table table-striped table-condensed">											
 							<tbody>
