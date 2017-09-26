@@ -40,7 +40,7 @@
 
 					<div class="box-title">
 
-						<div class="box-main-text">{{player_name}}</div>
+						<div class="box-main-text">{{player_name}} <label class="label label-danger" ng-show="data.is_private == 1">Private</label></div>
 
 						<div class="box-helping-text">Update the player using the form below.</div>
 
@@ -50,7 +50,7 @@
 
 						<form class="form-horizontal" name="edit_player_form" onsubmit="return false;" autocomplete="off" novalidate>
 							<div class="bot10">
-								<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>
+								<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>								
 							</div>
 
 							<h3 class="form-subtitle">Demographics</h3>											

@@ -382,7 +382,7 @@
 						</div>
 						<div class="tbody">
 							<div class="tr" ng-if="players.length > 0" ng-repeat="player in players">
-								<div class="td text-center">{{player.name}}</div>
+								<div class="td text-center">{{player.name}} <label class="label label-danger label-private-small" ng-show="player.is_private == 1">Private</label></div>
 								<div class="td text-center">{{player.country}}</div>
 								<div class="td text-center"><img class="player_type_icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></div>
 								<div class="td text-center">{{player.created}}</div>
