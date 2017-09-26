@@ -290,7 +290,16 @@
 
 							</div>
 
-						</div>		
+						</div>	
+
+						<div class="form-group">
+
+							<label class="control-label col-md-6">&nbsp;</label>
+							<div class="col-md-6">
+								<label class="checkbox-inline" style="color:#ff0000;"><input type="checkbox" ng-model="data.is_private" value="1">Make this player private (won't show up in Community)</label>
+							</div>
+
+						</div>	
 
 						<h3 class="form-subtitle">Rating Points</h3>						
 						<div class="text-center">

@@ -26,10 +26,12 @@ class Community extends CI_Controller {
 	public function fetchPlayers()
 	{
 		$user = (int) $this->session->logged_user;
-		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner, p.source_player');
+		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner, p.source_player, p.player_type, pt.type_name, pt.type_icon, c.country_name');
 		$this->db->from('players p');
 		$this->db->join('members m', 'm.user_id = p.owner', 'left');
-		$this->db->where(array('p.owner !=' => $user));
+		$this->db->join("player_types pt", "pt.player_type_id = p.player_type", 'left');
+		$this->db->join("countries c", "c.country_id = p.country", "left");
+		$this->db->where(array('p.owner !=' => $user, 'is_private'=>0));
 		$this->db->order_by('p.player_id', 'DESC');
 		$query = $this->db->get();
 		$players = array();
@@ -72,7 +74,10 @@ class Community extends CI_Controller {
 								'download'			=>	$row->is_downloaded,
 								'already'			=>	$already ? 'YES' : 'NO',
 								'source_owner'		=>	$source_owner,
-								'download_count'	=>	$download_count
+								'download_count'	=>	$download_count,
+								'player_type'		=>	$row->type_name,
+								'icon'				=>	$row->type_icon,
+								'country'			=>	$row->country_name
 							);
 			}
 

@@ -99,6 +99,7 @@ class Players extends CI_Controller {
 						'batting_rp'	=>	$_POST['batting_rp'],
 						'bowling_rp'	=>	$_POST['bowling_rp'],
 						'fielding_rp'	=>	$_POST['fielding_rp'],
+						'is_private'	=>	(isset($_POST['is_private']) && $_POST['is_private'] == '1') ? 1 : 0,
 						'owner'			=>	$logged_in_user,
 						'created_time'	=>  $time,
 						'updated_time'	=>  $time
@@ -251,7 +252,7 @@ class Players extends CI_Controller {
 		{
 			foreach ($query->result() as $row)
 			{
-			    $player[] = array('id'=>$row->player_id, 'first_name'=>$row->first_name, 'last_name'=>$row->last_name, 'nick_name'=>$row->nick_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country, 'player_type'=>$row->player_type, 'bowler_type'=>$row->bowler_type, 'batting_hand'=>$row->batting_hand, 'bowling_hand'=>$row->bowling_hand, 'test'=>$row->test, 'odi'=>$row->odi, 't20'=>$row->t20, 'batting_rp'=>$row->batting_rp, 'bowling_rp'=>$row->bowling_rp, 'fielding_rp'=>$row->fielding_rp);
+			    $player[] = array('id'=>$row->player_id, 'first_name'=>$row->first_name, 'last_name'=>$row->last_name, 'nick_name'=>$row->nick_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country, 'player_type'=>$row->player_type, 'bowler_type'=>$row->bowler_type, 'batting_hand'=>$row->batting_hand, 'bowling_hand'=>$row->bowling_hand, 'test'=>$row->test, 'odi'=>$row->odi, 't20'=>$row->t20, 'is_private'=>$row->is_private, 'batting_rp'=>$row->batting_rp, 'bowling_rp'=>$row->bowling_rp, 'fielding_rp'=>$row->fielding_rp);
 			}
 		}
 		echo json_encode($player);
@@ -278,6 +279,7 @@ class Players extends CI_Controller {
 			'batting_rp'	=>	$post->batting_rp,
 			'bowling_rp'	=>	$post->bowling_rp,
 			'fielding_rp'	=>	$post->fielding_rp,
+			'is_private'	=>	(isset($post->is_private) && $post->is_private == '1') ? 1 : 0,
 			'updated_time'	=>	date("Y-m-d H:i:s")
 		);
 		if(in_array($post->player_type, array(2,3,4)))

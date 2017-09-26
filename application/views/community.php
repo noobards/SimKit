@@ -127,22 +127,30 @@
 				</div>
 				<div class="box-body box-body-max" id="list">				
 					<div class="row">
-						<div class="col-md-12 vscroll" style="height: 400px;">							
+						<div class="col-md-12 vscroll" style="height: 400px;">	
+							<div class="form-horizontal">						
+								<div class="form-group">
+									<label for="fil">Filter Keywords</label>
+									<input type="text" id="fil" class="form-control" placeholder="Filter by Name, Role, Author or Country" ng-model="searchKW" />
+								</div>
+							</div>
 							<div class="table-mockup">
 								<div class="thead">
 									<div class="tr">
 										<div class="th">Name</div>
+										<div class="th">Role</div>
 										<div class="th">Author</div>
 										<div class="th"># of Downloads</div>
 										<div class="th">Actions</div>
 									</div>
 								</div>
 								<div class="tbody">
-									<div class="tr" ng-repeat="player in data.players">
+									<div class="tr" ng-repeat="player in data.players | filter : searchKW as filtered">
 										<div class="td"><a class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="This player was downloaded">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check red" title="You downloaded this player">&nbsp;</i></div>
+										<div class="td text-center"><img style="width: 20px; height: 20px; margin-top: 6px;" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
 										<div class="td text-center">{{player.author}} <span style="font-size: 10px;" ng-if="player.source_owner">({{player.source_owner}})</span></div>
 										<div class="td text-center"><a href="#" ng-show="player.download_count > 0" class="normal-anchor" ng-click="showDownloadList($event, player.pid)">{{player.download_count}}</a><span ng-show="player.download_count == 0">{{player.download_count}}</span></div>
-										<div class="td text-center"><button type="button" ng-disabled="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
+										<div class="td text-center"><button style="padding-top: 3px; padding-bottom: 3px;" type="button" ng-disabled="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
 									</div>
 									<div class="tr" ng-if="data.players.length == 0">
 										<div class="td">No players found.</div>

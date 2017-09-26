@@ -141,6 +141,8 @@ simkit.app.controller("editPlayer", function($scope, $http){
 
 				$scope.data.speciality.t20 = (obj.t20 == "1" ? true : false);
 
+				$scope.data.is_private = (obj.is_private == "1" ? true : false);
+
 				$scope.data.batting_rp = obj.batting_rp;
 
 				$scope.data.bowling_rp = obj.bowling_rp;
