@@ -232,52 +232,34 @@ class Utils extends CI_Model {
 	    return $randomString;
 	}
 
-	public function communityTeamList()
+	public function communityTeamCount()
 	{
 		$data = array();
 		$logged_in_user = (int) $this->session->logged_user;
 		if($logged_in_user > 0)
 		{
-			$this->db->select("t.team_id, t.team_name, tt.type_name");
-			$this->db->from("teams t");
-			$this->db->join("team_types tt", "tt.team_type_id = t.team_type", "left");
-			$this->db->where(array('t.owner != '=>$logged_in_user));
-			$this->db->order_by("t.updated_time", "DESC");
+			$this->db->select("team_id");
+			$this->db->from("teams");
+			$this->db->where(array('owner != '=>$logged_in_user));			
 			$query = $this->db->get();
-			if($query->num_rows() > 0)
-			{
-				foreach($query->result() as $row)
-				{
-					$data[] = $row;
-				}
-			}
+			return $query->num_rows();			
 		}
-		return $data;
+		return 0;
 	}
 
-	public function communityPlayerList()
+	public function communityPlayerCount()
 	{
 		$data = array();
 		$logged_in_user = (int) $this->session->logged_user;
 		if($logged_in_user > 0)
 		{
-			$this->db->select('*');
-			$this->db->from("players p");
-			$this->db->join("countries c", "c.country_id=p.country", "left");
-	        $this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
-	        $this->db->join("bowler_types bt", "bt.bowler_type_id=p.bowler_type", "left");
-			$this->db->order_by("p.updated_time", "DESC");
-			$this->db->where(array('p.owner != '=>$logged_in_user));
-			$query = $this->db->get();			
-			if($query->num_rows() > 0)
-			{				
-				foreach ($query->result() as $row)
-				{					
-				    $data[] = $row;
-				}
-			}
+			$this->db->select('player_id');
+			$this->db->from("players");			
+			$this->db->where(array('owner != '=>$logged_in_user, 'is_downloaded'=>'0'));
+			$query = $this->db->get();
+			return $query->num_rows();
 		}
-		return $data;
+		return 0;
 	}
 
 	public function myPlayerCount()

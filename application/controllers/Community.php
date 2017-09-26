@@ -18,8 +18,8 @@ class Community extends CI_Controller {
 	public function index()
 	{
 		$this->load->model("Utils");
-		$team_count = count($this->Utils->communityTeamList());
-		$player_count = count($this->Utils->communityPlayerList());
+		$team_count = $this->Utils->communityTeamCount();
+		$player_count = $this->Utils->communityPlayerCount();
 		$this->load->view('templates/logged_in', array('page'=>'community', 'team_count'=>$team_count, 'player_count'=>$player_count));
 	}
 
@@ -37,23 +37,32 @@ class Community extends CI_Controller {
 		{
 			$this->load->model('Community_Model');
 			$this->load->model('Utils');
+			$this->load->model('Player');
 			foreach($query->result() as $row)
 			{
-				// check if the current player in loop has already been downloaded by the logged in user
-				$already = $this->Community_Model->isAlreadyDownloaded($row->player_id);
-
-				$time = new DateTime($row->updated_time, new DateTimeZone('UTC'));
-				$time->setTimeZone(new DateTimeZone($this->session->timezone));
 
 				// get the original author name
 				if($row->is_downloaded == '1')
 				{
+					// if this player has same values as that of source player, do not show it on the page
+					if($this->Player->comparePlayers($row->source_owner, $row->player_id))
+					{
+						continue;
+					}
 					$source_owner = $this->Utils->getPlayerOwner($row->source_owner);
 				}
 				else
 				{
 					$source_owner = null;
 				}
+
+				// check if the current player in loop has already been downloaded by the logged in user
+				$already = $this->Community_Model->isAlreadyDownloaded($row->player_id);
+
+				$time = new DateTime($row->updated_time, new DateTimeZone('UTC'));
+				$time->setTimeZone(new DateTimeZone($this->session->timezone));
+
+				
 				$players[] = array(
 								'pid'			=>	$row->player_id,
 								'name'			=>	$row->first_name.' '.$row->last_name,
