@@ -6,6 +6,7 @@ simkit.app.controller('communityPlayers', function($scope, $http, $window){
 	$scope.data.players = [];
 	$scope.data.cache = {};
 	$scope.data.cart = [];
+	$scope.usernames = {};
 	$http({
 		method:'get',
 		url:simkit.baseUrl+'Community/fetchPlayers'
@@ -122,5 +123,49 @@ simkit.app.controller('communityPlayers', function($scope, $http, $window){
 		}).then(function complete(){
 			button.html(button_text).removeAttr('disabled').siblings('button').removeClass('hide');
 		});
+	};
+
+	$scope.showDownloadList = function(e, pid){
+		e.preventDefault();
+		if($scope.usernames[pid])
+		{
+			$scope.data.dl_list = $scope.usernames[pid];
+			$scope.showDownloadersList();
+		}
+		else
+		{
+			$scope.loading("list");
+			$http({
+				method:'post',
+				url:simkit.baseUrl+'Community/getDownloadList',
+				data:{player_id:pid}
+			}).then(function success(resp){
+				if(resp.statusText == 'OK')
+				{
+					if(resp.data.status == 'OK')
+					{
+						$scope.usernames[pid] = resp.data.list;
+						$scope.data.dl_list = $scope.usernames[pid];
+						$scope.showDownloadersList();
+					}
+					else
+					{
+						alert(resp.data.msg);
+					}
+				}
+				else
+				{
+					alert(resp.statusText);
+				}
+			}, function error(resp){
+				alert(resp.statusText);
+			}).then(function final(){
+				$scope.finish('list');
+			});
+		}
+	};
+
+	$scope.showDownloadersList = function()	{
+		jQuery('#dl_list').modal('show');
 	};
 });

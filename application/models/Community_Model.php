@@ -44,6 +44,25 @@ class Community_Model extends CI_Model {
 			$data['bowl_pt'] = $row->bowling_rp;
 			$data['field_pt'] = $row->fielding_rp;
 			$data['downloaded'] = $row->is_downloaded;
+			if($row->is_downloaded == '1')
+			{
+				$this->load->model('Player');
+				// check if the source player is also a downloaded player
+				$source_player_id = $row->source_player;
+				while($this->Player->isPlayerDownloaded($source_player_id))
+				{
+					$source_player_id = $this->Player->getSourcePlayerId($source_player_id);
+				}
+				$base_owner = $this->Player->getPlayerOwnerId($source_player_id);
+			}
+			else
+			{
+				$base_owner = null;
+			}
+			if($base_owner)
+			{
+				$data['base_owner'] = $this->Utils->getPlayerOwner($base_owner);
+			}
 			$data['source'] = $this->Utils->getPlayerOwner($row->source_owner);
 			$data['owner'] = $this->Utils->getPlayerOwner($row->owner);
 			$data['created'] = $this->Utils->localTimeZone($row->created_time);

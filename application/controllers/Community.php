@@ -26,11 +26,11 @@ class Community extends CI_Controller {
 	public function fetchPlayers()
 	{
 		$user = (int) $this->session->logged_user;
-		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner');
+		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner, p.source_player');
 		$this->db->from('players p');
 		$this->db->join('members m', 'm.user_id = p.owner', 'left');
 		$this->db->where(array('p.owner !=' => $user));
-		$this->db->order_by('p.updated_time', 'DESC');
+		$this->db->order_by('p.player_id', 'DESC');
 		$query = $this->db->get();
 		$players = array();
 		if($query->num_rows() > 0)
@@ -40,12 +40,11 @@ class Community extends CI_Controller {
 			$this->load->model('Player');
 			foreach($query->result() as $row)
 			{
-
-				// get the original author name
+				
 				if($row->is_downloaded == '1')
 				{
-					// if this player has same values as that of source player, do not show it on the page
-					if($this->Player->comparePlayers($row->source_owner, $row->player_id))
+					// if this player has same values as that of source player, do not show it on the page					
+					if($this->Player->sameAsSourcePlayer($row->source_player, $row->player_id))
 					{
 						continue;
 					}
@@ -62,17 +61,28 @@ class Community extends CI_Controller {
 				$time = new DateTime($row->updated_time, new DateTimeZone('UTC'));
 				$time->setTimeZone(new DateTimeZone($this->session->timezone));
 
+				$download_count = $this->Player->getDownloadCount($row->player_id);
+
 				
 				$players[] = array(
-								'pid'			=>	$row->player_id,
-								'name'			=>	$row->first_name.' '.$row->last_name,
-								'author'		=>	$row->username,
-								'time'			=>	$time->format('M j @ h:i a'),
-								'download'		=>	$row->is_downloaded,
-								'already'		=>	$already ? 'YES' : 'NO',
-								'source_owner'	=>	$source_owner
+								'pid'				=>	$row->player_id,
+								'name'				=>	$row->first_name.' '.$row->last_name,
+								'author'			=>	$row->username,
+								'time'				=>	$time->format('M j @ h:i a'),
+								'download'			=>	$row->is_downloaded,
+								'already'			=>	$already ? 'YES' : 'NO',
+								'source_owner'		=>	$source_owner,
+								'download_count'	=>	$download_count
 							);
 			}
+
+			// sorting based on download count
+			$temp = array();
+			foreach ($players as $key => $row)
+			{
+			    $temp[$key] = $row['download_count'];
+			}
+			array_multisort($temp, SORT_DESC, $players);
 		}
 		echo json_encode(array('status'=>'OK', 'players'=>$players));
 		exit;
@@ -188,6 +198,29 @@ class Community extends CI_Controller {
 		else
 		{
 			echo json_encode(array('status'=>'NOTOK', 'msg'=>'Nothing to download.'));
+		}
+	}
+
+	public function getDownloadList()
+	{
+		$post = json_decode(file_get_contents("php://input"));
+		$this->db->select('m.username');
+		$this->db->from('players p');
+		$this->db->join('members m', 'm.user_id = p.owner', 'left');
+		$this->db->where('p.source_player', $post->player_id);
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+		{
+			$owners = array();
+			foreach($query->result() as $row)
+			{
+				$owners[] = $row->username;
+			}
+			echo json_encode(array('status'=>'OK', 'list'=>$owners));
+		}
+		else
+		{
+			echo json_encode(array('status'=>'NOTOK', 'msg'=>'No downloaders found.'));
 		}
 	}
 

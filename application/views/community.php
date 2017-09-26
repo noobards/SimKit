@@ -93,6 +93,31 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="dl_list">
+  <div class="modal-dialog modal-sm">
+  	<div class="modal-content">
+	  	<div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">List of Downloaders</h4>
+	     </div>
+	     <div class="modal-body">	        
+	        <table class="table-condensed">	        	
+	        	<tbody>
+	        		<tr ng-repeat="o in data.dl_list">
+	        			<td>{{(o)}}</td>
+	        		</tr>	        		
+	        	</tbody>
+	        </table>
+	    </div>
+	    <div class="modal-footer">	    	
+	    	<button data-dismiss="modal" type="button" class="btn btn-default"><i class="fa fa-close">&nbsp;</i>Cancel</button>
+	    </div>
+    </div>
+  </div>
+</div>
+
+
+
 	<div class="row">
 		<div class="col-md-7">
 			<div class="box" style="margin-top: 10px;">
@@ -102,21 +127,21 @@
 				</div>
 				<div class="box-body box-body-max" id="list">				
 					<div class="row">
-						<div class="col-md-12 vscroll" style="height: 400px;">
+						<div class="col-md-12 vscroll" style="height: 400px;">							
 							<div class="table-mockup">
 								<div class="thead">
 									<div class="tr">
 										<div class="th">Name</div>
 										<div class="th">Author</div>
-										<div class="th">Updated On</div>
+										<div class="th"># of Downloads</div>
 										<div class="th">Actions</div>
 									</div>
 								</div>
 								<div class="tbody">
 									<div class="tr" ng-repeat="player in data.players">
-										<div class="td text-center"><a ng-if="player.already == 'NO'" class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a><span ng-if="player.already == 'YES'">{{player.name}}</span>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="This player was downloaded">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check green" title="You downloaded this player">&nbsp;</i></div>
+										<div class="td"><a class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="This player was downloaded">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check red" title="You downloaded this player">&nbsp;</i></div>
 										<div class="td text-center">{{player.author}} <span style="font-size: 10px;" ng-if="player.source_owner">({{player.source_owner}})</span></div>
-										<div class="td text-center">{{player.time}}</div>
+										<div class="td text-center"><a href="#" ng-show="player.download_count > 0" class="normal-anchor" ng-click="showDownloadList($event, player.pid)">{{player.download_count}}</a><span ng-show="player.download_count == 0">{{player.download_count}}</span></div>
 										<div class="td text-center"><button type="button" ng-disabled="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
 									</div>
 									<div class="tr" ng-if="data.players.length == 0">
@@ -210,8 +235,12 @@
 						<div class="bar_heading">Author Information</div>
 						<table class="table table-striped table-condensed">											
 							<tbody>
-								<tr ng-show="data.player.downloaded == 1" class="alert-warning">
-									<td><strong>Created By:</strong></td>
+								<tr ng-show="data.player.base_owner" class="alert-warning">
+									<td><strong>Orginal Creator:</strong></td>
+									<td>{{data.player.base_owner}}</td>
+								</tr>
+								<tr ng-show="data.player.downloaded == 1">
+									<td><strong>Downloaded From:</strong></td>
 									<td>{{data.player.source}}</td>
 								</tr>
 								<tr>
@@ -219,13 +248,9 @@
 									<td>{{data.player.owner}}</td>
 								</tr>
 								<tr>
-									<td style="width: 150px;"><strong>Created On:</strong></td>
+									<td style="width: 150px;"><strong><span ng-show="data.player.downloaded == 0">Created</span><span ng-show="data.player.downloaded == 1">Downloaded</span> On:</strong></td>
 									<td>{{data.player.created}}</td>
-								</tr>
-								<tr>
-									<td style="width: 150px;"><strong>Updated On:</strong></td>
-									<td>{{data.player.updated}}</td>
-								</tr>
+								</tr>								
 							</tbody>
 						</table>		
 					</div>
