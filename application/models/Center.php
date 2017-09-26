@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Center extends CI_Model {
 	public function fetchTeams()
 	{
-		$this->db->select("team_id, team_name");
+		$this->db->select("team_id, team_name, logo");
 		$this->db->from("teams");
 		$this->db->where("owner", $this->session->logged_user);
 		$query = $this->db->get();
@@ -13,11 +13,12 @@ class Center extends CI_Model {
 		{
 			foreach($query->result() as $row)
 			{
-				$nop = $this->getPlayerCount($row->team_id);
+				$nop = $this->getPlayerCount($row->team_id);				
 				$teams[] = array(
 								'team_id'		=> $row->team_id,
 								'team_name'		=> $row->team_name,
-								'player_count'	=> $nop
+								'player_count'	=> $nop,
+								'logo'	=> (trim($row->logo) != '' ? $row->logo : null )
 							);
 			}
 		}

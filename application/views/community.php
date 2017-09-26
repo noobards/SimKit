@@ -119,7 +119,7 @@
 
 
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-8">
 			<div class="box" style="margin-top: 10px;">
 				<div class="box-title">
 					<div class="box-main-text">Players</div>
@@ -169,7 +169,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-5 top10" id="player_placeholder" style="background-color: #fff;">
+		<div class="col-md-4 top10" id="player_placeholder" style="background-color: #fff;">
 			<div class="alert alert-warning" ng-show="no_player_data">{{page_load_message}}</div>
 			<div ng-hide="no_player_data">
 				<div class="row">
@@ -178,7 +178,7 @@
 						<table class="table table-striped table-condensed">											
 							<tbody>
 								<tr>
-									<td style="width: 150px;"><strong>First Name:</strong></td>
+									<td style="width: 110px;"><strong>First Name:</strong></td>
 									<td>{{data.player.first_name}}</td>
 								</tr>
 								<tr>
@@ -209,15 +209,15 @@
 						<table class="table table-striped table-condensed">											
 							<tbody>
 								<tr>
-									<td style="width: 150px;"><strong>Player Type:</strong></td>
+									<td style="width: 110px;"><strong>Role:</strong></td>
 									<td>{{data.player.type}}</td>
 								</tr>
 								<tr>
-									<td><strong>Batting Hand:</strong></td>
+									<td><strong>Bat Hand:</strong></td>
 									<td>{{data.player.bat_hand}}</td>
 								</tr>
 								<tr ng-show="data.player.type_id == '2' || data.player.type_id == '3' || data.player.type_id == '4'">
-									<td><strong>Bowling Hand:</strong></td>
+									<td><strong>Bowl Hand:</strong></td>
 									<td>{{data.player.bowl_hand}}</td>
 								</tr>
 								<tr ng-show="data.player.type_id == '2' || data.player.type_id == '3' || data.player.type_id == '4'">
@@ -252,11 +252,11 @@
 									<td>{{data.player.source}}</td>
 								</tr>
 								<tr>
-									<td style="width: 150px;"><strong><span ng-show="data.player.downloaded == 1">Downloaded By:</span><span ng-show="data.player.downloaded == 0">Created By:</span></strong></td>
+									<td style="width: 110px;"><strong><span ng-show="data.player.downloaded == 1">Downloaded By:</span><span ng-show="data.player.downloaded == 0">Created By:</span></strong></td>
 									<td>{{data.player.owner}}</td>
 								</tr>
 								<tr>
-									<td style="width: 150px;"><strong><span ng-show="data.player.downloaded == 0">Created</span><span ng-show="data.player.downloaded == 1">Downloaded</span> On:</strong></td>
+									<td style="width: 110px;"><strong><span ng-show="data.player.downloaded == 0">Created</span><span ng-show="data.player.downloaded == 1">Downloaded</span> On:</strong></td>
 									<td>{{data.player.created}}</td>
 								</tr>								
 							</tbody>

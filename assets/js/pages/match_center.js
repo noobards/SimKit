@@ -1,41 +1,2 @@
-simkit.app.controller("listTeams", function($scope, $http, $window){	$scope.team1_text = "Not selected";	$scope.team2_text = "Not selected";	$scope.teams = [];
-	$scope.data = {};	$scope.data.selected_teams = [];	$http({	  method: 'GET',	  	  url: simkit.baseUrl+'MatchCenter/getMyTeams'	}).then(function successCallback(response) {		if(response.statusText == "OK")		{						if(response.data.teams.length > 0)			{				while(response.data.teams.length > 0)				{					$scope.teams.push(response.data.teams.splice(0, 4));				}							}					}		else		{			alert("Ajax Error: "+response.statusText);		}				}, function errorCallback(response) {					alert("Ajax Error: "+response.statusText);	});		$scope.selectTeam = function(e){		var target = jQuery(e.target);		if(target.is('span') || target.is('strong'))		{			var box = target.parent();		}		else		{			var box = target;		}				var nop = parseInt(box.attr('data-player-count'), 10);		if(nop >= 15)		{			// count the number of boxes currently selected			var cnt = jQuery('#team_box_cont .team_box.team_selected').length;			var team_name = box.attr('data-team-name');			var team_id = box.attr('data-team-id');			if(cnt < 2)			{				if(box.hasClass('team_selected'))				{									box.removeClass('team_selected');					if($scope.team1_text == team_name)					{						$scope.team1_text = "Not selected";					}					else if($scope.team2_text == team_name)					{						$scope.team2_text = "Not selected";					}
-					$scope.removeTeamFromArray(team_id);				}				else				{									box.addClass('team_selected');					if($scope.team1_text == "Not selected")					{						$scope.team1_text = team_name;											}					else if($scope.team2_text == "Not selected")					{						$scope.team2_text = team_name;					}					$scope.data.selected_teams.push(team_id);				}										}			else			{				box.removeClass('team_selected');				if($scope.team1_text == team_name)				{					$scope.team1_text = "Not selected";				}				else if($scope.team2_text == team_name)				{					$scope.team2_text = "Not selected";				}
-				$scope.removeTeamFromArray(team_id);			}		}		else		{			alert("Team needs to have at least 15 players.");		}			};
-	
-	$scope.processForm = function(e){
-		var button = jQuery(e.target);
-		$scope.buttonLoading(button);
-		
-		$scope.ajax({data:$scope.data, url:'MatchCenter/saveStepOne', responseHandler:$scope.processFormHandler, target:button, buttonText:'Proceed'});
-	};
-	
-	$scope.processFormHandler = function(response, button){
-		if(response.status == 'OK'){
-			$window.location.href = "MatchCenter/SquadSelection/"+response.id;
-		} else {
-			alert(response.msg);
-			if(button !== undefined && button !== null)
-			{
-				button.removeAttr('disabled').html('Proceed');
-			}			
-		}		
-	};
-	
-	
-	$scope.removeTeamFromArray = function (item){
-		var index = $scope.data.selected_teams.indexOf(item);
-		if (index > -1) {
-			$scope.data.selected_teams.splice(index, 1);
-		}
-	};
+simkit.app.controller("matchCenter", function($scope, $http, $window){		$http({		method: 'get',		url: simkit.baseUrl+'MatchCenter/getMyTeams'			}).then(function success(resp){		if(resp.statusText == "OK")		{			$scope.teams = resp.data.teams;			$scope.team_count = $scope.teams.length;		}		else		{			alert(resp.statusText);		}	}, function error(resp){		alert(resp.statusText);	}).then(function complete(){			});			jQuery('#config_match').on('show.bs.collapse','.collapse', function() {		jQuery('#config_match').find('.collapse.in').collapse('hide');	});		$scope.goNext = function(e, panel_id){		jQuery('#config_match #'+panel_id).collapse('show');	};	$scope.goPrev = function(e, panel_id){		jQuery('#config_match #'+panel_id).collapse('show');	};		$scope.moveUp = function(e){		var arrow = jQuery(e.currentTarget);				var cont = arrow.siblings('.list_of_teams');		var active_box = cont.find('.team.team_active');		var index = active_box.attr('data-index');				if(index == $scope.team_count)		{						return false;		}		else		{			cont.siblings('.arrow_down').removeClass('arrow_disabled');			if(index == ($scope.team_count - 1))			{				cont.siblings('.arrow_up').addClass('arrow_disabled');			}			else			{				cont.siblings('.arrow_up').removeClass('arrow_disabled');			}			var margin_top = 100;			active_box.css({				marginTop: -(margin_top)+'px'			});			active_box.next().addClass('team_active').css('marginTop', '0px');			active_box.removeClass('team_active');		}	};		$scope.moveDown = function(e){		var arrow = jQuery(e.currentTarget);		var cont = arrow.siblings('.list_of_teams');		var active_box = cont.find('.team.team_active');		var index = active_box.attr('data-index');		if(index == '1')		{						return false;		}		else		{			cont.siblings('.arrow_up').removeClass('arrow_disabled');			if(index == '2')			{				cont.siblings('.arrow_down').addClass('arrow_disabled');			}			else			{				cont.siblings('.arrow_down').removeClass('arrow_disabled');			}			var margin_top = 100;			active_box.css({				marginTop: (margin_top)+'px'			});			active_box.prev().addClass('team_active').css('marginTop', '0px');			active_box.removeClass('team_active');		}	};
 });
-
-simkit.app.controller('savedMatches', function($scope, $element) {
-	$scope.populateMatchList = function(response){
-		$element.removeClass('ajax-loading');
-		$scope.matches = response.matches;
-	};
-	$scope.ajax({type:'GET', url: 'MatchCenter/savedMatchList', responseHandler:$scope.populateMatchList});		
-});
-
