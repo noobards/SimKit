@@ -11,14 +11,34 @@ class Center extends CI_Model {
 		$teams = array();
 		if($query->num_rows() > 0)
 		{
+			$this->load->model("Team");
 			foreach($query->result() as $row)
 			{
-				$nop = $this->getPlayerCount($row->team_id);				
+				$nop = $this->getPlayerCount($row->team_id);
+				if(trim($row->logo) != '')
+				{
+					$file = FCPATH.'assets'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'user_'.$this->session->logged_user.DIRECTORY_SEPARATOR.'teams'.DIRECTORY_SEPARATOR.$row->logo;					
+					if(file_exists($file))
+					{						
+						$file = base_url().'assets/images/uploads/user_'.$this->session->logged_user.'/teams/'.$row->logo;
+					}
+					else
+					{
+						$file = base_url().'assets/images/no_team_logo.png';
+					}
+				}
+				else
+				{
+					$file = base_url().'assets/images/no_team_logo.png';
+				}
+
+				$rating = $this->Team->getTeamRating($row->team_id);
 				$teams[] = array(
 								'team_id'		=> $row->team_id,
 								'team_name'		=> $row->team_name,
 								'player_count'	=> $nop,
-								'logo'	=> (trim($row->logo) != '' ? $row->logo : null )
+								'logo'			=> $file,
+								'rating'		=> $rating
 							);
 			}
 		}
@@ -118,35 +138,19 @@ class Center extends CI_Model {
 		return $data;
 	}
 	
-	public function getCompetingTeams($mid)
-	{
-		$teams = array();
-		$this->db->select('team1, team2');
-		$this->db->from('match_center');
-		$this->db->where('match_id', $mid);
-		$query = $this->db->get();
-		if($query->num_rows() > 0)
-		{
-			$row = $query->result();
-			$teams[0] = $row[0]->team1;
-			$teams[1] = $row[0]->team2;
-		}		
-		return $teams;
-	}
 	
-	public function getMatchTeamPlayers($mid)
-	{
-		$teams = $this->getCompetingTeams($mid);
+	
+	public function getMatchTeamPlayers($teams)
+	{		
 		$data = array();
 		if(count($teams) > 0)
 		{
 			$this->load->model("Team");			
 			foreach($teams as $tid)
-			{
+			{				
 				$data[] = $this->Team->getTeamPlayers($tid);
 			}
-		}
-		
+		}		
 		return $data;
 	}
 }
