@@ -8,3 +8,4 @@ application/config/database.php
 application/config/config.php
 assets/js/app.js
 application/libraries/EmailMailer.php
+assets/images/uploads/
