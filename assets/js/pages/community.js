@@ -83,7 +83,7 @@ simkit.app.controller('communityPlayers', function($scope, $http, $window){
 				$scope.data.cart.splice(i, 1);
 				anchor.closest('.tr').removeClass('player-added');
 				anchor.addClass('hide');
-				anchor.siblings('button').removeAttr('disabled').html('<i class="fa fa-plus">&nbsp;</i>Add to Queue');
+				anchor.siblings('button').removeAttr('disabled').html('<i class="fa fa-plus">&nbsp;</i>Queue');
 			}
 		});		
 

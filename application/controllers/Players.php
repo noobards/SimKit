@@ -150,7 +150,7 @@ class Players extends CI_Controller {
 			{
 				$date = new DateTime($row->created_time, new DateTimeZone('UTC'));
 				$date->setTimeZone(new DateTimeZone($this->session->timezone));
-			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'is_private'=>$row->is_private, 'created'=>$date->format('M d @ h:i a'));
+			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'is_private'=>$row->is_private, 'created'=>$date->format('M d, g:i a'));
 			}
 		}
 		echo json_encode($players);

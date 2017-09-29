@@ -160,7 +160,7 @@
 
 											<td><input type="checkbox" class="playerCB" ng-checked="data.checkThis" ng-click="allCheck($event)" ng-model="data.selectedPlayers[player.id]" /></td>
 
-											<td>{{player.name}} ({{player.id}})</td>
+											<td>{{player.name}}</td>
 
 											<td>{{player.gender}}</td>
 

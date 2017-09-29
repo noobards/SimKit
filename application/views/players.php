@@ -66,7 +66,7 @@
 
 	<div class="row">
 
-		<div class="col-md-6" ng-controller="addNewPlayer">
+		<div class="col-md-5" ng-controller="addNewPlayer">
 
 			<div class="modal fade" tabindex="-1" id="playerDataModal">
 
@@ -358,7 +358,7 @@
 
 
 
-		<div class="col-md-6" ng-controller="recentlyAddedPlayers">
+		<div class="col-md-7" ng-controller="recentlyAddedPlayers">
 
 			<div class="box">
 
@@ -375,16 +375,14 @@
 						<div class="thead">
 							<div class="tr">
 								<div class="th">Name</div>
-								<div class="th">Country</div>
-								<div class="th">Role</div>
+								<div class="th">Country</div>								
 								<div class="th">Added</div>
 							</div>
 						</div>
 						<div class="tbody">
 							<div class="tr" ng-if="players.length > 0" ng-repeat="player in players">
-								<div class="td text-center">{{player.name}} <label class="label label-danger label-private-small" ng-show="player.is_private == 1">Private</label></div>
-								<div class="td text-center">{{player.country}}</div>
-								<div class="td text-center"><img class="player_type_icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></div>
+								<div class="td text-center"><img class="role-icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" />{{player.name}} <label class="label label-danger label-private-small" ng-show="player.is_private == 1">Private</label></div>
+								<div class="td text-center">{{player.country}}</div>								
 								<div class="td text-center">{{player.created}}</div>
 							</div>
 							<div class="tr" ng-if="players.length == 0"><div class="td text-center">No records found</div></div>

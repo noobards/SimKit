@@ -41,8 +41,7 @@
 						<div class="tr">
 							<div class="th"><input type="checkbox" ng-click="selectAll()" ng-model="check_all" /></div>
 							<div class="th">Name</div>							
-							<div class="th">Country</div>
-							<div class="th">Role</div>
+							<div class="th">Country</div>							
 							<div class="th">Rating</div>
 							<div class="th">Updated</div>
 						</div>
@@ -50,9 +49,8 @@
 					<div class="tbody">
 						<div class="tr" ng-repeat="player in my_players | filter : searchKW as filtered">
 							<div class="td text-center"><input type="checkbox" ng-model="player.selected" class="nl-checkbox" ng-click="selectSingle($event)" value="{{player.id}}" /></div>
-							<div class="td text-center"><a class="normal-anchor" href="Edit/{{player.id}}">{{player.name}}</a> <label class="label label-danger label-private-small" ng-show="player.is_private == 1">Private</label></div>							
-							<div class="td text-center">{{player.country}}</div>
-							<div class="td text-center"><img class="player_type_icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
+							<div class="td"><img class="role-icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /><a class="normal-anchor" href="Edit/{{player.id}}">{{player.name}}</a> <label class="label label-danger label-private-small" ng-show="player.is_private == 1">Private</label></div>							
+							<div class="td text-center">{{player.country}}</div>							
 							<div class="td">
 								<div class='outer_bar'><div style="width:{{(player.avg*10)}}%" class='inner_bar'></div><span class='bar_value'>{{player.avg}}</span></div>
 							</div>

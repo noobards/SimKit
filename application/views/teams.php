@@ -148,8 +148,7 @@
 	      					<div class="thead">
 	      						<div class="tr">
 	      							<div class="th"><input type="checkbox" ng-click="toCheckAll($event)" /></div>
-	      							<div class="th">Name</div>	      							
-	      							<div class="th">Role</div>
+	      							<div class="th">Name</div>	      								      							
 	      							<div class="th">Rating</div>
 	      							<div class="th">Country</div>
 	      						</div>
@@ -157,8 +156,7 @@
 	      					<div class="tbody">
 	      						<div class="tr" ng-repeat="player in my_players | filter: search_filter">
 	      							<div class="td text-center"><input type="checkbox" class="toCheckAll" ng-click="allCheck($event)" ng-model="players.selected[player.id]" /></div>
-	      							<div class="td text-center">{{player.name}}</div>	      							
-	      							<div class="td text-center"><img class="player_type_icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" /></div>
+	      							<div class="td"><img class="role-icon" ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.type}}" alt="{{player.type}}" />{{player.name}}</div>	      								      							
 	      							<div class="td text-center">
 	      								<div class='outer_bar'><div style="width:{{(player.avg*10)}}%" class='inner_bar'></div><span class='bar_value'>{{player.avg}}</span></div>
 	      							</div>
