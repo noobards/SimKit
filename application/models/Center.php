@@ -54,44 +54,6 @@ class Center extends CI_Model {
 		return $query->num_rows();
 	}
 	
-	public function stepOne($selected_teams, $match_type, $match_title = '')
-	{
-		$data = array();
-		if(is_array($selected_teams) && count($selected_teams) == 2)
-		{
-			$team1 = $selected_teams[0];
-			$team2 = $selected_teams[1];
-			date_default_timezone_set("UTC");
-			$insert = array(
-				'match_type'	=>	$match_type,
-				'owner'			=>	$this->session->logged_user,
-				'match_title'	=>	$match_title,
-				'team1'			=>	$team1,
-				'team2'			=>	$team2,
-				'match_stage'	=>	1,
-				'match_status'	=>	1,
-				'created_on'	=> date("Y-m-d H:i:s"),
-				'updated_on'	=> date("Y-m-d H:i:s")
-			);
-			if($this->db->insert('match_center', $insert))
-			{
-				$data['status'] = "OK";
-				$data['id']	= $this->db->insert_id();
-			}
-			else
-			{
-				$data['status'] = "NOTOK";
-				$data['msg']	= $this->db->error()['message'];				
-			}
-		}
-		else
-		{
-			$data['status'] = 'NOTOK';
-			$data['msg'] = 'Selected teams not found';
-		}
-		return $data;
-	}
-	
 	public function hasMatchPermission($id)
 	{
 		$this->db->select('match_id');
@@ -103,41 +65,7 @@ class Center extends CI_Model {
 			return true;
 		}
 		return false;
-	}
-	
-	public function getMatchStatus($id)
-	{
-		$this->db->select('match_status');
-		$this->db->from('match_center');
-		$this->db->where(array('match_id'=>$id));
-		$query = $this->db->get();
-		foreach($query->result() as $row)
-		{
-			return $row->match_status;
-		}
-	}
-	
-	public function fetchInProgressMatches()
-	{
-		$data = array();
-		$this->db->select('m.match_id, m.match_title, m.updated_on, s.stage_label, t1.team_name as team1, t2.team_name as team2');
-		$this->db->from('match_center m');
-		$this->db->join('match_stages s', 's.stage_id = m.match_stage', 'left');
-		$this->db->join('teams t1', 't1.team_id = m.team1', 'left');
-		$this->db->join('teams t2', 't2.team_id = m.team2', 'left');
-		$this->db->where(array('m.owner' => $this->session->logged_user, 'm.match_status' => 1));
-		$this->db->order_by('m.updated_on', 'DESC');
-		$query = $this->db->get();
-		if($query->num_rows() > 0)
-		{
-			foreach($query->result() as $row)
-			{
-				$data[] = $row;
-			}
-		}
-		return $data;
-	}
-	
+	}	
 	
 	
 	public function getMatchTeamPlayers($teams)
@@ -151,6 +79,90 @@ class Center extends CI_Model {
 				$data[] = $this->Team->getTeamPlayers($tid);
 			}
 		}		
+		return $data;
+	}
+	
+	public function getMatchTypes()
+	{
+		$this->db->from("match_types");
+		$this->db->order_by("type_id", "ASC");
+		$query = $this->db->get();
+		$types = array();
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $row)
+			{
+				$types[] = array('label'=>$row->type_label, 'Id'=>$row->type_id);
+			}
+		}
+		return $types;
+	}
+	
+	public function getPitchTypes()
+	{
+		$this->db->from("pitch_types");
+		$this->db->order_by("pitch_id", "ASC");
+		$query = $this->db->get();
+		$types = array();
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $row)
+			{
+				$types[] = array('label'=>$row->pitch_label, 'Id'=>$row->pitch_id);
+			}
+		}
+		return $types;
+	}
+	
+	public function getMatchDetails($mid)
+	{
+		$this->db->select('home, away, overs, ground, pitch');
+		$this->db->from('match_center');
+		$this->db->where(array('match_id'=>$mid));
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+		{
+			$data = array();
+			$r = $query->result()[0];
+			$data['home'] = $r->home;
+			$data['away'] = $r->away;
+			$data['overs'] = $r->overs;
+			$data['ground'] = $r->ground;
+			$this->load->model("Team");
+			$data['pitch'] = $this->Team->getPitchLabel($r->pitch);
+			$data['home_label'] = $this->Team->getTeamName($r->home);
+			$data['away_label'] = $this->Team->getTeamName($r->away);
+			return $data;
+		}
+		else
+		{
+			return array();
+		}
+	}
+	
+	public function getBowlers($mid, $tid, $what)
+	{
+		$this->db->select('p.player_id, CONCAT(p.first_name," ",p.last_name) AS name, p.player_type, pt.type_name, pt.type_icon');
+		$this->db->from('players p');
+		$this->db->join('player_types pt', 'pt.player_type_id = p.player_type', 'left');
+		$this->db->join('match_players mp', 'mp.pid = p.player_id', 'left');
+		$this->db->where(array('mp.mid'=>$mid, 'mp.team'=>$what, 'mp.can_bowl'=>1));
+		$this->db->order_by('mp.pos', 'ASC');		
+		$q = $this->db->get();
+		$data = array();
+		if($q->num_rows() > 0)
+		{
+			foreach($q->result() as $r)
+			{
+				$data[] = array(
+					'name'	=>	$r->name,
+					'player_id'	=>	$r->player_id,
+					'role'	=>	$r->type_name,
+					'icon'	=>	$r->type_icon,
+					'role_id'	=>	$r->player_type
+				);
+			}
+		}
 		return $data;
 	}
 }
