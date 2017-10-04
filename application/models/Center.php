@@ -182,4 +182,49 @@ class Center extends CI_Model {
 		}
 		return $data;
 	}
+	
+	public function getTeam1Team2($mid)
+	{
+		$this->db->select("home, away, toss, decision");
+		$this->db->from("match_center");
+		$this->db->where("match_id", $mid);
+		$q = $this->db->get();
+		$teams = array();
+		$teams[0] = 0;
+		$teams[1] = 0;
+		if($q->num_rows() == 1)
+		{
+			$r = $q->result()[0];
+			$toss_won_by = $r->toss;
+			$decision = $r->decision;
+			if($decision == "Bat")
+			{
+				if($toss_won_by == $r->home)
+				{
+					$teams[0] = $r->home;
+					$teams[1] = $r->away;
+				}
+				else if($toss_won_by == $r->away)
+				{
+					$teams[0] = $r->away;
+					$teams[1] = $r->home;
+				}				
+			}
+			else
+			{
+				// decided to field
+				if($toss_won_by == $r->home)
+				{
+					$teams[0] = $r->away;
+					$teams[1] = $r->home;
+				}
+				else if($toss_won_by == $r->away)
+				{
+					$teams[0] = $r->home;
+					$teams[1] = $r->away;
+				}
+			}
+		}
+		return $teams;
+	}
 }
