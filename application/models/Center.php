@@ -65,7 +65,24 @@ class Center extends CI_Model {
 			return true;
 		}
 		return false;
-	}	
+	}
+
+	public function hasMatchFinished($id)
+	{
+		$this->db->select('status');
+		$this->db->from('match_center');
+		$this->db->where(array('match_id'=>$id, 'owner'=>$this->session->logged_user));
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+		{
+			$r = $query->result()[0];
+			if($r->status == '0')
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	
 	public function getMatchTeamPlayers($teams)
