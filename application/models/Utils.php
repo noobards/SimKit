@@ -19,6 +19,21 @@ class Utils extends CI_Model {
 		return $options;
 	}
 
+	public function getSingleValue($data)
+	{
+		$this->db->select($data['column']);
+		$this->db->from($data['table']);
+		foreach($data['where'] as $col=>$val)
+		{
+			$this->db->where($col, $val);
+		}		
+		$q = $this->db->get();
+		if($q->num_rows() == 1)
+		{
+			return $q->result()[0]->{$data['column']};
+		}
+	}
+
 	public function playerRating($player_id)
 	{
 		if($player_id && (int) $player_id > 0)

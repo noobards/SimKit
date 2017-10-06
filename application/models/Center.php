@@ -227,4 +227,54 @@ class Center extends CI_Model {
 		}
 		return $teams;
 	}
+
+	public function matchDuration($mid)
+	{
+		$overs = 0;
+		$this->load->model("Utils");
+		$overs = $this->Utils->getSingleValue(array('table'=>'match_center', 'column'=>'overs', 'where'=>array('match_id'=>$mid)));
+		return $overs;
+	}
+
+	public function getGameMode($mid)
+	{
+		$mode = 0;
+		$this->load->model("Utils");
+		$mode = $this->Utils->getSingleValue(array('table'=>'match_center', 'column'=>'match_type', 'where'=>array('match_id'=>$mid)));
+		return $mode;
+	}
+
+	public function getBowlingOptions($mid, $tid)
+	{
+		$this->db->select('p.player_id, CONCAT(p.first_name," ", p.last_name) AS name, p.player_type, p.bowler_type, p.bowling_rp');
+		$this->db->from('players p');
+		$this->db->join('match_players mp', 'mp.pid = p.player_id', 'left');
+		$this->db->join('bowler_types bt', 'bt.bowler_type_id = p.bowler_type', 'left');
+		$this->db->where('mp.mid', $mid);
+		$this->db->where('mp.tid', $tid);
+		$this->db->where('mp.can_bowl', 1);
+		$this->db->order_by('mp.bowl_pos', 'ASC');
+		$q = $this->db->get();
+		$data = array();
+		if($q->num_rows() > 0)
+		{			
+			foreach($q->result() as $r)
+			{
+				$data[$r->player_id] = array(
+									'name'	=>	$r->name,									
+									'player_type'	=>	$r->player_type,
+									'bowler_type'	=>	$r->bowler_type,
+									'rating_points'	=>	$r->bowling_rp,
+									'bowls_bowled'	=>	0,
+									'wickets'	=>	0,
+									'wides'	=> 	0,
+									'noballs'	=> 0,
+									'maidens'	=> 0,
+									'runs'	=>	0
+								);
+			}
+
+		}
+		return $data;
+	}
 }
