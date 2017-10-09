@@ -114,6 +114,30 @@ class Center extends CI_Model {
 		}
 		return $types;
 	}
+
+	public function getTeamBattingLineup($mid, $teamid)
+	{
+		$this->db->select('p.player_id, CONCAT(p.first_name, " ", p.last_name) AS name, p.player_type, p.batting_rp, p.bowling_rp, p.fielding_rp');
+		$this->db->from('players p');
+		$this->db->join('match_players mp', 'mp.pid = p.player_id', 'left');
+		$this->db->where(array('mid'=>$mid, 'tid'=>$teamid));
+		$this->db->order_by('pos', 'ASC');
+		$q = $this->db->get();
+		$data = array();
+		if($q->num_rows() > 0)
+		{
+			foreach($q->result() as $r)
+			$data[] = array(
+									'player_id'	=> $r->player_id,
+									'name'	=>	$r->name,
+									'role'	=>	$r->player_type,
+									'bat'	=>	$r->batting_rp,
+									'bowl'	=>	$r->bowling_rp,
+									'field'	=>	$r->fielding_rp
+								);
+		}
+		return $data;
+	}
 	
 	public function getPitchTypes()
 	{
@@ -260,12 +284,14 @@ class Center extends CI_Model {
 		{			
 			foreach($q->result() as $r)
 			{
-				$data[$r->player_id] = array(
+				$data[] = array(
+									'player_id'	=> $r->player_id,
 									'name'	=>	$r->name,									
 									'player_type'	=>	$r->player_type,
 									'bowler_type'	=>	$r->bowler_type,
 									'rating_points'	=>	$r->bowling_rp,
-									'bowls_bowled'	=>	0,
+									'legal_balls'	=>	0,
+									'last_ball_index'	=>	0,
 									'wickets'	=>	0,
 									'wides'	=> 	0,
 									'noballs'	=> 0,
