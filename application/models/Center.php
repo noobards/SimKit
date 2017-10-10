@@ -126,15 +126,25 @@ class Center extends CI_Model {
 		$data = array();
 		if($q->num_rows() > 0)
 		{
+			$index = 0;
 			foreach($q->result() as $r)
-			$data[] = array(
-									'player_id'	=> $r->player_id,
-									'name'	=>	$r->name,
-									'role'	=>	$r->player_type,
-									'bat'	=>	$r->batting_rp,
-									'bowl'	=>	$r->bowling_rp,
-									'field'	=>	$r->fielding_rp
-								);
+			{
+				$data[] = array(
+								'player_id'	=> $r->player_id,
+								'name'	 =>	$r->name,
+								'role'	 =>	$r->player_type,
+								'bat'	 =>	$r->batting_rp,
+								'bowl'	 =>	$r->bowling_rp,
+								'field'	 =>	$r->fielding_rp,
+								'runs'	 =>	0,
+								'balls'	 =>	0,
+								'fours'	 =>	0,
+								'sixes'	 =>	0,
+								'status' =>	"DNB",
+								'batting_index' => $index
+							);
+				$index++;
+			}
 		}
 		return $data;
 	}
