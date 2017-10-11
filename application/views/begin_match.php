@@ -14,7 +14,7 @@ if($data['status'] == "OK")
 	$batsmen = $data['batsmen'];
 	$bowlers = $data['bowlers'];	
 	?>
-	<div class="col-md-12">
+	<div class="col-md-8">
 		<div class="table-mockup">
 			<div class="thead">
 				<div class="tr">
@@ -32,7 +32,7 @@ if($data['status'] == "OK")
 				{	?>
 				<div class="tr">
 					<div class="td"><?php echo $ary['name']; ?></div>
-					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['status']; ?></div>
+					<div class="td text-center"><?php echo $ary['status']; ?></div>
 					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs']; ?></div>
 					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['balls']; ?></div>
 					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours']; ?></div>
@@ -44,7 +44,7 @@ if($data['status'] == "OK")
 			?>
 				<div class="tr">
 					<div class="td text-right">
-						<strong>Total: <?php echo $data['total'].'/'.$data['wickets'].' ('.$data['run_rate'].')'; ?></strong>
+						<strong>Total: <?php echo $data['total'].'/'.$data['wickets'].' ('.$data['run_rate'].' rpo)'; ?></strong>
 					</div>
 				</div>
 			</div>
@@ -55,6 +55,7 @@ if($data['status'] == "OK")
 				<div class="tr">
 					<div class="th">Player</div>
 					<div class="th">Overs</div>
+					<div class="th">Maidens</div>
 					<div class="th">Runs</div>
 					<div class="th">Wickets</div>
 					<div class="th">Economy</div>					
@@ -73,6 +74,7 @@ if($data['status'] == "OK")
 						echo floor($ary['legal_balls']/6).'.'.floor($ary['legal_balls'] % 6);
 						?>
 					</div>
+					<div class="td text-center"><?php echo $ary['maidens'] ?></div>
 					<div class="td text-center"><?php echo $ary['runs'] ?></div>
 					<div class="td text-center"><?php echo $ary['wickets']; ?></div>
 					<div class="td text-center">
@@ -87,6 +89,15 @@ if($data['status'] == "OK")
 				}
 			?>
 			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="commentary" style="height: 557px; overflow-y: scroll;">
+			<?php foreach($data['commentary'] as $line)
+			{
+				echo '<div>'.$line.'</div>';
+			}
+			?>
 		</div>
 	</div>
 </div>
