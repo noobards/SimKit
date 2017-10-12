@@ -84,6 +84,23 @@ class Center extends CI_Model {
 		return true;
 	}
 	
+	public function getFielderNames($mid, $tid)
+	{
+		$data = array();
+		$this->db->select('CONCAT(p.first_name, " ", p.last_name) AS name');
+		$this->db->from("players p");
+		$this->db->join('match_players mp', 'mp.pid = p.player_id', 'left');
+		$this->db->where(array('mid'=>$mid, 'tid'=>$tid));
+		$q = $this->db->get();
+		if($q->num_rows() > 0)
+		{
+			foreach($q->result() as $r)
+			{
+				$data[] = $r->name;
+			}
+		}
+		return $data;
+	}
 	
 	public function getMatchTeamPlayers($teams)
 	{		
@@ -167,7 +184,7 @@ class Center extends CI_Model {
 	
 	public function getMatchDetails($mid)
 	{
-		$this->db->select('home, away, overs, ground, pitch');
+		$this->db->select('home, away, overs, ground, pitch, toss, decision');
 		$this->db->from('match_center');
 		$this->db->where(array('match_id'=>$mid));
 		$query = $this->db->get();
@@ -179,6 +196,8 @@ class Center extends CI_Model {
 			$data['away'] = $r->away;
 			$data['overs'] = $r->overs;
 			$data['ground'] = $r->ground;
+			$data['toss'] = (int) $r->toss;
+			$data['decision'] = $r->decision;
 			$this->load->model("Team");
 			$data['pitch'] = $this->Team->getPitchLabel($r->pitch);
 			$data['home_label'] = $this->Team->getTeamName($r->home);

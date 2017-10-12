@@ -1,6 +1,6 @@
 <div class="row site-breadcrumbs">
 	<div class="col-xs-12">
-		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter">Match Center</a> <i class="fa fa-chevron-right">&nbsp;</i> Begin Match
+		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter">Match Center</a> <i class="fa fa-chevron-right">&nbsp;</i> <?php echo $data['home_label'].'&nbsp;&nbsp;&nbsp;v/s&nbsp;&nbsp;&nbsp;'.$data['away_label']; ?>
 	</div>
 </div>
 	
@@ -15,28 +15,32 @@ if($data['status'] == "OK")
 	$bowlers = $data['bowlers'];	
 	?>
 	<div class="col-md-8">
+		<div class="text-center">
+			<div><strong><?php echo $data['match_length']; ?></strong> overs match</div>
+			<div>at <strong><?php echo $data['ground']; ?></strong></div>
+			<div>on <?php echo date('F d, Y'); ?></div>
+		</div>
+		<div class="alert alert-success mb0 text-center bold"><?php echo $data['batting_label']; ?> Batting Scorecard</div>
 		<div class="table-mockup">
 			<div class="thead">
 				<div class="tr">
 					<div class="th">Player</div>
 					<div class="th">Status</div>
-					<div class="th">Runs</div>
-					<div class="th">Balls</div>
-					<div class="th">Fours</div>
-					<div class="th">Sixes</div>
+					<div class="th">Runs</div>					
+					<div class="th">4/6</div>					
 					<div class="th">SR</div>
 				</div>
 			</div>
 			<div class="tbody">
 				<?php foreach($batsmen as $ary)
-				{	?>
-				<div class="tr">
+				{	
+					$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
+					?>
+				<div class="tr <?php echo $css_class; ?>">
 					<div class="td"><?php echo $ary['name']; ?></div>
-					<div class="td text-center"><?php echo $ary['status']; ?></div>
-					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs']; ?></div>
-					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['balls']; ?></div>
-					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours']; ?></div>
-					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['sixes']; ?></div>
+					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
+					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
+					<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
 					<div class="td text-center"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></div>
 				</div>
 				<?php
@@ -44,13 +48,14 @@ if($data['status'] == "OK")
 			?>
 				<div class="tr">
 					<div class="td text-right">
-						<strong>Total: <?php echo $data['total'].'/'.$data['wickets'].' ('.$data['run_rate'].' rpo)'; ?></strong>
+						<strong>Total: <?php echo $data['total'].'/'.$data['wickets'].' in '.$data['overs'].' overs ('.$data['run_rate'].' rpo)'; ?></strong>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="table-mockup top10">
+		<div class="alert alert-success mb0 text-center bold"><?php echo $data['bowling_label']; ?> Bowling Scorecard</div>
+		<div class="table-mockup">
 			<div class="thead">
 				<div class="tr">
 					<div class="th">Player</div>
@@ -90,9 +95,22 @@ if($data['status'] == "OK")
 			?>
 			</div>
 		</div>
+		<?php
+			if(count($data['fow']) > 0)
+			{
+				echo '<div class="fow">';
+				echo '<strong>FOW: </strong>';
+				foreach($data['fow'] as $line)
+				{
+					echo '<span>'.$line.'</span>';
+				}
+				echo '</div>';
+			}
+		?>
 	</div>
 	<div class="col-md-4">
-		<div class="commentary" style="height: 557px; overflow-y: scroll;">
+		<div class="alert alert-success mb0 text-center bold">Innings Commentary</div>
+		<div class="commentary" style="height: 630px; overflow-y: scroll;">
 			<?php foreach($data['commentary'] as $line)
 			{
 				echo '<div>'.$line.'</div>';
