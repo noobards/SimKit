@@ -8,12 +8,17 @@ class Match{
 	public $CI;
 	
 	public $game_mode = 0;
-	public $innings = 1;
+	public $innings = "first";
+	public $teams = array();
+	public $win_score = 0;
 	
 	public $batting_team_id = 0; // the team that is batting first
 	public $bowling_team_id = 0; // the team that is batting second
 	public $batting_team_label = "";
 	public $bowling_team_label = "";
+	public $partnership_runs = 0;
+	public $partnership_balls = 0;
+	public $partnerships = array();
 	
 	public $innings_completed = false;
 	public $innings_total = 0;
@@ -23,7 +28,7 @@ class Match{
 	public $innings_commentary = array();
 	public $innings_fow = array();
 	public $last_over_total = 0;
-	public $game_stage = "PP";	
+	public $game_stage = "PP1";	
 	public $innings_noballs = 0;
 	public $innings_wides = 0;
 	public $innings_byes = 0;
@@ -65,29 +70,12 @@ class Match{
 		$this->CI->load->model("Center");
 		$this->CI->load->model("Team");
 	}
-	
-	public function getInnings()
-	{
-		return $this->innings;
-	}
-	
-	public function setInnings($number)
-	{
-		$this->innings = $number;
-	}
-	
+		
 	public function setMatchId($mid)
 	{
 		$this->match_id = $mid;
 		$this->game_mode = $this->CI->Center->getGameMode($this->match_id);
-		$teams = $this->CI->Center->getTeam1Team2($this->match_id);
-		
-		$this->batting_team_id = $teams[0];
-		$this->batting_team_label = $this->CI->Team->getTeamName($teams[0]);
-
-		$this->bowling_team_id = $teams[1];
-		$this->fielders = $this->CI->Center->getFielderNames($mid, $teams[1]);
-		$this->bowling_team_label = $this->CI->Team->getTeamName($teams[1]);
+		$this->teams = $this->CI->Center->getTeam1Team2($this->match_id);
 	}
 
 	public function setOpeningBatsman()
@@ -120,11 +108,44 @@ class Match{
 	{
 		if($innings == 'first')
 		{
+			$this->batting_team_id = $this->teams[0];
+			$this->batting_team_label = $this->CI->Team->getTeamName($this->teams[0]);
+
+			$this->bowling_team_id = $this->teams[1];
+			$this->bowling_team_label = $this->CI->Team->getTeamName($this->teams[1]);
+			$this->fielders = $this->CI->Center->getFielderNames($this->match_id, $this->teams[1]);			
 			$this->bowlers = $this->CI->Center->getBowlingOptions($this->match_id, $this->bowling_team_id);
 		}
 		else if($innings == 'second')
 		{
-			$this->bowlers = $this->CI->Center->getBowlingOptions($this->match_id, $this->batting_team_id);
+
+			$this->innings_completed = false;
+			$this->innings_total = 0;
+			$this->innings_wickets = 0;
+			$this->innings_overs = "0.0";
+			$this->innings_balls_bowled = 0;
+			$this->innings_commentary = array();
+			$this->innings_fow = array();
+			$this->last_over_total = 0;
+			$this->game_stage = "PP1";	
+			$this->innings_noballs = 0;
+			$this->innings_wides = 0;
+			$this->innings_byes = 0;
+			$this->innings_legbyes = 0;
+			$this->partnership_runs = 0;
+			$this->partnership_balls = 0;
+			$this->partnerships = array();
+
+			$this->striker_index = 0;
+			$this->non_strike_index = 0;
+
+			$this->batting_team_id = $this->teams[1];
+			$this->batting_team_label = $this->CI->Team->getTeamName($this->teams[1]);
+
+			$this->bowling_team_id = $this->teams[0];
+			$this->bowling_team_label = $this->CI->Team->getTeamName($this->teams[0]);
+			$this->fielders = $this->CI->Center->getFielderNames($this->match_id, $this->teams[0]);			
+			$this->bowlers = $this->CI->Center->getBowlingOptions($this->match_id, $this->bowling_team_id);
 		}
 
 		foreach($this->bowlers as $index=>$array)
@@ -205,6 +226,9 @@ class Match{
 				$this->bowlers[$this->currently_bowling_index]['runs'] = (int) $this->bowlers[$this->currently_bowling_index]['runs'] + 1;
 				$result = $ball_result;
 				$check_for_over = false;
+
+				$this->partnership_balls += 1;
+				$this->partnership_runs += 1;
 			}
 			else
 			{	
@@ -212,6 +236,7 @@ class Match{
 				$this->bowlers[$this->currently_bowling_index]['legal_balls'] = ((int) $this->bowlers[$this->currently_bowling_index]['legal_balls'] + 1);
 				$this->innings_balls_bowled = (int) $this->innings_balls_bowled + 1;
 				$number_of_deliveries--;
+				$this->partnership_balls += 1;
 
 				$batsman_role = $this->striker['role'];
 				$batsman_points = $this->striker['bat'];
@@ -257,6 +282,13 @@ class Match{
 
 					if($result === "W")
 					{
+
+						// partnership result
+						$player1 = $this->striker;
+						$player2 = $this->non_striker;
+						$this->calculatePartnership($player1, $player2);
+
+
 						$this->out_how = $this->mode_of_dismissal[mt_rand(0, (count($this->mode_of_dismissal) - 1))];
 						$this->innings_wickets = (int) $this->innings_wickets + 1;
 						$this->innings_fow[] = $this->innings_wickets.'-'.$this->innings_total.' <strong>'.$this->batsmen[$this->striker_index]['name'].'</strong> ('.$this->ballsToOvers($this->innings_balls_bowled).')';
@@ -405,31 +437,22 @@ class Match{
 					{
 						if($result === 4)
 						{
-							$this->batsmen[$this->striker_index]['fours'] = ((int) $this->batsmen[$this->striker_index]['fours'] + 1);
+							$this->batsmen[$this->striker_index]['fours'] = ((int) $this->batsmen[$this->striker_index]['fours'] + 1);							
 						}
 						else if($result === 6)
 						{							
-							$this->batsmen[$this->striker_index]['sixes'] = ((int) $this->batsmen[$this->striker_index]['sixes'] + 1);
-						}							
+							$this->batsmen[$this->striker_index]['sixes'] = ((int) $this->batsmen[$this->striker_index]['sixes'] + 1);							
+						}
 					}
 					$this->batsmen[$this->striker_index]['runs'] += $result;
 					$this->bowlers[$this->currently_bowling_index]['runs'] += $result;
 					$this->innings_total = ((int) $this->innings_total + (int) $result);
+					$this->partnership_runs += (int) $result;
 				}
 				$check_for_over = true;
 			}
 			
-			// last ball of over, so use 1.6 instead of 2.0
-			/*
-			if($this->innings_balls_bowled % 6 == 0)
-			{
-				$this->innings_overs = (floor($this->innings_balls_bowled/6) - 1).".6";
-			}
-			else
-			{
-				$this->innings_overs = floor($this->innings_balls_bowled/6).".".floor($this->innings_balls_bowled % 6);	
-			}
-			*/
+			
 			$this->addToCommentary($this->innings_balls_bowled, $result);
 
 			// change strike if single or three taken and it's not end of over
@@ -454,8 +477,8 @@ class Match{
 				// over complete
 				if($this->bowlers[$this->currently_bowling_index]['legal_balls'] > 0 && $this->bowlers[$this->currently_bowling_index]['legal_balls'] % 6 == 0)
 				{
-					// change strike if condition met
-					if($result === 'W' || $result === 0 || $result === 2 || $result === 4 || $result === 6)				
+					// change strike if condition met (not out added because on last ball if wicket not taken, then too change strike)
+					if($result === 'W' || $result === 0 || $result === 2 || $result === 4 || $result === 6 || $result === "NOT OUT")
 					{
 						$temp = $this->striker;
 						$this->striker = $this->non_striker;
@@ -470,33 +493,34 @@ class Match{
 			
 		}
 
-		/*
-		foreach($this->bowlers as $index=>$ary)
+		// team did not get all out so get partnership details of last batting pair
+		if($this->innings_wickets < 10)		
 		{
-			echo '<h3>'.$ary['name'].'</h3>';						
-			echo '<div>Runs: '.$ary['runs'].'</div>';
-			echo '<div>Wides: '.$ary['wides'].'</div>';
-			echo '<div>Noballs: '.$ary['noballs'].'</div>';
-			echo '<div>Wickets: '.$ary['wickets'].'</div>';
-			echo '<hr />';
+			// partnership result
+			$player1 = $this->non_striker;
+			$player2 = $this->striker;
+			$this->calculatePartnership($player1, $player2);
 		}
-		
 
-		foreach($this->batsmen as $index=>$ary)
+		if($this->innings == "first")
 		{
-			if($ary['runs'] > 0)
-			{
-				echo '<h3>'.$ary['name'].'</h3>';						
-				echo '<div>Runs: '.$ary['runs'].'</div>';
-				echo '<div>Balls: '.$ary['balls'].'</div>';
-				echo '<div>Fours: '.$ary['fours'].'</div>';
-				echo '<div>Sixes: '.$ary['sixes'].'</div>';
-				echo '<div>Status: '.$ary['status'].'</div>';
-				echo '<hr />';
-			}			
+			$this->win_score = ($this->innings_total + 1);
 		}
-		*/
-		
+	}
+
+	public function calculatePartnership($player1, $player2)
+	{
+		if($player1['batting_index'] > $player2['batting_index'])
+		{
+			$between = $this->shortName($player2['name']).'/'.$this->shortName($player1['name']);							
+		}
+		else
+		{
+			$between = $this->shortName($player1['name']).'/'.$this->shortName($player2['name']);
+		}
+		$this->partnerships[] = array('between'=>$between, 'runs'=>$this->partnership_runs, 'balls'=>$this->partnership_balls);
+		$this->partnership_runs = 0;
+		$this->partnership_balls = 0;
 	}
 
 	public function getFielder()
@@ -581,7 +605,7 @@ class Match{
 			$text .= $this->notout[mt_rand(0, (count($this->notout) - 1))];
 		}
 
-		$this->innings_commentary[] = "<div class='clearfix'><div class='comm_over'>[".$this->innings_overs."]</div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'>[".$this->innings_overs."]</div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
 		
 		if($over)
 		{
