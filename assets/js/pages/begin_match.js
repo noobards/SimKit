@@ -1,4 +1,4 @@
-simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout){		
+simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, $location, $window){		
 	$scope.data = {};
 	$scope.showSecondInningsScorecard = false;
 
@@ -16,6 +16,20 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout){
 			        'medium');
 				});				
 			}, 1500);			
-		}, 750)
+		}, 1000);
+	};
+
+	$scope.resimulate = function(e){
+		var button = jQuery(e.currentTarget);
+		button.attr('disabled', 'disabled').html('Restarting match...');
+		$timeout(function(){			
+			button.html('Generating batting and bowling lineups...');
+			$timeout(function() {
+				button.html("Starting match...");
+				$timeout(function() {
+					$window.location.href = $location.absUrl();					
+				}, 2000);
+			}, 2000);			
+		}, 1500);
 	};
 });

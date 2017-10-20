@@ -32,7 +32,8 @@ class Match{
 	public $innings_noballs = 0;
 	public $innings_wides = 0;
 	public $innings_byes = 0;
-	public $innings_legbyes = 0;
+	public $innings_legbyes = 0;	
+	public $match_result = array();
 	
 	public $bowlers = array();
 	public $balls_per_bowler = 0;
@@ -491,6 +492,17 @@ class Match{
 					$this->changeBowler();
 				}
 			}
+
+			// checking if team batting second has achieved the target
+			if($this->innings == 'second')
+			{
+				// match over
+				if($this->win_score <= $this->innings_total)
+				{
+					$this->matchSummary("won");
+					break;
+				}
+			}
 			
 		}
 
@@ -505,7 +517,45 @@ class Match{
 
 		if($this->innings == "first")
 		{
-			$this->win_score = ($this->innings_total + 1);
+			$this->win_score = ($this->innings_total + 1);			
+		}
+
+		// match ended and it's a tie
+		if($this->innings == 'second' && (($this->win_score - 1) == $this->innings_total))
+		{
+			$this->matchSummary("tie");
+		}
+		// match ended but team batting second didn't score the required runs
+		else if($this->innings == 'second' && $this->win_score > $this->innings_total)
+		{
+			$this->matchSummary("lose");
+		}		
+
+	}
+
+	public function matchSummary($result)
+	{
+		// team batting secon won (in wickets)
+		if($result == "won")
+		{
+			$this->match_result['team_id'] = $this->batting_team_id;
+			$this->match_result['team_label'] = $this->batting_team_label;
+			$this->match_result['margin'] = (10 - $this->innings_wickets).' wickets with '.($this->game_mode == 1 ? 300 - $this->innings_balls_bowled : 120 - $this->innings_balls_bowled).' balls to spare.';
+			$this->match_result['is_tie'] = 'NO';
+		}
+		// team batting first won (in runs)
+		else if($result == "lose")
+		{
+			$this->match_result['team_id'] = $this->bowling_team_id;
+			$this->match_result['team_label'] = $this->bowling_team_label;
+			$this->match_result['margin'] = ($this->win_score - $this->innings_total - 1).' runs.';
+			$this->match_result['is_tie'] = 'NO';
+		}
+		// it's a tie
+		else if($result == "tie")
+		{
+			$this->match_result['is_tie'] = 'YES';
+			$this->match_result['margin'] = "The match has ended in a tie. There is nothing separating the two teams.";
 		}
 	}
 
