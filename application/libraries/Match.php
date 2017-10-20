@@ -106,6 +106,7 @@ class Match{
 	*/
 	public function startInnings($innings)
 	{
+		$this->innings = $innings;
 		if($innings == 'first')
 		{
 			$this->batting_team_id = $this->teams[0];
@@ -629,7 +630,21 @@ class Match{
 			$bowler_maidens = $this->bowlers[$this->currently_bowling_index]['maidens'];
 			$bowler_string = $bowler_name.str_repeat("&nbsp;", 8).floor($bowler_balls/6).'-'.$bowler_maidens.'-'.$bowler_runs.'-'.$bowler_wickets;
 
-			$this->innings_commentary[] = "<p class='comm_end_of_over bold'>End of ".$this->ordinal(floor($balls_bowled/6))." over</p><p class='bold'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs <br />'.$bowler_string.'</p>';
+			$overs = floor($balls_bowled/6);
+			$crr = number_format($this->innings_total/$overs, 2);
+			$overs_remaining = $this->game_mode == 1 ? (50 - $overs) : (20 - $overs);
+			if($this->innings == 'second')
+			{
+				$no_of_runs_required = $this->win_score - $this->innings_total;				
+				$rrr = " | To Win: ".$no_of_runs_required." runs | RRR: ".number_format($no_of_runs_required/($overs_remaining == 0 ? 1 : $overs_remaining), 2);
+			}
+			else
+			{
+				$projected = floor($crr*($this->game_mode == 1 ? 50 : 20));
+				$rrr = " | Projected: ".$projected." runs";
+			}
+
+			$this->innings_commentary[] = "<p class='comm_end_of_over bold'>End of ".$this->ordinal($overs)." over</p><p class='bold'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs | RR: '.$crr.$rrr.'<br />'.$bowler_string.'</p>';
 		}
 	}
 

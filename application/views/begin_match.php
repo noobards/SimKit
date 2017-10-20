@@ -8,8 +8,8 @@
 if($data['status'] == "OK")
 {		
 ?>
-
-<div class="row" ng-controller="beginMatch">
+<div ng-controller="beginMatch">
+<div class="row">
 	<?php
 	$batsmen = $data['first_batsmen'];
 	$bowlers = $data['first_bowlers'];	
@@ -149,11 +149,15 @@ if($data['status'] == "OK")
 <div class="row top10">
 	<div class="col-md-12">
 		<div class="alert alert-info text-center">
-			So, <strong><?php echo $data['second_batting_label']; ?></strong> require <strong><?php echo $data['to_win']; ?></strong> runs to win in <strong><?php echo $data['in_overs']; ?></strong> overs at <strong><?php echo $data['rrr']; ?> runs per over</strong>
+			<strong><?php echo $data['second_batting_label']; ?></strong> require <strong><?php echo $data['to_win']; ?></strong> runs to win in <strong><?php echo $data['in_overs']; ?></strong> overs at <strong><?php echo $data['rrr']; ?> runs per over</strong>
+		</div>
+
+		<div class="text-center">
+			<button class="btn btn-primary" ng-click="startSecondInnings($event)">Simulate 2nd Innings</button>
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row" id="secondInnings" ng-show="data.showSecondInningsScorecard">
 	<?php
 	$batsmen = $data['second_batsmen'];
 	$bowlers = $data['second_bowlers'];	
@@ -282,7 +286,7 @@ if($data['status'] == "OK")
 		</div>
 	</div>
 </div>
-
+</div>
 <?php	
 }
 else
