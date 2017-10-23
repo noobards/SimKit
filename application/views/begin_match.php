@@ -287,7 +287,7 @@ if($data['status'] == "OK")
 		</div>
 	</div>
 
-	<div class="row" ng-show="data.showSecondInningsScorecard">
+	<div class="row top10" ng-show="data.showSecondInningsScorecard">
 		<div class="col-md-12">
 			<div class="alert alert-danger text-center">
 				<h2 class="match_result_title">
@@ -315,7 +315,7 @@ if($data['status'] == "OK")
 else
 {	?>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 text-center">
 			<div class="alert alert-danger"><i class="fa fa-warning">&nbsp;</i><?php echo $data['msg']; ?></div>
 		</div>
 	</div>

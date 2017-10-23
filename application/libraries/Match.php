@@ -1001,64 +1001,59 @@ class Match{
 		{
 			if($role == '2')
 			{
-				return 4;
+				return mt_rand(2,5);
 			}
 			else
 			{
-				return 5;
+				return mt_rand(3,7);
 			}			
 		}
 		else if($points >= 20 && $points < 40)
 		{
 			if($role == '2')
 			{
-				return 2;
+				return mt_rand(2,4);
 			}
 			else
 			{
-				return 3;
+				return mt_rand(2,6);
 			}
 		}
 		else if($points >= 40 && $points < 60)
 		{
 			if($role == '2')
 			{
-				$possibility = array(0,1,2,0,1,2);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(1,3);
 			}				
 			else
 			{
-				$possibility = array(0,1,2,3,0,1,2,3);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(1,4);
 			}
 		}
 		else if($points >= 60 && $points < 80)
 		{
 			if($role == '2')
 			{
-				return mt_rand(0,1);
+				return mt_rand(0,3);
 			}
 			else if($role == '4')
 			{
-				$possibility = array(0,1,0,1);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(0,3);
 			}
 			else
 			{
-				$possibility = array(0,1,2);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(1,3);
 			}
 		}
 		else if($points >= 80 && $points < 90)
 		{
 			if($role == '2')
 			{
-				$possibility = array(0,1,0,1);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(0,1);
 			}			
 			else
 			{
-				return mt_rand(0,1);
+				return mt_rand(0,2);
 			}
 		}
 		else
@@ -1069,8 +1064,7 @@ class Match{
 			}			
 			else
 			{
-				$possibility = array(0,1,0,1);
-				return $possibility[mt_rand(0, count($possibility) - 1)];
+				return mt_rand(0,1);
 			}
 		}		
 	}

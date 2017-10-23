@@ -53,6 +53,38 @@ class Center extends CI_Model {
 		$query = $this->db->get();		
 		return $query->num_rows();
 	}
+
+	public function getPendingMatches()
+	{
+		$user = (int) $this->session->logged_user;
+		$this->db->select("m.match_id, mt.type_label, m.home, m.away, m.ground, m.created_on");
+		$this->db->from("match_center m");
+		$this->db->join("match_types mt", "mt.type_id = m.match_type", "left");
+		$this->db->where(array("owner"=>$user, "toss"=>"", "decision"=>""));
+		$this->db->order_by("m.created_on", "DESC");
+		$q = $this->db->get();
+		$matches = array();				
+		if($q->num_rows() > 0)
+		{
+			foreach($q->result() as $r)
+			{
+				$time = $r->created_on;
+				$dt = new DateTime($time, new DateTimeZone('UTC'));
+				$dt->setTimeZone(new DateTimeZone($this->session->timezone));
+				$home_label = $this->Team->getTeamName($r->home);
+				$away_label = $this->Team->getTeamName($r->away);
+				$matches[] = array(
+						'mid'		=>	$r->match_id,
+						'home'		=>	$home_label,
+						'away'		=>	$away_label,
+						'type'		=>	$r->type_label,
+						'ground'	=>	$r->ground,
+						'time'		=>	$dt->format('M d, g:i a')
+					);
+			}
+		}		
+		return $matches;
+	}
 	
 	public function hasMatchPermission($id)
 	{
@@ -76,7 +108,7 @@ class Center extends CI_Model {
 		if($query->num_rows() == 1)
 		{
 			$r = $query->result()[0];
-			if($r->status == '0')
+			if($r->status == '1')
 			{
 				return false;
 			}
