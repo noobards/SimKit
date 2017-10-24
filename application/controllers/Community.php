@@ -13,82 +13,24 @@ class Community extends CI_Controller {
 			$this->session->set_flashdata('flash', array('status'=>'NOTOK', 'msg'=>'You need to be logged in to view that page.'));
 			redirect("Login");
 		}
+		$this->load->model('Community_Model');
     }
 
 	public function index()
 	{
 		$this->load->model("Utils");
 		$team_count = $this->Utils->communityTeamCount();
-		$player_count = $this->Utils->communityPlayerCount();
+		$player_count = $this->Utils->communityPlayerCount();		
 		$this->load->view('templates/logged_in', array('page'=>'community', 'team_count'=>$team_count, 'player_count'=>$player_count));
 	}
 
 	public function fetchPlayers()
-	{
-		$user = (int) $this->session->logged_user;
-		$this->db->select('p.player_id, p.first_name, p.last_name, p.updated_time, m.username, p.is_downloaded, p.source_owner, p.source_player, p.player_type, pt.type_name, pt.type_icon, c.country_name');
-		$this->db->from('players p');
-		$this->db->join('members m', 'm.user_id = p.owner', 'left');
-		$this->db->join("player_types pt", "pt.player_type_id = p.player_type", 'left');
-		$this->db->join("countries c", "c.country_id = p.country", "left");
-		$this->db->where(array('p.owner !=' => $user, 'is_private'=>0));
-		$this->db->order_by('p.player_id', 'DESC');
-		$query = $this->db->get();
+	{		
 		$players = array();
-		if($query->num_rows() > 0)
-		{
-			$this->load->model('Community_Model');
-			$this->load->model('Utils');
-			$this->load->model('Player');
-			foreach($query->result() as $row)
-			{
-				
-				if($row->is_downloaded == '1')
-				{
-					// if this player has same values as that of source player, do not show it on the page					
-					if($this->Player->sameAsSourcePlayer($row->source_player, $row->player_id))
-					{
-						continue;
-					}
-					$source_owner = $this->Utils->getPlayerOwner($row->source_owner);
-				}
-				else
-				{
-					$source_owner = null;
-				}
+		$players['created'] = $this->Community_Model->fetchManuallyCreatedPlayers();
+		$players['downloaded'] = $this->Community_Model->downloadedButChangedPlayers();
 
-				// check if the current player in loop has already been downloaded by the logged in user
-				$already = $this->Community_Model->isAlreadyDownloaded($row->player_id);
-
-				$time = new DateTime($row->updated_time, new DateTimeZone('UTC'));
-				$time->setTimeZone(new DateTimeZone($this->session->timezone));
-
-				$download_count = $this->Player->getDownloadCount($row->player_id);
-
-				
-				$players[] = array(
-								'pid'				=>	$row->player_id,
-								'name'				=>	$row->first_name.' '.$row->last_name,
-								'author'			=>	$row->username,
-								'time'				=>	$time->format('M j @ h:i a'),
-								'download'			=>	$row->is_downloaded,
-								'already'			=>	$already ? 'YES' : 'NO',
-								'source_owner'		=>	$source_owner,
-								'download_count'	=>	$download_count,
-								'player_type'		=>	$row->type_name,
-								'icon'				=>	$row->type_icon,
-								'country'			=>	$row->country_name
-							);
-			}
-
-			// sorting based on download count
-			$temp = array();
-			foreach ($players as $key => $row)
-			{
-			    $temp[$key] = $row['download_count'];
-			}
-			array_multisort($temp, SORT_DESC, $players);
-		}
+		
 		echo json_encode(array('status'=>'OK', 'players'=>$players));
 		exit;
 	}

@@ -116,56 +116,78 @@
   </div>
 </div>
 
-
-
-	<div class="row">
-		<div class="col-md-8">
+	<div class="row"  id="list">
+		<div class="col-md-4">
 			<div class="box" style="margin-top: 10px;">
 				<div class="box-title">
-					<div class="box-main-text">Players</div>
-					<div class="box-helping-text">List of players created by the community.</div>
+					<div class="box-main-text">Created Players</div>
+					<div class="box-helping-text">List of players that were manually created by the community.</div>
 				</div>
-				<div class="box-body box-body-max" id="list">				
-					<div class="row">
-						<div class="col-md-12 vscroll" style="height: 400px;">	
+				<div class="box-body box-body-max">					
+					<div class="row" ng-show="data.players.created.length > 0">
+						<div class="col-md-12">
 							<div class="form-horizontal">						
-								<div class="form-group">
+								<div class="form-group" style="margin-left:0; margin-right: 0;">
 									<label for="fil">Filter Keywords</label>
-									<input type="text" id="fil" class="form-control" placeholder="Filter by Name, Role, Author or Country" ng-model="searchKW" />
+									<input type="text" id="fil" class="form-control" placeholder="Filter by Name, Role, Author or Country" ng-model="createdKW" />
 								</div>
 							</div>
-							<div class="table-mockup">
-								<div class="thead">
-									<div class="tr">
-										<div class="th">Name</div>										
-										<div class="th">Author</div>
-										<div class="th"># of Downloads</div>
-										<div class="th">Actions</div>
-									</div>
-								</div>
-								<div class="tbody">
-									<div class="tr" ng-repeat="player in data.players | filter : searchKW as filtered">
-										<div class="td"><img class="role-icon" src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" title="{{player.player_type}}" alt="{{player.player_type}}" /><a class="normal-anchor" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>&nbsp;<i ng-show="player.download == '1'" class="fa fa-download red" title="This player was downloaded">&nbsp;</i>&nbsp;<i ng-show="player.already == 'YES'" class="fa fa-check red" title="You downloaded this player">&nbsp;</i></div>										
-										<div class="td text-center">{{player.author}} <span style="font-size: 10px;" ng-if="player.source_owner">({{player.source_owner}})</span></div>
-										<div class="td text-center"><a href="#" ng-show="player.download_count > 0" class="normal-anchor" ng-click="showDownloadList($event, player.pid)">{{player.download_count}}</a><span ng-show="player.download_count == 0">{{player.download_count}}</span></div>
-										<div class="td text-center"><button type="button" ng-disabled="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary btn-xs" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
-									</div>
-									<div class="tr" ng-if="data.players.length == 0">
-										<div class="td">No players found.</div>
-									</div>
+						</div>
+					</div>
+					<div class="row vscroll" style="height: 330px;">
+						<div class="col-sm-4" ng-repeat="player in data.players.created | filter : createdKW as filtered">
+							<div class="player_card">
+								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In your library</div></div>
+								<a class="normal-anchor card_title" title="{{player.name}}" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>
+								<div><strong>Role: </strong><img ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" class="role-icon" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
+								<div title="{{player.author}}"><strong>Author: </strong>{{player.author}}</div>
+								<div><strong>Downloads: </strong><a href="#" ng-show="player.download_count > 0" class="normal-anchor" ng-click="showDownloadList($event, player.pid)">{{player.download_count}}</a><span ng-show="player.download_count == 0">{{player.download_count}}</span></div>
+								<div class="text-center top10"><button type="button" ng-hide="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary btn-xs" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
+							</div>
+						</div>
+						<div class="col-md-12" ng-if="data.players.created.length == 0">
+							<div class="alert alert-danger text-center">No players have been created by the community</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<div class="col-md-4">
+			<div class="box" style="margin-top: 10px;">
+				<div class="box-title">
+					<div class="box-main-text">Downloaded Players</div>
+					<div class="box-helping-text">List of players that were downloaded but changed from the original.</div>
+				</div>
+				<div class="box-body box-body-max">	
+
+					<div class="row" ng-show="data.players.downloaded.length > 0">
+						<div class="col-md-12">
+							<div class="form-horizontal">						
+								<div class="form-group" style="margin-left:0; margin-right: 0;">
+									<label for="fil2">Filter Keywords</label>
+									<input type="text" id="fil2" class="form-control" placeholder="Filter by Name, Role, Author or Country" ng-model="downloadedKW" />
 								</div>
 							</div>
-						</div>						
+						</div>
+					</div>
+					<div class="row vscroll" style="height: 330px;">
+						<div class="col-sm-4" ng-repeat="player in data.players.downloaded | filter : downloadedKW as filtered">
+							<div class="player_card">
+								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In your library</div></div>
+								<a class="normal-anchor card_title" title="{{player.name}}" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>
+								<div><strong>Role: </strong><img ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" class="role-icon" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
+								<div class="alert-warning" title="{{player.source_owner}}"><strong>From: </strong>{{player.source_owner}}</div>
+								<div title="{{player.author}}"><strong>By: </strong>{{player.author}}</div>
+								<div><strong>Downloads: </strong><a href="#" ng-show="player.download_count > 0" class="normal-anchor" ng-click="showDownloadList($event, player.pid)">{{player.download_count}}</a><span ng-show="player.download_count == 0">{{player.download_count}}</span></div>
+								<div class="text-center top10"><button type="button" ng-hide="player.already == 'YES'" data-author="{{player.author}}" data-pid="{{player.pid}}" ng-click="addToQueue($event)" class="btn btn-primary btn-xs" data-name="{{player.name}}"><i class="fa fa-plus">&nbsp;</i>Add to Queue</button>&nbsp;<a data-pid="{{player.pid}}" ng-click="removeFromCart($event)" class="hide red" href="#">(Remove)</a></div>
+							</div>
+						</div>
+						<div class="col-md-12" ng-if="data.players.downloaded.length == 0">
+							<div class="alert alert-danger text-center">No players have been downloaded by the community that deviates from the original source.</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row top10 bot10">
-				<div class="col-md-12">
-					<div class="text-center">
-						<button data-toggle="modal" data-target="#confirm" type="button" ng-click="confirmDownloadPlayers($event)" class="btn btn-default"><strong><i class="fa fa-user">&nbsp;</i> {{data.cart.length}} players in queue <span ng-show="data.cart.length > 0"><br /><i class="fa fa-download">&nbsp;</i>Click to Download</span></strong></button>
-					</div>
-				</div>
-			</div>
+			</div>			
 		</div>
 		<div class="col-md-4 top10" id="player_placeholder" style="background-color: #fff;">
 			<div class="alert alert-warning" ng-show="no_player_data">{{page_load_message}}</div>
@@ -209,6 +231,10 @@
 								<tr>
 									<td style="width: 110px;"><strong>Role:</strong></td>
 									<td>{{data.player.type}}</td>
+								</tr>
+								<tr>
+									<td><strong>Mentality:</strong></td>
+									<td>{{data.player.mentality}}</td>
 								</tr>
 								<tr>
 									<td><strong>Bat Hand:</strong></td>
@@ -296,6 +322,13 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row top10 bot10">
+		<div class="col-md-8">
+			<div class="text-center">
+				<button data-toggle="modal" data-target="#confirm" type="button" ng-click="confirmDownloadPlayers($event)" class="btn btn-default"><strong><i class="fa fa-user">&nbsp;</i> {{data.cart.length}} players in queue <span ng-show="data.cart.length > 0"><br /><i class="fa fa-download">&nbsp;</i>Click to Download</span></strong></button>
 			</div>
 		</div>
 	</div>	

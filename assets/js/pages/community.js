@@ -7,12 +7,13 @@ simkit.app.controller('communityPlayers', function($scope, $http, $window){
 	$scope.data.cache = {};
 	$scope.data.cart = [];
 	$scope.usernames = {};
+	$scope.gridColumns = 3;
 	$http({
 		method:'get',
 		url:simkit.baseUrl+'Community/fetchPlayers'
 	}).then(function success(response){
 		if(response.statusText == 'OK')
-		{			
+		{	
 			$scope.data.players = response.data.players;
 		}
 		else

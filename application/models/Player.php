@@ -28,13 +28,13 @@ class Player extends CI_Model {
 			return false;
 		}
 
-		$columns = array('first_name', 'last_name', 'nick_name', 'age', 'gender', 'country', 'player_type', 'batting_hand', 'bowling_hand', 'bowler_type', 'test', 'odi', 't20', 'batting_rp', 'bowling_rp', 'fielding_rp');
+		$columns = array('first_name', 'last_name', 'nick_name', 'age', 'gender', 'country', 'player_type', 'mentality', 'batting_hand', 'bowling_hand', 'bowler_type', 'test', 'odi', 't20', 'batting_rp', 'bowling_rp', 'fielding_rp');
 
 		$not_changed = true;
 		foreach($columns as $col)
 		{	
 			if(trim($source_player->{$col}) != trim($current_player->{$col}))
-			{					
+			{				
 				$not_changed = false;
 				break;
 			}
