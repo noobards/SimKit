@@ -163,6 +163,21 @@
 
 							</div>
 
+							<div class="form-group">
+								<label for="player_mentality" class="control-label col-md-6">Mentality: <span class="red">*</span></label>
+								<div class="col-md-6">
+									<select id="player_mentality" ng-model="data.mentality" ng-required="true" class="form-control">
+										<option value="">Choose One</option>
+										<option value="1">Aggressive</option>
+										<option value="2">Moderate</option>
+										<option value="3">Defensive</option>
+									</select>
+									<span class="extra-info" ng-show="data.mentality == '1'">If there is a scoring opportunity, this player will try to take advantage of it but might also end up losing his wicket in the process. High risk, high reward. The end result will range between 0 to 6 runs.</span>
+									<span class="extra-info" ng-show="data.mentality == '2'">This player will lay emphasis on preserving his wicket when presented with a scoring opportunity. He will mostly deal in singles and twos with the occasional boundary. The end result will range between 0 and 6 runs.</span>
+									<span class="extra-info" ng-show="data.mentality == '3'">The player is out there to make sure he is not tempted by loose deliveries. He will try to score off them but will play with utmost safety. The end result will range between 0 and 4 runs.</span>
+								</div>
+							</div>
+
 							<div class="form-group" ng-if="hasBowlingAbility()">
 
 								<label for="bowler_type" class="control-label col-md-6">Bowler Type: <span class="red">*</span></label>

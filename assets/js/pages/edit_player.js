@@ -129,6 +129,8 @@ simkit.app.controller("editPlayer", function($scope, $http){
 
 				$scope.data.player_type = obj.player_type;
 
+				$scope.data.mentality = obj.mentality;
+
 				$scope.data.bowler_type = obj.bowler_type;
 
 				$scope.data.bat_hand = obj.batting_hand;
