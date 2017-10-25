@@ -10,7 +10,7 @@
 <?php echo link_tag("assets/css/bootstrap.theme.min.css"); ?>
 <?php echo link_tag("assets/css/font_awesome.min.css"); ?>
 <?php echo link_tag("assets/css/circle.css"); ?>
-<?php echo link_tag("assets/css/style.css?v=3"); ?>
+<?php echo link_tag("assets/css/style.css?v=4"); ?>
 <?php echo link_tag("assets/css/responsive.css?v=1"); ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>

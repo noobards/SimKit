@@ -135,9 +135,9 @@
 						</div>
 					</div>
 					<div class="row vscroll" style="height: 330px;">
-						<div class="col-sm-4" ng-repeat="player in data.players.created | filter : createdKW as filtered">
+						<div class="col-md-6" ng-repeat="player in data.players.created | filter : createdKW as filtered">
 							<div class="player_card">
-								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In your library</div></div>
+								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In library</div></div>
 								<a class="normal-anchor card_title" title="{{player.name}}" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>
 								<div><strong>Role: </strong><img ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" class="role-icon" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
 								<div title="{{player.author}}"><strong>Author: </strong>{{player.author}}</div>
@@ -155,7 +155,7 @@
 		<div class="col-md-4">
 			<div class="box" style="margin-top: 10px;">
 				<div class="box-title">
-					<div class="box-main-text">Downloaded Players</div>
+					<div class="box-main-text">Created via Download</div>
 					<div class="box-helping-text">List of players that were downloaded but changed from the original.</div>
 				</div>
 				<div class="box-body box-body-max">	
@@ -171,9 +171,9 @@
 						</div>
 					</div>
 					<div class="row vscroll" style="height: 330px;">
-						<div class="col-sm-4" ng-repeat="player in data.players.downloaded | filter : downloadedKW as filtered">
+						<div class="col-md-6" ng-repeat="player in data.players.downloaded | filter : downloadedKW as filtered">
 							<div class="player_card">
-								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In your library</div></div>
+								<div ng-show="player.already == 'YES'" class="ribbon-wrapper-green"><div class="ribbon-green">In library</div></div>
 								<a class="normal-anchor card_title" title="{{player.name}}" ng-click="showDetail($event, player.pid)" href="#">{{player.name}}</a>
 								<div><strong>Role: </strong><img ng-src="<?php echo base_url(); ?>assets/images/icons/{{player.icon}}" class="role-icon" title="{{player.player_type}}" alt="{{player.player_type}}" /></div>
 								<div class="alert-warning" title="{{player.source_owner}}"><strong>From: </strong>{{player.source_owner}}</div>
