@@ -329,7 +329,9 @@ class Match{
 					{											
 						$this->batsmen[$this->striker_index]['status'] = "NOTOUT";
 					}
-					$this->batsmen[$this->striker_index]['balls'] = (int) $this->batsmen[$this->striker_index]['balls'] + 1;					
+					$this->batsmen[$this->striker_index]['balls'] = (int) $this->batsmen[$this->striker_index]['balls'] + 1;
+
+					$this->bowlers[$this->currently_bowling_index]['wicket_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['wicket_balls'] + 1;
 				}
 				else
 				{
@@ -378,6 +380,7 @@ class Match{
 								$result = $this->defensiveApproach();
 							}
 						}
+						$this->bowlers[$this->currently_bowling_index]['bad_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['bad_balls'] + 1;
 					}
 					else if($ball_result == 'GOOD')
 					{
@@ -400,6 +403,7 @@ class Match{
 						{
 							$result = $this->defensiveApproach();							
 						}
+						$this->bowlers[$this->currently_bowling_index]['good_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['good_balls'] + 1;
 					}
 					else if($ball_result == 'STOCK')
 					{
@@ -433,6 +437,8 @@ class Match{
 								$result = $this->defensiveApproach();
 							}
 						}
+
+						$this->bowlers[$this->currently_bowling_index]['stock_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['stock_balls'] + 1;
 					}
 
 					if($result === 4 || $result === 6)
@@ -911,335 +917,203 @@ class Match{
 	*/
 	public function wicketDeliveryCount($role, $points)
 	{
-		if($points >=0 && $points < 20)
+		if($points >=0 && $points < 50)
 		{
 			if($role == '2')
 			{
-				return 1;
+				$percent = mt_rand(0, 3);
 			}
 			else
 			{
-				return 0;
+				$percent = mt_rand(0, 2);
 			}			
 		}
-		else if($points >= 20 && $points < 40)
+		else if($points >= 50 && $points < 75)
 		{
 			if($role == '2')
 			{
-				return 2;
+				$percent = mt_rand(4, 6);
 			}
 			else
 			{
-				return 1;	
+				$percent = mt_rand(3, 4);
 			}
 		}
-		else if($points >= 40 && $points < 60)
+		else if($points >= 75 && $points < 90)
 		{
 			if($role == '2')
 			{
-				return 3;
-			}
-			else if($role == '4')
-			{
-				return 2;
-			}			
-			else
-			{
-				return 1;
-			}
-		}
-		else if($points >= 60 && $points < 80)
-		{
-			if($role == '2')
-			{
-				return 4;
-			}
-			else if($role == '4')
-			{
-				return 3;
+				$percent = mt_rand(5, 8);
 			}
 			else
 			{
-				return 2;
-			}
-		}
-		else if($points >= 80 && $points < 90)
-		{
-			if($role == '2')
-			{
-				return 5;
-			}
-			else if($role == '4')
-			{
-				return 4;
-			}
-			else
-			{
-				return 3;
+				$percent = mt_rand(4, 6);
 			}
 		}
 		else
 		{
 			if($role == '2')
 			{
-				return 6;
-			}
-			else if($role == '4')
-			{
-				return 5;
-			}
+				$percent = mt_rand(6, 10);
+			}			
 			else
 			{
-				return 4;
+				$percent = mt_rand(5, 8);
 			}
 		}
+
+		return ($this->game_mode == 1 ? ceil($percent*60/100) : ceil($percent*24/100));
 	}
 
 	public function extraDeliveryCount($role, $points)
 	{
-		if($points >=0 && $points < 20)
+		if($points >=0 && $points < 50)
 		{
 			if($role == '2')
 			{
-				return mt_rand(2,5);
+				$balls = 6;
 			}
 			else
 			{
-				return mt_rand(3,7);
+				$balls = 7;
 			}			
 		}
-		else if($points >= 20 && $points < 40)
+		else if($points >= 50 && $points < 75)
 		{
 			if($role == '2')
 			{
-				return mt_rand(2,4);
+				$balls = 4;
 			}
 			else
 			{
-				return mt_rand(2,6);
+				$balls = 5;
 			}
 		}
-		else if($points >= 40 && $points < 60)
+		else if($points >= 75 && $points < 90)
 		{
 			if($role == '2')
 			{
-				return mt_rand(1,3);
-			}				
-			else
-			{
-				return mt_rand(1,4);
-			}
-		}
-		else if($points >= 60 && $points < 80)
-		{
-			if($role == '2')
-			{
-				return mt_rand(0,3);
-			}
-			else if($role == '4')
-			{
-				return mt_rand(0,3);
+				$balls = mt_rand(0, 3);
 			}
 			else
 			{
-				return mt_rand(1,3);
-			}
-		}
-		else if($points >= 80 && $points < 90)
-		{
-			if($role == '2')
-			{
-				return mt_rand(0,1);
-			}			
-			else
-			{
-				return mt_rand(0,2);
+				$balls = mt_rand(0, 4);
 			}
 		}
 		else
 		{
 			if($role == '2')
 			{
-				return 0;
+				$balls = mt_rand(0, 1);
 			}			
 			else
 			{
-				return mt_rand(0,1);
+				$balls = mt_rand(0, 2);
 			}
-		}		
+		}
+
+		return $balls;
 	}
 
 	public function badDeliveryCount($role, $points)
 	{
-		if($points >=0 && $points < 20)
+		if($points >=0 && $points < 50)
 		{
 			if($role == '2')
 			{
-				return 9;
+				$percent = mt_rand(30, 40);
 			}
 			else
 			{
-				return 10;
+				$percent = mt_rand(35, 45);
 			}			
 		}
-		else if($points >= 20 && $points < 40)
+		else if($points >= 50 && $points < 75)
 		{
 			if($role == '2')
 			{
-				return 7;
+				$percent = mt_rand(20, 30);
 			}
 			else
 			{
-				return 8;	
+				$percent = mt_rand(25, 35);
 			}
 		}
-		else if($points >= 40 && $points < 60)
+		else if($points >= 75 && $points < 90)
 		{
 			if($role == '2')
 			{
-				return 6;
-			}
-			else if($role == '4')
-			{
-				return 7;
-			}			
-			else
-			{
-				return 8;
-			}
-		}
-		else if($points >= 60 && $points < 80)
-		{
-			if($role == '2')
-			{
-				return 5;
-			}
-			else if($role == '4')
-			{
-				return 6;
+				$percent = mt_rand(10, 20);
 			}
 			else
 			{
-				return 7;
-			}
-		}
-		else if($points >= 80 && $points < 90)
-		{
-			if($role == '2')
-			{
-				return 4;
-			}
-			else if($role == '4')
-			{
-				return 5;
-			}
-			else
-			{
-				return 6;
+				$percent = mt_rand(15, 25);
 			}
 		}
 		else
 		{
 			if($role == '2')
 			{
-				return 3;
-			}
-			else if($role == '4')
-			{
-				return 4;
-			}
+				$percent = mt_rand(0, 10);
+			}			
 			else
 			{
-				return 5;
+				$percent = mt_rand(5, 15);
 			}
-		}		
+		}
+
+		return ($this->game_mode == 1 ? ceil($percent*60/100) : ceil($percent*24/100));	
 	}
 
 
 	public function goodDeliveryCount($role, $points)
 	{
-		if($points >=0 && $points < 20)
+		if($points >=0 && $points < 50)
 		{
 			if($role == '2')
 			{
-				return 3;
+				$percent = mt_rand(0, 5);
 			}
 			else
 			{
-				return 1;
+				$percent = 0;
 			}			
 		}
-		else if($points >= 20 && $points < 40)
+		else if($points >= 50 && $points < 75)
 		{
 			if($role == '2')
 			{
-				return 5;
+				$percent = mt_rand(5, 15);
 			}
 			else
 			{
-				return 3;	
+				$percent = mt_rand(0, 10);
 			}
 		}
-		else if($points >= 40 && $points < 60)
+		else if($points >= 75 && $points < 90)
 		{
 			if($role == '2')
 			{
-				return 7;
-			}
-			else if($role == '4')
-			{
-				return 5;
-			}			
-			else
-			{
-				return 3;
-			}
-		}
-		else if($points >= 60 && $points < 80)
-		{
-			if($role == '2')
-			{
-				return 9;
-			}
-			else if($role == '4')
-			{
-				return 7;
+				$percent = mt_rand(15, 25);
 			}
 			else
 			{
-				return 5;
-			}
-		}
-		else if($points >= 80 && $points < 90)
-		{
-			if($role == '2')
-			{
-				return 11;
-			}
-			else if($role == '4')
-			{
-				return 9;
-			}
-			else
-			{
-				return 7;
+				$percent = mt_rand(10, 20);
 			}
 		}
 		else
 		{
 			if($role == '2')
 			{
-				return 13;
-			}
-			else if($role == '4')
-			{
-				return 11;
-			}
+				$percent = mt_rand(25, 35);
+			}			
 			else
 			{
-				return 9;
+				$percent = mt_rand(20, 30);
 			}
-		}		
+		}
+
+		return ($this->game_mode == 1 ? floor($percent*60/100) : floor($percent*24/100));
 	}
 
 	public function ordinal($number) {

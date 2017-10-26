@@ -1,6 +1,14 @@
+<div ng-controller="beginMatch">
 <div class="row site-breadcrumbs">
-	<div class="col-xs-12">
+	<div class="col-sm-10">
 		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter">Match Center</a> <i class="fa fa-chevron-right">&nbsp;</i> <?php echo $data['home_label'].'&nbsp;&nbsp;&nbsp;v/s&nbsp;&nbsp;&nbsp;'.$data['away_label']; ?>
+	</div>
+	<div class="col-sm-2 text-right">
+		<?php
+		if($data['status'] == "OK")
+		{
+			echo '<a style="font-size:80%; color: #333;" href="#" ng-click="debug($event)">{{data.debug_text}}</a>';
+		}?>
 	</div>
 </div>
 	
@@ -8,7 +16,7 @@
 if($data['status'] == "OK")
 {		
 ?>
-<div ng-controller="beginMatch">
+
 	<div class="row">
 		<?php
 		$batsmen = $data['first_batsmen'];
@@ -37,7 +45,7 @@ if($data['status'] == "OK")
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?></div>
+						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['bat']; ?>)</span></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
@@ -73,7 +81,12 @@ if($data['status'] == "OK")
 						{
 						?>
 					<div class="tr">
-						<div class="td"><?php echo $ary['name']; ?></div>
+						<div class="td">
+							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
+							<div ng-show="data.debug">
+								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
+							</div>
+						</div>
 						<div class="td text-center">
 							<?php
 							echo floor($ary['legal_balls']/6).'.'.floor($ary['legal_balls'] % 6);

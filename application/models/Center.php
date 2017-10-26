@@ -357,7 +357,11 @@ class Center extends CI_Model {
 									'wides'	=> 	0,
 									'noballs'	=> 0,
 									'maidens'	=> 0,
-									'runs'	=>	0
+									'runs'	=>	0,
+									'bad_balls'	=> 0,
+									'good_balls' => 0,
+									'wicket_balls' => 0,
+									'stock_balls' => 0
 								);
 			}
 

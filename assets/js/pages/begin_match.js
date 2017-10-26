@@ -1,6 +1,8 @@
 simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, $location, $window){		
 	$scope.data = {};
 	$scope.showSecondInningsScorecard = false;
+	$scope.data.debug = false;
+	$scope.data.debug_text = "Show Debug Info";
 
 	$scope.startSecondInnings = function(e){
 		var button = jQuery(e.currentTarget);
@@ -31,5 +33,20 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 				}, 2000);
 			}, 2000);			
 		}, 1500);
+	};
+
+	$scope.debug = function(e)	{
+		e.preventDefault();
+		var anchor = jQuery(e.currentTarget);
+		if($scope.data.debug)
+		{
+			$scope.data.debug_text = "Show Debug Info";
+			$scope.data.debug = false;
+		}
+		else
+		{
+			$scope.data.debug_text = "Hide Debug Info";
+			$scope.data.debug = true;
+		}
 	};
 });
