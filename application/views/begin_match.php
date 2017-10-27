@@ -193,7 +193,7 @@ if($data['status'] == "OK")
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?></div>
+						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['bat']; ?>)</span></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
@@ -229,7 +229,12 @@ if($data['status'] == "OK")
 						{
 						?>
 					<div class="tr">
-						<div class="td"><?php echo $ary['name']; ?></div>
+						<div class="td">
+							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
+							<div ng-show="data.debug">
+								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
+							</div>
+						</div>
 						<div class="td text-center">
 							<?php
 							echo floor($ary['legal_balls']/6).'.'.floor($ary['legal_balls'] % 6);

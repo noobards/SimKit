@@ -165,7 +165,7 @@ class Match{
 
 	public function Simulate()
 	{		
-		$number_of_deliveries = ($this->game_mode == 1 ? 300 : 120);
+		$number_of_deliveries = ($this->game_mode == 1 ? 300 : 120);		
 		while($number_of_deliveries > 0)
 		{
 			if($this->game_mode == 1)
@@ -241,7 +241,7 @@ class Match{
 				$this->partnership_balls += 1;
 
 				$batsman_role = $this->striker['role'];
-				$batsman_points = $this->striker['bat'];
+				$batsman_points = $this->batsmen[$this->striker_index]['bat'];
 				$bowler_role = $this->bowlers[$this->currently_bowling_index]['player_type'];
 				$bowler_points = $this->bowlers[$this->currently_bowling_index]['rating_points'];
 
@@ -321,7 +321,7 @@ class Match{
 						if($this->innings_wickets == 10)
 						{
 							$this->innings_completed = true;
-							$this->addToCommentary($this->innings_balls_bowled, $result);							
+							$this->addToCommentary($this->innings_balls_bowled, $result, $ball_result);							
 							break;
 						}
 					}
@@ -352,32 +352,46 @@ class Match{
 					{
 						if($batsman_points >= $bowler_points)
 						{
-							if($batsman_role == 1 || $batsman_role == 5)
+							if($batsman_role == 1 || $batsman_role == 5 || $batsman_role == 3)
 							{
-								$result = $this->aggresiveApproach();
+								if($this->game_stage == 'PP1')
+								{
+									$result = $this->boundaryChance('m');
+								}
+								else if($this->game_stage == 'MO')
+								{
+									$result = $this->boundaryChance('l');
+								}
+								else
+								{
+									$result = $this->boundaryChance('h');	
+								}								
 							}
-							else if($batsman_role == 3)
+							else if($batsman_role == 4)
 							{
-								$result = $this->conservativeApproach();
+								$result = $this->boundaryChance('m');
 							}
 							else
 							{
-								$result = $this->defensiveApproach();
+								$result = $this->boundaryChance('l');
 							}
 						}
 						else
 						{
-							if($batsman_role == 1 || $batsman_role == 5)
+							if($batsman_role == 1 || $batsman_role == 5 || $batsman_role == 3)
 							{
-								$result = $this->conservativeApproach();
-							}
-							else if($batsman_role == 3)
-							{
-								$result = $this->defensiveApproach();
-							}
+								if($this->game_stage == 'PP2')
+								{
+									$result = $this->boundaryChance('m');
+								}								
+								else
+								{
+									$result = $this->boundaryChance('l');
+								}								
+							}							
 							else
 							{
-								$result = $this->defensiveApproach();
+								$result = $this->boundaryChance('l');
 							}
 						}
 						$this->bowlers[$this->currently_bowling_index]['bad_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['bad_balls'] + 1;
@@ -441,13 +455,14 @@ class Match{
 						$this->bowlers[$this->currently_bowling_index]['stock_balls'] = (int) $this->bowlers[$this->currently_bowling_index]['stock_balls'] + 1;
 					}
 
-					if($result === 4 || $result === 6)
+					if($result == '4' || $result == '6')
 					{
-						if($result === 4)
+						
+						if($result == '4')
 						{
 							$this->batsmen[$this->striker_index]['fours'] = ((int) $this->batsmen[$this->striker_index]['fours'] + 1);							
 						}
-						else if($result === 6)
+						else if($result == '6')
 						{							
 							$this->batsmen[$this->striker_index]['sixes'] = ((int) $this->batsmen[$this->striker_index]['sixes'] + 1);							
 						}
@@ -461,7 +476,7 @@ class Match{
 			}
 			
 			
-			$this->addToCommentary($this->innings_balls_bowled, $result);
+			$this->addToCommentary($this->innings_balls_bowled, $result, $ball_result);
 
 			// change strike if single or three taken and it's not end of over
 			if($check_for_over)
@@ -535,8 +550,7 @@ class Match{
 		else if($this->innings == 'second' && $this->win_score > $this->innings_total)
 		{
 			$this->matchSummary("lose");
-		}		
-
+		}				
 	}
 
 	public function matchSummary($result)
@@ -590,7 +604,7 @@ class Match{
 		return $picked_name;
 	}
 
-	public function addToCommentary($balls_bowled, $result)
+	public function addToCommentary($balls_bowled, $result, $type_of_ball)
 	{
 		if($balls_bowled % 6 == 0 && $result !== "WIDE" && $result !== "NOBALL")
 		{
@@ -603,10 +617,10 @@ class Match{
 			$over = false;
 		}
 
-		// delivery description
-		if($result === 0 || $result == 1 || $result == 2 || $result == 3)
-		{
-			if($result === 0)
+		// delivery description		
+		if($result == 0 || $result == 1 || $result == 2 || $result == 3)
+		{			
+			if($result == 0)
 			{
 				$text = "no run, ".$this->dots[mt_rand(0, (count($this->dots) - 1))];
 			}
@@ -662,7 +676,7 @@ class Match{
 			$text .= $this->notout[mt_rand(0, (count($this->notout) - 1))];
 		}
 
-		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'>[".$this->innings_overs."]</div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'>[".$this->innings_overs."]<span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
 		
 		if($over)
 		{
@@ -722,6 +736,28 @@ class Match{
 			$ln = end($ex);
 			return $fn[0].'.'.$ln;
 		}		
+	}
+
+	public function boundaryChance($chance)
+	{
+		if(! $chance || ! in_array($chance, array('h', 'm', 'l')))
+		{
+			return mt_rand(0, 3);
+		}
+
+		if($chance == 'h')
+		{			
+			$runs = array('4','0','4','6');
+		}
+		else if($chance == 'm')
+		{
+			$runs = array('1','2','4','1','4','6');
+		}
+		else if($chance == 'l')
+		{
+			$runs = array('0','1','0','1','2','0','2','0','4','0','6','0');
+		}
+		return $runs[array_rand($runs)];
 	}
 
 	public function aggresiveApproach()
@@ -814,7 +850,20 @@ class Match{
 			$this->part_timers_count = count($this->bowlers) - 5;
 		}
 
+		$overs_bowled = floor($this->innings_balls_bowled/6);
 		$current_index = $this->currently_bowling_index;
+
+		// time to get a new pair of bowlers bowler
+		if(in_array($overs_bowled, array(6,12,18,24,30,36,42,48,54)))
+		{			
+			
+		}
+		else // continue with same pair
+		{
+			
+		}
+
+		
 		$new_index = (int) $current_index + 1;
 
 		if($new_index <= 4)
@@ -841,9 +890,14 @@ class Match{
 		$bad_ball_count = $this->badDeliveryCount($role, $points);
 		$extra_ball_count = $this->extraDeliveryCount($role, $points);
 		
-
-		$balls_bank = range(1, 60);
-
+		if($this->game_mode == 1)
+		{
+			$balls_bank = range(1, 60);
+		}
+		else
+		{
+			$balls_bank = range(1, 24);
+		}
 		
 		
 		$wicket_taking_balls = array();
@@ -919,47 +973,108 @@ class Match{
 	{
 		if($points >=0 && $points < 50)
 		{
-			if($role == '2')
-			{
-				$percent = mt_rand(0, 3);
+
+			if($this->game_mode == 1)
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(0, 3);
+				}
+				else
+				{
+					$percent = mt_rand(3, 4);
+				}
 			}
 			else
-			{
-				$percent = mt_rand(0, 2);
-			}			
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(10, 15);
+				}
+				else
+				{
+					$percent = mt_rand(5, 10);
+				}
+			}
 		}
 		else if($points >= 50 && $points < 75)
 		{
-			if($role == '2')
-			{
-				$percent = mt_rand(4, 6);
+
+			if($this->game_mode == 1)
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(4, 6);
+				}
+				else
+				{
+					$percent = mt_rand(3, 4);
+				}
 			}
 			else
-			{
-				$percent = mt_rand(3, 4);
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(15, 20);
+				}
+				else
+				{
+					$percent = mt_rand(10, 15);
+				}
 			}
+			
 		}
 		else if($points >= 75 && $points < 90)
 		{
-			if($role == '2')
-			{
-				$percent = mt_rand(5, 8);
+			if($this->game_mode == 1)
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(5, 8);
+				}
+				else
+				{
+					$percent = mt_rand(4, 6);
+				}
 			}
 			else
-			{
-				$percent = mt_rand(4, 6);
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(20, 25);
+				}
+				else
+				{
+					$percent = mt_rand(15, 20);
+				}
 			}
+			
 		}
 		else
 		{
-			if($role == '2')
-			{
-				$percent = mt_rand(6, 10);
-			}			
-			else
-			{
-				$percent = mt_rand(5, 8);
+			if($this->game_mode == 1)
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(6, 10);
+				}
+				else
+				{
+					$percent = mt_rand(5, 8);
+				}
 			}
+			else
+			{				
+				if($role == '2')
+				{
+					$percent = mt_rand(25, 30);
+				}
+				else
+				{
+					$percent = mt_rand(20, 25);
+				}
+			}
+			
 		}
 
 		return ($this->game_mode == 1 ? ceil($percent*60/100) : ceil($percent*24/100));
