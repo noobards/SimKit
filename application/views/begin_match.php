@@ -45,7 +45,7 @@ if($data['status'] == "OK")
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['bat']; ?>)</span></div>
+						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
@@ -193,7 +193,7 @@ if($data['status'] == "OK")
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['bat']; ?>)</span></div>
+						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></span></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>

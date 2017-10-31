@@ -166,9 +166,10 @@ class Center extends CI_Model {
 
 	public function getTeamBattingLineup($mid, $teamid)
 	{
-		$this->db->select('p.player_id, CONCAT(p.first_name, " ", p.last_name) AS name, p.player_type, p.batting_rp, p.bowling_rp, p.fielding_rp');
+		$this->db->select('p.player_id, CONCAT(p.first_name, " ", p.last_name) AS name, p.player_type, mt.mentality_id, mt.mentality_label, mt.mentality_icon,  p.batting_rp, p.bowling_rp, p.fielding_rp');
 		$this->db->from('players p');
 		$this->db->join('match_players mp', 'mp.pid = p.player_id', 'left');
+		$this->db->join('mentality_types mt', 'mt.mentality_id = p.mentality', 'left');
 		$this->db->where(array('mid'=>$mid, 'tid'=>$teamid));
 		$this->db->order_by('pos', 'ASC');
 		$q = $this->db->get();
@@ -182,6 +183,9 @@ class Center extends CI_Model {
 								'player_id'	=> $r->player_id,
 								'name'	 =>	$r->name,
 								'role'	 =>	$r->player_type,
+								'mentality_id'	=>	$r->mentality_id,
+								'mentality'	=>	$r->mentality_label,
+								'mentality_icon'	=>	$r->mentality_icon,
 								'bat'	 =>	$r->batting_rp,
 								'bowl'	 =>	$r->bowling_rp,
 								'field'	 =>	$r->fielding_rp,
