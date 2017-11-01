@@ -38,10 +38,14 @@ class Match{
 	public $bowlers = array();
 	public $balls_per_bowler = 0;
 	public $currently_bowling_index = 0;
-	public $current_bowler = array();
 	public $part_timers_available = false;
 	public $part_timers_count = 0;
 	public $change_bowler_after_overs = 3;
+	public $bowling_pair_1 = 0;
+	public $bowling_pair_2 = 1;
+	public $bowling_change_count = 0;
+	public $get_new_bowling_pair = false;
+	public $last_over_bowling_index = null;
 	public $fielders = array();
 
 	public $mode_of_dismissal = array("Caught","LBW","Caught","Bowled","Caught","Run Out","LBW","Caught","Bowled","Caught","LBW","Caught","Bowled","LBW","Caught","Bowled","Caught","LBW","Caught","Bowled","Caught");
@@ -158,8 +162,7 @@ class Match{
 			$this->generateDeliveries($index, $role, $points);	
 		}
 
-		$this->setOpeningBatsman();
-		$this->current_bowler = $this->bowlers[$this->currently_bowling_index];	
+		$this->setOpeningBatsman();		
 		$this->Simulate();
 	}
 
@@ -445,25 +448,107 @@ class Match{
 
 	public function goodBallResult($batsman_points, $bowler_points, $batsman_role, $batsman_style)
 	{
+		$result = "UNDEFINED";
+
 		if($batsman_points >= $bowler_points)
 		{
-			if($batsman_role == 1 || $batsman_role == 5)
-			{
-				$result = $this->conservativeApproach();
+			if($batsman_role == '1')
+			{	
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('1', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+				}	
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+				}
+				else
+				{
+					$possibility = array('2', '0', '1', '0', '1', '1', '0', '2', '1', '2');
+				}
 			}
-			else if($batsman_role == 3)
+			else if($batsman_role == '2')
 			{
-				$result = $this->defensiveApproach();
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('0', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+				}
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', '0', '0', '1', '0', '0', '0', '0', '1', '0');
+				}
+				else
+				{
+					$possibility = array('1', '0', '1', '0', '1', '1', '0', '2', '1', '0');
+				}
 			}
 			else
 			{
-				$result = $this->defensiveApproach();
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('0', '0', '1', '0', '0', '0', '0', '0', '1', '0');
+				}
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', '0', '0', '1', '0', '0', '0', '0', '0', '0');
+				}
+				else
+				{
+					$possibility = array('1', '0', '1', '0', '1', '1', '0', '1', '1', '0');
+				}
 			}
 		}
 		else
 		{
-			$result = $this->defensiveApproach();							
+			if($batsman_role == '1')
+			{	
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('1', '0', '0', 'W', '0', '0', '0', 'W', '1', 'W');
+				}	
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', 'W', '0', '0', 'W', '1', '0', '0', '0', '0');
+				}
+				else
+				{
+					$possibility = array('W', '0', 'W', '1', '1', 'W', '0', 'W', '1', '0');
+				}
+			}
+			else if($batsman_role == '2')
+			{
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('1', '0', '0', 'W', '0', '0', '0', 'W', '1', '0');
+				}
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '0', '0', '0');
+				}
+				else
+				{
+					$possibility = array('W', '0', '0', '1', '1', 'W', '0', '0', '1', '0');
+				}
+			}
+			else
+			{
+				if($this->game_stage == 'PP1')
+				{
+					$possibility = array('0', '0', '1', '0', '0', '0', '0', '1', '0', '0');
+				}
+				else if($this->game_stage == 'MO')
+				{
+					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '1', '0', '0');
+				}
+				else
+				{
+					$possibility = array('0', 'W', '0', '1', '1', 'W', '0', '0', '1', '0');
+				}
+			}				
 		}
+
+		shuffle($possibility);
+		$result = array_pop($possibility);
 
 		return $result;
 	}
@@ -479,7 +564,7 @@ class Match{
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bat');
+						$result = $this->boundaryChance('m');
 					}
 					else if($batsman_style == '2')
 					{
@@ -506,11 +591,11 @@ class Match{
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bat');
+						$result = $this->boundaryChance('h');
 					}
 					else if($batsman_style == '2')
 					{
-						$result = $this->boundaryChance('h');
+						$result = $this->boundaryChance('m');
 					}
 					else
 					{
@@ -524,7 +609,7 @@ class Match{
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bat');
+						$result = $this->boundaryChance('l');
 					}
 					else
 					{
@@ -533,17 +618,24 @@ class Match{
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$result = $this->boundaryChance('l');
+					if($batsman_style == '1')
+					{										
+						$result = $this->boundaryChance('m');
+					}
+					else
+					{
+						$result = $this->boundaryChance('l');	
+					}					
 				}
 				else
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bat');
+						$result = $this->boundaryChance('m');
 					}
 					else
 					{
-						$result = $this->boundaryChance('m');
+						$result = $this->boundaryChance('l');
 					}
 				}
 			}
@@ -970,11 +1062,11 @@ class Match{
 	{
 		if($stronger == 'bat') // batsman points is greater than bowler
 		{
-			$runs = array("1", "W", "4", "6", "W", "2", "1", "4", "1");
+			$runs = array("1", "W", "4", "6", "2", "2", "1", "4", "1");
 		}
 		else
 		{
-			$runs = array("1", "W", "4", "6", "W", "2", "W", "4", "W");
+			$runs = array("1", "W", "4", "6", "W", "2", "1", "4", "W");
 		}		
 		return $runs[array_rand($runs)];
 	}
@@ -988,73 +1080,22 @@ class Match{
 
 		if($chance == 'h')
 		{			
-			$runs = array('4','0','4','6');
+			$runs = array('4','1','4','6','3','4','6','2');
 		}
 		else if($chance == 'm')
 		{
-			$runs = array('1','2','4','1','0','6');
+			$runs = array('1','2','4','1','2','6','1','1');
 		}
 		else if($chance == 'l')
 		{
-			$runs = array('0','1','0','1','0','0','2','0','4','0','0','0');
+			$runs = array('0','1','0','1','0','1','2','0','4','0','1','2');
 		}
 		return $runs[array_rand($runs)];
 	}
-
-	public function aggresiveApproach()
-	{
-		if($this->game_stage == 'PP1')
-		{			
-			$input = array('1', '1', '0', '3', '0', '4', '1', '0', '1', '2');
-		}
-		else if($this->game_stage == 'MO')
-		{			
-			$input = array('1', '4', '0', '1', '6', '0', '1', '0', '1', '2');
-		}
-		else
-		{			
-			$input = array('0', '4', '6', '3', '2', '1', '6', '4', '2', '6');
-		}
-		return $input[rand(0, count($input) - 1)];
-	}
-
-	public function conservativeApproach()
-	{
-		if($this->game_stage == 'PP1')
-		{			
-			$input = array('2', '1', '0', '3', '1', '4', '1', '0', '1', '1');
-		}
-		else if($this->game_stage == 'MO')
-		{			
-			$input = array('0', '0', '1', '3', '0', '1', '0', '2', '0', '1');
-		}
-		else
-		{			
-			$input = array('2', '2', '4', '3', '1', '0', '3', '2', '0', '1');
-		}
-		return $input[rand(0, count($input) - 1)];
-	}
-
-	public function defensiveApproach()
-	{
-		if($this->game_stage == 'PP1')
-		{			
-			$input = array('1', '0', '0', '0', '1', '0', '1', '0', '1', '0');
-		}
-		else if($this->game_stage == 'MO')
-		{			
-			$input = array('1', '0', '0', '1', '0', '0', '1', '0', '0', '0');
-		}
-		else
-		{			
-			$input = array('1', '0', '1', '2', '1', '1', '0', '0', '1', '2');
-		}
-		return $input[rand(0, count($input) - 1)];
-	}
-
 	
 	public function changeBowler()
-	{
+	{		
+		
 		$bowling_options_number = count($this->bowlers);
 		if($bowling_options_number > 5)
 		{
@@ -1065,29 +1106,28 @@ class Match{
 		$overs_bowled = floor($this->innings_balls_bowled/6);
 		$current_index = $this->currently_bowling_index;
 
-		// time to get a new pair of bowlers bowler
-		if(in_array($overs_bowled, array(6,12,18,24,30,36,42,48,54)))
-		{			
-			
+		// time to get a new pair of bowlers
+		if($overs_bowled % ($this->change_bowler_after_overs*2) == 0)
+		{
+
 		}
-		else // continue with same pair
+		else
 		{
 			
 		}
-
 		
+
 		$new_index = (int) $current_index + 1;
 
 		if($new_index <= 4)
-		{
-			$this->current_bowler = $this->bowlers[$new_index];
+		{			
 			$this->currently_bowling_index = $new_index;
 		}
 		else
-		{			
-			$this->current_bowler = $this->bowlers[0];
+		{	
 			$this->currently_bowling_index = 0;
 		}		
+		$this->last_over_bowling_index = $current_index;
 	}
 	
 	public function getMatchId()
