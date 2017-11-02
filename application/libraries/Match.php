@@ -150,6 +150,8 @@ class Match{
 
 			$this->bowling_team_id = $this->teams[0];
 			$this->bowling_team_label = $this->CI->Team->getTeamName($this->teams[0]);
+			$this->currently_bowling_index = 0;
+			$this->last_over_bowling_index = 1;
 			$this->fielders = $this->CI->Center->getFielderNames($this->match_id, $this->teams[0]);			
 			$this->bowlers = $this->CI->Center->getBowlingOptions($this->match_id, $this->bowling_team_id);
 		}
@@ -255,7 +257,7 @@ class Match{
 					$result = $this->wicketBallResult($bowler_role, $bowler_points, $batsman_points);
 					if($result === "W")
 					{
-						$this->onWicketFall();
+						$this->onWicketFall();						
 
 						if($this->innings_wickets == 10)
 						{
@@ -295,9 +297,9 @@ class Match{
 					{
 						die("UNDEFINED ERROR: ".$ball_result." (".$result.")");
 					}
-					else if($result === 'W')
+					else if($result === "W")
 					{
-						$this->onWicketFall();
+						$this->onWicketFall();						
 						if($this->innings_wickets == 10)
 						{
 							$this->innings_completed = true;
@@ -1106,17 +1108,116 @@ class Match{
 		$overs_bowled = floor($this->innings_balls_bowled/6);
 		$current_index = $this->currently_bowling_index;
 
+		$per_bowler_allowed = $this->game_mode == 1 ? 60 : 24;
+		$match_overs = $this->game_mode == 1 ? 50 : 20;
+
 		// time to get a new pair of bowlers
 		if($overs_bowled % ($this->change_bowler_after_overs*2) == 0)
 		{
-
+			if($this->change_bowler_after_overs == 3)
+			{
+				if($overs_bowled == 6)
+				{
+					$new_index = 2;
+					$this->last_over_bowling_index = 3;
+				}
+				else if($overs_bowled == 12)
+				{
+					$new_index = 4;
+					$this->last_over_bowling_index = 0;
+				}
+				else if($overs_bowled == 18)
+				{
+					if($this->game_mode == 1)
+					{
+						$new_index = 1;
+					}
+					else
+					{
+						$new_index = 4;
+					}					
+					$this->last_over_bowling_index = 2;
+				}
+				else if($overs_bowled == 24)
+				{
+					$new_index = 3;
+					$this->last_over_bowling_index = 4;
+				}
+				else if($overs_bowled == 30)
+				{
+					$new_index = 0;
+					$this->last_over_bowling_index = 1;
+				}
+				else if($overs_bowled == 36)
+				{
+					$new_index = 2;
+					$this->last_over_bowling_index = 3;
+				}
+				else if($overs_bowled == 42)
+				{
+					$new_index = 4;
+					$this->last_over_bowling_index = 0;
+				}
+				else if($overs_bowled == 48)
+				{
+					$new_index = 3;			
+					$this->last_over_bowling_index = 4;
+				}
+			}
+			else if($this->change_bowler_after_overs == 5)
+			{
+				if($overs_bowled == 10)
+				{
+					$new_index = 2;
+					$this->last_over_bowling_index = 3;
+				}
+				else if($overs_bowled == 20)
+				{
+					$new_index = 4;
+					$this->last_over_bowling_index = 0;
+				}
+				else if($overs_bowled == 30)
+				{
+					$new_index = 1;
+					$this->last_over_bowling_index = 2;
+				}
+				else if($overs_bowled == 40)
+				{
+					$new_index = 3;
+					$this->last_over_bowling_index = 4;
+				}
+				else if($overs_bowled == 50)
+				{
+					$new_index = 0;
+					$this->last_over_bowling_index = 1;
+				}
+			}
 		}
 		else
 		{
-			
-		}
-		
+			if($this->last_over_bowling_index === null)
+			{
+				$new_index = 1;
+			}
+			else
+			{
+				$new_index = $this->last_over_bowling_index;	
+			}
 
+			$next_bolwer_balls_bowled = $this->bowlers[$new_index]['legal_balls'];			
+			while($next_bolwer_balls_bowled == $per_bowler_allowed && $overs_bowled < $match_overs)
+			{				
+				$new_index = $new_index + 1;				
+				$next_bolwer_balls_bowled = $this->bowlers[$new_index]['legal_balls'];
+			}
+
+			$this->last_over_bowling_index = $current_index;
+		}
+
+		
+		$this->currently_bowling_index = $new_index;
+		
+		/*
 		$new_index = (int) $current_index + 1;
 
 		if($new_index <= 4)
@@ -1127,7 +1228,10 @@ class Match{
 		{	
 			$this->currently_bowling_index = 0;
 		}		
-		$this->last_over_bowling_index = $current_index;
+		*/
+		
+
+		//echo '<p>End of over '.$overs_bowled.' (Last Bowler: '.$current_index.' | New Bolwer: '.$new_index.'</p>';
 	}
 	
 	public function getMatchId()
