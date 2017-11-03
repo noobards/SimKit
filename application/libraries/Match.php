@@ -454,22 +454,22 @@ class Match{
 
 		if($batsman_points >= $bowler_points)
 		{
-			if($batsman_role == '1')
+			if($batsman_style == '1')
 			{	
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+					$possibility = array('1', '0', '1', '1', 'W', '1', '0', '1', '1', '0');
 				}	
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+					$possibility = array('1', '0', '1', '1', '0', '1', '1', '0', '1', '0');
 				}
 				else
 				{
-					$possibility = array('2', '0', '1', '0', '1', '1', '0', '2', '1', '2');
+					$possibility = array('2', '0', '1', '0', '2', 'W', '1', '2', '1', '2');
 				}
 			}
-			else if($batsman_role == '2')
+			else if($batsman_style == '2')
 			{
 				if($this->game_stage == 'PP1')
 				{
@@ -502,7 +502,7 @@ class Match{
 		}
 		else
 		{
-			if($batsman_role == '1')
+			if($batsman_style == '1')
 			{	
 				if($this->game_stage == 'PP1')
 				{
@@ -517,7 +517,7 @@ class Match{
 					$possibility = array('W', '0', 'W', '1', '1', 'W', '0', 'W', '1', '0');
 				}
 			}
-			else if($batsman_role == '2')
+			else if($batsman_style == '2')
 			{
 				if($this->game_stage == 'PP1')
 				{
@@ -821,7 +821,7 @@ class Match{
 		}
 		else if($outcome == 'single')
 		{
-			$possibility = array('0','0','1','1','0','1','1','0');
+			$possibility = array('1','0','1','1','0','1','0','1');
 		}
 		else
 		{
