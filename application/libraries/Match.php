@@ -406,7 +406,7 @@ class Match{
 		else if($this->innings == 'second' && $this->win_score > $this->innings_total)
 		{
 			$this->matchSummary("lose");
-		}				
+		}
 	}
 
 	public function wicketBallResult($bowler_role, $bowler_points, $batsman_points)

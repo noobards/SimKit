@@ -15,31 +15,34 @@ class Center extends CI_Model {
 			foreach($query->result() as $row)
 			{
 				$nop = $this->getPlayerCount($row->team_id);
-				if(trim($row->logo) != '')
+				if($nop >= 11)
 				{
-					$file = FCPATH.'assets'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'user_'.$this->session->logged_user.DIRECTORY_SEPARATOR.'teams'.DIRECTORY_SEPARATOR.$row->logo;					
-					if(file_exists($file))
-					{						
-						$file = base_url().'assets/images/uploads/user_'.$this->session->logged_user.'/teams/'.$row->logo;
+					if(trim($row->logo) != '')
+					{
+						$file = FCPATH.'assets'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'user_'.$this->session->logged_user.DIRECTORY_SEPARATOR.'teams'.DIRECTORY_SEPARATOR.$row->logo;					
+						if(file_exists($file))
+						{						
+							$file = base_url().'assets/images/uploads/user_'.$this->session->logged_user.'/teams/'.$row->logo;
+						}
+						else
+						{
+							$file = base_url().'assets/images/no_team_logo.png';
+						}
 					}
 					else
 					{
 						$file = base_url().'assets/images/no_team_logo.png';
 					}
-				}
-				else
-				{
-					$file = base_url().'assets/images/no_team_logo.png';
-				}
 
-				$rating = $this->Team->getTeamRating($row->team_id);
-				$teams[] = array(
-								'team_id'		=> $row->team_id,
-								'team_name'		=> $row->team_name,
-								'player_count'	=> $nop,
-								'logo'			=> $file,
-								'rating'		=> $rating
-							);
+					$rating = $this->Team->getTeamRating($row->team_id);
+					$teams[] = array(
+									'team_id'		=> $row->team_id,
+									'team_name'		=> $row->team_name,
+									'player_count'	=> $nop,
+									'logo'			=> $file,
+									'rating'		=> $rating
+								);
+				}				
 			}
 		}
 		return $teams;
@@ -57,10 +60,10 @@ class Center extends CI_Model {
 	public function getPendingMatches()
 	{
 		$user = (int) $this->session->logged_user;
-		$this->db->select("m.match_id, mt.type_label, m.home, m.away, m.ground, m.created_on");
+		$this->db->select("m.match_id, mt.type_label, m.home, m.away, m.ground, m.stage, m.created_on");
 		$this->db->from("match_center m");
 		$this->db->join("match_types mt", "mt.type_id = m.match_type", "left");
-		$this->db->where(array("owner"=>$user, "toss"=>"", "decision"=>""));
+		$this->db->where(array("owner"=>$user, "stage !="=>3));
 		$this->db->order_by("m.created_on", "DESC");
 		$q = $this->db->get();
 		$matches = array();				
@@ -79,7 +82,8 @@ class Center extends CI_Model {
 						'away'		=>	$away_label,
 						'type'		=>	$r->type_label,
 						'ground'	=>	$r->ground,
-						'time'		=>	$dt->format('M d, g:i a')
+						'stage'		=>	$r->stage,
+						'time'		=>	$dt->format('M j, g:i a')
 					);
 			}
 		}		
@@ -101,14 +105,14 @@ class Center extends CI_Model {
 
 	public function hasMatchFinished($id)
 	{
-		$this->db->select('status');
+		$this->db->select('stage');
 		$this->db->from('match_center');
 		$this->db->where(array('match_id'=>$id, 'owner'=>$this->session->logged_user));
 		$query = $this->db->get();
 		if($query->num_rows() == 1)
 		{
 			$r = $query->result()[0];
-			if($r->status == '1')
+			if($r->stage != 3)
 			{
 				return false;
 			}
@@ -220,7 +224,7 @@ class Center extends CI_Model {
 	
 	public function getMatchDetails($mid)
 	{
-		$this->db->select('home, away, overs, ground, pitch, toss, decision');
+		$this->db->select('home, away, overs, ground, pitch, toss, decision, stage');
 		$this->db->from('match_center');
 		$this->db->where(array('match_id'=>$mid));
 		$query = $this->db->get();
@@ -232,12 +236,25 @@ class Center extends CI_Model {
 			$data['away'] = $r->away;
 			$data['overs'] = $r->overs;
 			$data['ground'] = $r->ground;
-			$data['toss'] = (int) $r->toss;
+			$data['toss'] = (int) $r->toss;			
 			$data['decision'] = $r->decision;
+			$data['stage'] = $r->stage;
 			$this->load->model("Team");
 			$data['pitch'] = $this->Team->getPitchLabel($r->pitch);
 			$data['home_label'] = $this->Team->getTeamName($r->home);
 			$data['away_label'] = $this->Team->getTeamName($r->away);
+			if($r->toss == $r->home)
+			{
+				$data['won_by'] = $data['home_label'];
+			}
+			else if($r->toss == $r->away)
+			{
+				$data['won_by'] = $data['away_label'];
+			}
+			else
+			{
+				$data['won_by'] = "UNDEFINED";
+			}			
 			return $data;
 		}
 		else

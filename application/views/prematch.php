@@ -22,6 +22,9 @@ if($data['status'] == "OK")
 				<p class="sim_extra_info">Pitch is <strong><?php echo $data['pitch']; ?></strong></p>
 				<p class="sim_extra_info">Match length is <strong><?php echo $data['overs']; ?> overs</strong> long</p>
 				
+				<?php
+				if($data['stage'] == '1')
+					{ ?>
 				<div class="text-center">
 					<button class="btn btn-danger" ng-click="flipCoin($event)">Coin Toss</button>
 					<img ng-show="coin_tossed" class="coin_toss" src="<?php echo base_url(); ?>assets/images/coin.png" alt="Toss" />
@@ -81,9 +84,19 @@ if($data['status'] == "OK")
 						</div>
 					</div>
 					<div class="text-center top10">
-						<button class="btn btn-danger" ng-click="saveBowlingOrder($event)"><i class="fa fa-rocket">&nbsp;</i>Begin Match</button>
+						<button class="btn btn-danger" ng-click="saveBowlingOrder($event, 'save')"><i class="fa fa-rocket">&nbsp;</i>Begin Match</button>
 					</div>
 				</div>
+				<?php
+				} else {	?>
+					<div class="alert alert-warning text-center mb0"><i class="fa fa-bolt">&nbsp;</i><strong><?php echo $data['toss_won_by']; ?></strong> have won the toss and elected to <strong><?php echo $data['decision']; ?></strong> first.</div>
+					<div class="text-center top10">
+						<button class="btn btn-danger" ng-click="saveBowlingOrder($event, 'proceed')"><i class="fa fa-rocket">&nbsp;</i>Simulate</button>
+					</div>
+				<?php
+				}
+				?>
+				
 			</div>
 		</div>	
 	</div>
