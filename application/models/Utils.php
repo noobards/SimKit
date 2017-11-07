@@ -105,7 +105,7 @@ class Utils extends CI_Model {
 		}
 		else
 		{
-			return "Undefined";
+			return "Not Available";
 		}
 	}
 
@@ -359,7 +359,7 @@ class Utils extends CI_Model {
 		$logged_in_user = (int) $this->session->logged_user;
 		$this->db->select('player_id');
 		$this->db->from("players");
-		$this->db->where(array("owner"=>$logged_in_user, "player_id"=>$player_id));
+		$this->db->where(array("owner"=>$logged_in_user, "player_id"=> (int) $player_id));
 		$query = $this->db->get();
 		if($query->num_rows() == 1)
 		{

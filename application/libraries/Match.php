@@ -48,7 +48,7 @@ class Match{
 	public $last_over_bowling_index = null;
 	public $fielders = array();
 
-	public $mode_of_dismissal = array("Caught","LBW","Caught","Bowled","Caught","Run Out","LBW","Caught","Bowled","Caught","LBW","Caught","Bowled","LBW","Caught","Bowled","Caught","LBW","Caught","Bowled","Caught");
+	public $mode_of_dismissal = array("Caught","LBW","Caught","Bowled","Caught","Run Out", "Hit Wicket", "Caught","Caught","Caught","Caught","LBW","Caught","Bowled","Caught","Caught","Bowled","Caught","LBW","Caught","Caught","Caught");
 	public $out_how = "";
 	public $batsmen = array();
 	public $striker = array();
@@ -506,26 +506,26 @@ class Match{
 			{	
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '0', 'W', '0', '0', '0', 'W', '1', 'W');
+					$possibility = array('1', '0', '0', 'W', '0', '0', '0', '1', '1', 'W');
 				}	
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', 'W', '0', '0', 'W', '1', '0', '0', '0', '0');
+					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '0', '0', '0');
 				}
 				else
 				{
-					$possibility = array('W', '0', 'W', '1', '1', 'W', '0', 'W', '1', '0');
+					$possibility = array('W', '0', 'W', '1', '1', '2', '0', 'W', '1', '0');
 				}
 			}
 			else if($batsman_style == '2')
 			{
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '0', 'W', '0', '0', '0', 'W', '1', '0');
+					$possibility = array('1', '0', '0', 'W', '0', '0', '0', '1', '1', '0');
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '0', '0', '0');
+					$possibility = array('0', '1', '0', '0', '0', '1', '0', '0', '0', '0');
 				}
 				else
 				{
@@ -540,11 +540,11 @@ class Match{
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '1', '0', '0');
+					$possibility = array('0', '1', '0', '0', '0', '1', '0', '1', '0', '0');
 				}
 				else
 				{
-					$possibility = array('0', 'W', '0', '1', '1', 'W', '0', '0', '1', '0');
+					$possibility = array('0', 'W', '0', '1', '1', '2', '0', '0', '1', '0');
 				}
 			}				
 		}
@@ -645,7 +645,7 @@ class Match{
 			{
 				if($batsman_style == '1')
 				{										
-					$result = $this->boundaryChanceWithWicket('bat');
+					$result = $this->boundaryChance('m');
 				}
 				else
 				{
@@ -661,7 +661,7 @@ class Match{
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bowl');
+						$result = $this->boundaryChance('m');
 					}
 					else if($batsman_style == '2')
 					{
@@ -676,7 +676,7 @@ class Match{
 				{
 					if($batsman_style == '1')
 					{										
-						$result = $this->boundaryChanceWithWicket('bowl');
+						$result = $this->boundaryChance('m');
 					}									
 					else
 					{
@@ -856,6 +856,10 @@ class Match{
 		if($this->out_how == 'Bowled')
 		{
 			$this->batsmen[$this->striker_index]['status'] = "b. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
+		}
+		else if($this->out_how == 'Hit Wicket')
+		{
+			$this->batsmen[$this->striker_index]['status'] = "hitwicket. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
 		}
 		else if($this->out_how == 'LBW')
 		{

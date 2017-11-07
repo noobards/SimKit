@@ -15,7 +15,8 @@ class Center extends CI_Model {
 			foreach($query->result() as $row)
 			{
 				$nop = $this->getPlayerCount($row->team_id);
-				if($nop >= 11)
+				$number_of_bowlers = $this->countBowlingOptions($row->team_id);
+				if($nop >= 11 && $number_of_bowlers >= 5)
 				{
 					if(trim($row->logo) != '')
 					{
@@ -57,6 +58,17 @@ class Center extends CI_Model {
 		return $query->num_rows();
 	}
 
+	public function countBowlingOptions($tid)
+	{
+		$this->db->select('p.player_id');
+		$this->db->from('players p');
+		$this->db->join('squads s', 's.player_id = p.player_id', 'left');
+		$this->db->where('s.team_id', $tid);
+		$this->db->where_in('p.player_type', array(2,3,4));
+		$q = $this->db->get();
+		return $q->num_rows();
+	}
+
 	public function getPendingMatches()
 	{
 		$user = (int) $this->session->logged_user;
@@ -92,14 +104,17 @@ class Center extends CI_Model {
 	
 	public function hasMatchPermission($id)
 	{
-		$this->db->select('match_id');
-		$this->db->from('match_center');
-		$this->db->where(array('match_id'=>$id, 'owner'=>$this->session->logged_user));
-		$query = $this->db->get();
-		if($query->num_rows() == 1)
+		if((int) $id > 0)
 		{
-			return true;
-		}
+			$this->db->select('match_id');
+			$this->db->from('match_center');
+			$this->db->where(array('match_id'=>$id, 'owner'=>$this->session->logged_user));
+			$query = $this->db->get();
+			if($query->num_rows() == 1)
+			{
+				return true;
+			}
+		}		
 		return false;
 	}
 
@@ -224,7 +239,7 @@ class Center extends CI_Model {
 	
 	public function getMatchDetails($mid)
 	{
-		$this->db->select('home, away, overs, ground, pitch, toss, decision, stage');
+		$this->db->select('match_id, home, away, overs, ground, pitch, toss, decision, stage');
 		$this->db->from('match_center');
 		$this->db->where(array('match_id'=>$mid));
 		$query = $this->db->get();
@@ -232,7 +247,8 @@ class Center extends CI_Model {
 		{
 			$data = array();
 			$r = $query->result()[0];
-			$data['home'] = $r->home;
+			$data['mid'] = $r->match_id;
+			$data['home'] = $r->home;			
 			$data['away'] = $r->away;
 			$data['overs'] = $r->overs;
 			$data['ground'] = $r->ground;

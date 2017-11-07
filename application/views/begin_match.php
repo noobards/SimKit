@@ -1,13 +1,90 @@
 <div ng-controller="beginMatch">
+
+<div class="modal fade" id="editPlayerRatingModal">
+  <div class="modal-dialog" style="width: 90%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit the ratings</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="ajax-loading" style="width: 80%; margin: auto; height: 100px;" ng-hide="save.showPlayers">
+      	</div>
+        <div class="row" ng-show="save.showPlayers">
+        	<div class="col-md-6">
+        		<div class="alert alert-success text-center mb0"><strong>{{edit.home.name}}</strong></div>
+        		<div class="table-mockup">
+        			<div class="thead">
+        				<div class="tr">
+        					<div class="th">Name</div>
+        					<div class="th">Bat</div>
+        					<div class="th">Bowl</div>
+        					<div class="th">Nature</div>
+        				</div>        				
+        			</div>
+        			<div class="tbody">
+    					<div class="tr" ng-repeat="p in edit.home.players">
+    						<div class="td">{{p.name}}</div>
+    						<div class="td"><input type="text" ng-model="save[p.id]['bat']" class="form-control" /></div>
+    						<div class="td"><input type="text" ng-model="save[p.id]['bowl']" class="form-control" /></div>
+    						<div class="td">
+    							<select class="form-control" ng-model="save[p.id]['ment']">
+    								<option value="1">Aggressive</option>
+    								<option value="2">Moderate</option>
+    								<option value="3">Defensive</option>
+    							</select>
+    						</div>
+    					</div>
+    				</div>
+        		</div>
+        	</div>
+        	<div class="col-md-6">
+        		<div class="alert alert-success text-center mb0"><strong>{{edit.away.name}}</strong></div>
+        		<div class="table-mockup">
+        			<div class="thead">
+        				<div class="tr">
+        					<div class="th">Name</div>
+        					<div class="th">Bat</div>
+        					<div class="th">Bowl</div>
+        					<div class="th">Nature</div>
+        				</div>        				
+        			</div>
+        			<div class="tbody">
+    					<div class="tr" ng-repeat="p in edit.away.players">
+    						<div class="td">{{p.name}}</div>
+    						<div class="td"><input type="text" ng-model="save[p.id]['bat']" class="form-control" /></div>
+    						<div class="td"><input type="text" ng-model="save[p.id]['bowl']" class="form-control" /></div>
+    						<div class="td">
+    							<select class="form-control" ng-model="save[p.id]['ment']">
+    								<option value="1">Aggressive</option>
+    								<option value="2">Moderate</option>
+    								<option value="3">Defensive</option>
+    							</select>
+    						</div>
+    					</div>
+    				</div>
+        		</div>
+        	</div>
+        </div>
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+        <button type="button" class="btn btn-default" ng-show="save.showPlayers" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="updateRatings($event)" ng-show="save.showPlayers" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="row site-breadcrumbs">
 	<div class="col-sm-10">
-		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter">Match Center</a> <i class="fa fa-chevron-right">&nbsp;</i> <?php echo $data['home_label'].'&nbsp;&nbsp;&nbsp;v/s&nbsp;&nbsp;&nbsp;'.$data['away_label']; ?>
+		<span class="bradcrumbs-static-text">You're here</span> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo base_url(); ?>">Dashboard</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter">Match Center</a> <i class="fa fa-chevron-right">&nbsp;</i> <a href="<?php echo site_url(); ?>/MatchCenter/PreMatch/<?php echo $this->uri->segment(3); ?>">PreMatch</a> <i class="fa fa-chevron-right">&nbsp;</i> <?php echo $data['home_label'].'&nbsp;&nbsp;&nbsp;v/s&nbsp;&nbsp;&nbsp;'.$data['away_label']; ?>
 	</div>
 	<div class="col-sm-2 text-right">
 		<?php
 		if($data['status'] == "OK")
 		{
-			echo '<a style="font-size:80%; color: #333;" href="#" ng-click="debug($event)">{{data.debug_text}}</a>';
+			echo '<a data-mid="'.$data['mid'].'" style="font-size:80%; color:#333;" href="#" data-toggle="modal" data-target="#editPlayerRatingModal" ng-click="editRatings($event)">Edit Player Ratings</a> | ';
+			echo '<a style="font-size:80%; color:#333;" href="#" ng-click="debug($event)">{{data.debug_text}}</a>';
 		}?>
 	</div>
 </div>
@@ -46,7 +123,7 @@ if($data['status'] == "OK")
 						?>
 					<div class="tr <?php echo $css_class; ?>">
 						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
+						<div class="td"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
 						<div class="td text-center"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></div>
@@ -194,7 +271,7 @@ if($data['status'] == "OK")
 						?>
 					<div class="tr <?php echo $css_class; ?>">
 						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></span></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
+						<div class="td"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
 						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
 						<div class="td text-center"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></div>
