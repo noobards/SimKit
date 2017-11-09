@@ -187,7 +187,7 @@ class Match{
 		{
 			$points = $array['rating_points'];
 			$role = $array['player_type'];
-			$this->balls_per_bowler = 60;
+			$this->balls_per_bowler = $this->game_mode == 1 ? 60 : 24;
 			$this->generateDeliveries($index, $role, $points);	
 		}
 
@@ -1105,16 +1105,38 @@ class Match{
 		}
 
 		if($chance == 'h')
-		{			
-			$runs = array('4','1','4','6','3','4','6','2');
+		{
+			if($this->game_mode == 1)
+			{
+				$runs = array('4','1','4','6','3','4','6','2');	
+			}
+			else
+			{
+				$runs = array('4','6','4','6','3','4','6','4');
+			}
 		}
 		else if($chance == 'm')
 		{
-			$runs = array('1','2','4','1','2','6','1','1');
+			if($this->game_mode == 1)
+			{
+				$runs = array('1','2','4','1','2','6','1','1');
+			}
+			else
+			{
+				$runs = array('6','2','4','1','2','6','2','1');
+			}			
 		}
 		else if($chance == 'l')
 		{
-			$runs = array('0','1','0','1','0','1','2','0','4','0','1','2');
+			if($this->game_mode == 1)
+			{
+				$runs = array('0','1','0','1','0','1','2','0','4','0','1','2');
+			}
+			else
+			{
+				$runs = array('2','2','0','4','0','1','2','0','4','0','1','2');
+			}
+			
 		}
 		return $runs[array_rand($runs)];
 	}
@@ -1369,11 +1391,11 @@ class Match{
 			{				
 				if($role == '2')
 				{
-					$percent = mt_rand(10, 15);
+					$percent = mt_rand(2, 7);
 				}
 				else
 				{
-					$percent = mt_rand(5, 10);
+					$percent = mt_rand(0, 5);
 				}
 			}
 		}
@@ -1395,11 +1417,11 @@ class Match{
 			{				
 				if($role == '2')
 				{
-					$percent = mt_rand(15, 20);
+					$percent = mt_rand(10, 15);
 				}
 				else
 				{
-					$percent = mt_rand(10, 15);
+					$percent = mt_rand(2, 5);
 				}
 			}
 			
@@ -1421,11 +1443,11 @@ class Match{
 			{				
 				if($role == '2')
 				{
-					$percent = mt_rand(20, 25);
+					$percent = mt_rand(15, 20);
 				}
 				else
 				{
-					$percent = mt_rand(15, 20);
+					$percent = mt_rand(7, 10);
 				}
 			}
 			
@@ -1447,17 +1469,17 @@ class Match{
 			{				
 				if($role == '2')
 				{
-					$percent = mt_rand(25, 30);
+					$percent = mt_rand(20, 25);
 				}
 				else
 				{
-					$percent = mt_rand(20, 25);
+					$percent = mt_rand(10, 15);
 				}
 			}
 			
 		}
 
-		return ($this->game_mode == 1 ? ceil($percent*60/100) : ceil($percent*24/100));
+		return ($this->game_mode == 1 ? ceil($percent*60/100) : floor($percent*24/100));
 	}
 
 	public function extraDeliveryCount($role, $points)
