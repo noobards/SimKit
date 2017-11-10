@@ -160,7 +160,7 @@ if($data['status'] == "OK")
 					<div class="tr">
 						<div class="td">
 							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
-							<div ng-show="data.debug">
+							<div ng-show="data.debug.hide">
 								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
 							</div>
 						</div>
@@ -308,7 +308,7 @@ if($data['status'] == "OK")
 					<div class="tr">
 						<div class="td">
 							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
-							<div ng-show="data.debug">
+							<div ng-show="data.debug.hide">
 								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
 							</div>
 						</div>

@@ -487,45 +487,45 @@ class Match{
 			{	
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '1', '1', 'W', '1', '0', '1', '1', '0');
+					$possibility = array('1', '0', '1', '1', '2', '1', '0', '1', '2', '1');
 				}	
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('1', '0', '1', '1', '0', '1', '1', '0', '1', '0');
+					$possibility = array('1', '0', '1', '1', '1', '1', '1', '0', '1', '0');
 				}
 				else
 				{
-					$possibility = array('2', '0', '1', '0', '2', 'W', '1', '2', '1', '2');
+					$possibility = array('2', '1', '1', '0', '2', '1', '1', '2', '1', '2');
 				}
 			}
 			else if($batsman_style == '2')
 			{
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('0', '0', '1', '0', '0', '1', '0', '0', '1', '0');
+					$possibility = array('1', '0', '1', '0', '1', '2', '0', '1', '1', '1');
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', '0', '0', '1', '0', '0', '0', '0', '1', '0');
+					$possibility = array('0', '1', '0', '1', '1', '0', '1', '1', '1', '0');
 				}
 				else
 				{
-					$possibility = array('1', '0', '1', '0', '1', '1', '0', '2', '1', '0');
+					$possibility = array('1', '2', '1', '2', '1', '1', '0', '2', '1', '0');
 				}
 			}
 			else
 			{
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('0', '0', '1', '0', '0', '0', '0', '0', '1', '0');
+					$possibility = array('0', '0', '1', '1', '0', '1', '0', '1', '1', '0');
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', '0', '0', '1', '0', '0', '0', '0', '0', '0');
+					$possibility = array('1', '1', '0', '1', '0', '0', '1', '0', '1', '0');
 				}
 				else
 				{
-					$possibility = array('1', '0', '1', '0', '1', '1', '0', '1', '1', '0');
+					$possibility = array('1', '0', '1', '1', '1', '1', '0', '1', '1', '0');
 				}
 			}
 		}
@@ -535,45 +535,45 @@ class Match{
 			{	
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '0', 'W', '0', '0', '0', '1', '1', 'W');
+					$possibility = array('1', '0', '0', '1', '0', '0', '1', '1', '1', '0');
 				}	
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', 'W', '0', '0', '0', '1', '0', '0', '0', '0');
+					$possibility = array('0', '1', '0', '1', '0', '1', '0', '1', '0', '0');
 				}
 				else
 				{
-					$possibility = array('W', '0', 'W', '1', '1', '2', '0', 'W', '1', '0');
+					$possibility = array('W', '0', '1', '1', '1', '2', '0', '2', '1', '0');
 				}
 			}
 			else if($batsman_style == '2')
 			{
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('1', '0', '0', 'W', '0', '0', '0', '1', '1', '0');
+					$possibility = array('1', '0', '0', '1', '0', '0', '0', '1', '1', '0');
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', '1', '0', '0', '0', '1', '0', '0', '0', '0');
+					$possibility = array('0', '1', '0', '1', '0', '1', '0', '1', '0', '1');
 				}
 				else
 				{
-					$possibility = array('W', '0', '0', '1', '1', 'W', '0', '0', '1', '0');
+					$possibility = array('1', '0', '0', '1', '1', '1', '0', '0', '1', '0');
 				}
 			}
 			else
 			{
 				if($this->game_stage == 'PP1')
 				{
-					$possibility = array('0', '0', '1', '0', '0', '0', '0', '1', '0', '0');
+					$possibility = array('0', '1', '1', '0', '0', '1', '0', '1', '0', '0');
 				}
 				else if($this->game_stage == 'MO')
 				{
-					$possibility = array('0', '1', '0', '0', '0', '1', '0', '1', '0', '0');
+					$possibility = array('0', '1', '0', '1', '0', '1', '0', '1', '0', '1');
 				}
 				else
 				{
-					$possibility = array('0', 'W', '0', '1', '1', '2', '0', '0', '1', '0');
+					$possibility = array('0', 'W', '0', '1', '1', '2', '0', '1', '1', '0');
 				}
 			}				
 		}
@@ -842,7 +842,7 @@ class Match{
 	{		
 		if($outcome == 'three')
 		{
-			$possibility = array('1','0','4','1','4','3','1','0');
+			$possibility = array('1','0','4','1','4','3','1','1');
 		}
 		else if($outcome == 'two')
 		{
@@ -854,7 +854,7 @@ class Match{
 		}
 		else
 		{
-			$possibility = array('0','0','0','1','0','0','1','0');
+			$possibility = array('0','1','0','1','1','1','1','0');
 		}
 
 		return $possibility[mt_rand(0, (count($possibility) - 1))];
