@@ -68,8 +68,8 @@ class Match{
 	public $wides = array();
 	public $noballs = array();
 	public $notout = array();
-	
-	public function Match()
+
+	public function __construct()
 	{
 		$this->CI = get_instance();
 		$this->CI->load->model("Center");
@@ -85,6 +85,8 @@ class Match{
 		$this->noballs = $this->getCommentaryLines('NB');
 		$this->notout = $this->getCommentaryLines('NO');
 	}
+	
+	
 
 	public function getCommentaryLines($ball_result)
 	{
