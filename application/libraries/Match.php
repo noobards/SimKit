@@ -1024,7 +1024,7 @@ class Match{
 			$text .= $this->notout[mt_rand(0, (count($this->notout) - 1))];
 		}
 
-		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'>[".$this->innings_overs."]<span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'><span class='over_number'>[".$this->innings_overs."]</span><span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
 		
 		if($over)
 		{
@@ -1062,7 +1062,7 @@ class Match{
 				$rrr = " | Projected: ".$projected." runs";
 			}
 
-			$this->innings_commentary[] = "<p class='comm_end_of_over bold'>End of ".$this->ordinal($overs)." over</p><p class='bold'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs | RR: '.$crr.$rrr.'<br />'.$bowler_string.'</p>';
+			$this->innings_commentary[] = "<div class='comm_end_of_over bold'>End of ".$this->ordinal($overs)." over</div><div class='bold comm_over_stat'><span class='over_stat1'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs | RR: '.$crr.$rrr.'</span><span class="over_stat2">'.$bowler_string.'</span></div>';
 		}
 	}
 

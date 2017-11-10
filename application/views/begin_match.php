@@ -224,7 +224,7 @@ if($data['status'] == "OK")
 		</div>
 		<div class="col-md-4">
 			<div class="alert alert-success mb0 text-center bold">Innings Commentary</div>
-			<div class="commentary" style="height: 850px; overflow-y: scroll;">
+			<div class="commentary 1st" style="height: 850px; overflow-y: scroll;">
 				<?php foreach($data['first_commentary'] as $line)
 				{
 					echo $line;
@@ -244,6 +244,7 @@ if($data['status'] == "OK")
 
 			<div class="text-center">
 				<button class="btn btn-primary" ng-click="startSecondInnings($event)">Simulate 2nd Innings</button>
+				<button class="btn btn-danger" ng-click="copyCommentary($event, '1st')">Copy 1st Innings Commentary</button>
 			</div>
 		</div>
 	</div>
@@ -372,7 +373,7 @@ if($data['status'] == "OK")
 		</div>
 		<div class="col-md-4">
 			<div class="alert alert-success mb0 text-center bold">Innings Commentary</div>
-			<div class="commentary" style="height: 850px; overflow-y: scroll;">
+			<div class="commentary 2nd" style="height: 850px; overflow-y: scroll;">
 				<?php foreach($data['second_commentary'] as $line)
 				{
 					echo $line;
@@ -402,6 +403,7 @@ if($data['status'] == "OK")
 
 		<div class="col-md-12 text-center" style="padding-bottom: 30px;">
 			<button ng-click="resimulate($event)" class="btn btn-primary">Resimulate Match</button>
+			<button class="btn btn-danger" ng-click="copyCommentary($event, '2nd')">Copy 2nd Innings Commentary</button>
 		</div>
 	</div>
 </div>
