@@ -49,7 +49,7 @@ class Community extends CI_Controller {
 		if(count($post) > 0)
 		{
 			$this->load->model('Utils');
-			$total_to_download = count($post);
+			$total_to_download = count($post);			
 			$downloaded = 0;
 			$failed = array();
 			date_default_timezone_set("UTC");
@@ -101,6 +101,7 @@ class Community extends CI_Controller {
 						'gender'		=>	$row->gender,
 						'country'		=>	$row->country,
 						'player_type'	=>	$row->player_type,
+						'mentality'		=>	$row->mentality,
 						'batting_hand'	=>	$row->batting_hand,
 						'bowling_hand'	=>	($row->bowling_hand ? $row->bowling_hand : null),
 						'bowler_type'	=>	($row->bowler_type ? $row->bowler_type : null),
