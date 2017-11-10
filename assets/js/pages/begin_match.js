@@ -54,7 +54,7 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 	};
 
 	$scope.editRatings = function(e){
-		$scope.save.showPlayers = false;
+		$scope.data.showPlayers = false;
 		e.preventDefault();
 		var anchor = jQuery(e.currentTarget);
 		$scope.data.mid = parseInt(anchor.attr('data-mid'), 10);		
@@ -89,7 +89,7 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 							$scope.save[obj.id]['name'] = obj.name;
 						});
 
-						$scope.save.showPlayers = true;
+						$scope.data.showPlayers = true;
 					}					
 					else
 					{

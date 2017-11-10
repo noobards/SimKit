@@ -8,9 +8,9 @@
         <h4 class="modal-title">Edit the ratings</h4>
       </div>
       <div class="modal-body">
-      	<div class="ajax-loading" style="width: 80%; margin: auto; height: 100px;" ng-hide="save.showPlayers">
+      	<div class="ajax-loading" style="width: 80%; margin: auto; height: 100px;" ng-hide="data.showPlayers">
       	</div>
-        <div class="row" ng-show="save.showPlayers">
+        <div class="row" ng-show="data.showPlayers">
         	<div class="col-md-6">
         		<div class="alert alert-success text-center mb0"><strong>{{edit.home.name}}</strong></div>
         		<div class="table-mockup">
@@ -68,8 +68,8 @@
         </div>
       </div>
       <div class="modal-footer" style="text-align: center;">
-        <button type="button" class="btn btn-default" ng-show="save.showPlayers" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="updateRatings($event)" ng-show="save.showPlayers" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" ng-show="data.showPlayers" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="updateRatings($event)" ng-show="data.showPlayers" class="btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
