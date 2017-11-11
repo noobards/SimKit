@@ -441,4 +441,4 @@ else
 
 
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/begin_match.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/begin_match.js?v=1"></script>
