@@ -86,7 +86,7 @@ class Players extends CI_Controller {
 						'first_name'	=>	$_POST['fn'],
 						'last_name'		=>	$_POST['ln'],
 						'nick_name'		=>	(isset($_POST['nick']) ? $_POST['nick'] : ""),
-						'age'			=>	$_POST['age'],
+						'age'			=>	(isset($_POST['age']) ? $_POST['age'] : 0),
 						'gender'		=>	$_POST['gender'],
 						'country'		=>	$_POST['country'],
 						'player_type'	=>	$_POST['player_type'],
@@ -138,7 +138,8 @@ class Players extends CI_Controller {
 		$this->db->select('*');
 		$this->db->from("players p");
 		$this->db->join("countries c", "c.country_id=p.country", "left");
-        $this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
+		$this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
+		$this->db->join("mentality_types mt", "mt.mentality_id=p.mentality", "left");
 		$this->db->order_by("p.created_time", "DESC");
 		$this->db->limit(5);
 		$this->db->where(array('p.owner'=>$logged_in_user));
@@ -151,7 +152,7 @@ class Players extends CI_Controller {
 			{
 				$date = new DateTime($row->created_time, new DateTimeZone('UTC'));
 				$date->setTimeZone(new DateTimeZone($this->session->timezone));
-			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'is_private'=>$row->is_private, 'created'=>$date->format('M d, g:i a'));
+			    $players[] = array('name'=>$row->first_name.' '.$row->last_name, 'gender'=>$row->gender, 'country'=>$row->country_name, 'type'=>$row->type_name, 'icon'=>$row->type_icon, 'ment_label'=>$row->mentality_label, 'ment_icon'=>$row->mentality_icon, 'is_private'=>$row->is_private, 'created'=>$date->format('M d, g:i a'));
 			}
 		}
 		echo json_encode($players);
@@ -165,7 +166,8 @@ class Players extends CI_Controller {
 		$this->db->from("players p");
 		$this->db->join("countries c", "c.country_id=p.country", "left");
         $this->db->join("player_types pt", "pt.player_type_id=p.player_type", "left");
-        $this->db->join("bowler_types bt", "bt.bowler_type_id=p.bowler_type", "left");
+		$this->db->join("bowler_types bt", "bt.bowler_type_id=p.bowler_type", "left");
+		$this->db->join("mentality_types mt", "mt.mentality_id=p.mentality", "left");
 		$this->db->order_by("p.updated_time", "DESC");		
 		$this->db->where(array('p.owner'=>$logged_in_user));
 		$query = $this->db->get();
@@ -181,7 +183,7 @@ class Players extends CI_Controller {
 				$updated = new DateTime($row->updated_time, new DateTimeZone("UTC"));
 				$updated->setTimeZone(new DateTimeZone($this->session->timezone));
 				$avg = $this->Utils->playerRating($row->player_id);
-			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'is_private'=>$row->is_private, 'updated'=>$updated->format("M d @ h:i a"), 'created'=>$created->format('M d @ h:i a'));
+			    $players[] = array('id'=>$row->player_id, 'name'=>$row->first_name.' '.$row->last_name, 'age'=>$row->age, 'gender'=>$row->gender, 'country'=>$row->country_name, 'player_type'=>$row->type_name, 'icon'=>$row->type_icon, 'ment_label'=>$row->mentality_label, 'ment_icon'=>$row->mentality_icon, 'test'=>($row->test == 1 ? 'YES':'NO'), 'odi'=>($row->odi == 1 ? 'YES':'NO'), 't20'=>($row->t20 == 1 ? 'YES':'NO'), 'avg'=>$avg, 'is_private'=>$row->is_private, 'updated'=>$updated->format("M d @ h:i a"), 'created'=>$created->format('M d @ h:i a'));
 			}
 		}
 		echo json_encode($players);

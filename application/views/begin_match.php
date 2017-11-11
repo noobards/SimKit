@@ -80,10 +80,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Copy the commentary text</h4>
+        <h4 class="modal-title">Copy the text</h4>
       </div>
       <div class="modal-body">      	
-        <textarea class="form-control" id="clipboard" rows="12" ng-model="clipboard"></textarea>
+        <textarea style="font-family: MONOSPACE; overflow-x:auto;" class="form-control" id="clipboard" rows="12" ng-model="clipboard"></textarea>
       </div>
       <div class="modal-footer" style="text-align: center;">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
@@ -133,24 +133,24 @@ if($data['status'] == "OK")
 						<div class="th">SR</div>
 					</div>
 				</div>
-				<div class="tbody">
+				<div class="tbody first-bat">
 					<?php foreach($batsmen as $ary)
 					{	
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></div>
-						<div class="td"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
-						<div class="td text-center"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></div>
+						<div class="td"><span class="for-comm"><?php echo $ary['name']; ?></span> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></div>
+						<div class="td"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></span></div>
 					</div>
 					<?php
 					}				
 				?>
 					<div class="tr">
 						<div class="td text-right">
-							<strong>Total: <?php echo $data['first_total'].'/'.$data['first_wickets'].' in '.$data['first_overs'].' overs ('.$data['first_run_rate'].' rpo)'; ?></strong>
+							<strong><span class="for-comm">Total: <?php echo $data['first_total'].'/'.$data['first_wickets'].' in '.$data['first_overs'].' overs ('.$data['first_run_rate'].' rpo)'; ?></span></strong>
 						</div>
 					</div>
 				</div>
@@ -168,7 +168,7 @@ if($data['status'] == "OK")
 						<div class="th">Economy</div>					
 					</div>
 				</div>
-				<div class="tbody">
+				<div class="tbody first-bowl">
 					<?php foreach($bowlers as $ary)
 					{
 						if($ary['legal_balls'] > 0)
@@ -176,24 +176,24 @@ if($data['status'] == "OK")
 						?>
 					<div class="tr">
 						<div class="td">
-							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
+						<span class="for-comm"><?php echo $ary['name']; ?></span> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
 							<div ng-show="data.debug.hide">
 								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
 							</div>
 						</div>
 						<div class="td text-center">
-							<?php
+						<span class="for-comm"><?php
 							echo floor($ary['legal_balls']/6).'.'.floor($ary['legal_balls'] % 6);
-							?>
+							?></span>
 						</div>
-						<div class="td text-center"><?php echo $ary['maidens'] ?></div>
-						<div class="td text-center"><?php echo $ary['runs'] ?></div>
-						<div class="td text-center"><?php echo $ary['wickets']; ?></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['maidens'] ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['runs'] ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['wickets']; ?></span></div>
 						<div class="td text-center">
-							<?php
+						<span class="for-comm"><?php
 								$econ = $ary['runs']*6/$ary['legal_balls'];
 								echo number_format($econ, 2);
-							?>
+							?></span>
 						</div>
 					</div>
 					<?php
@@ -260,8 +260,7 @@ if($data['status'] == "OK")
 			</div>
 
 			<div class="text-center">
-				<button class="btn btn-primary" ng-click="startSecondInnings($event)">Simulate 2nd Innings</button>
-				<button class="btn btn-danger" ng-click="copyCommentary($event, '1st')">Copy 1st Innings Commentary</button>
+				<button class="btn btn-primary" ng-click="startSecondInnings($event)">Simulate 2nd Innings</button>				
 			</div>
 		</div>
 	</div>
@@ -282,24 +281,24 @@ if($data['status'] == "OK")
 						<div class="th">SR</div>
 					</div>
 				</div>
-				<div class="tbody">
+				<div class="tbody second-bat">
 					<?php foreach($batsmen as $ary)
 					{	
 						$css_class = ($ary['status'] == 'NOTOUT' ? 'highlight' : 'unhilight' );
 						?>
 					<div class="tr <?php echo $css_class; ?>">
-						<div class="td"><?php echo $ary['name']; ?> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></span></div>
-						<div class="td"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></div>
-						<div class="td text-center"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></div>
-						<div class="td text-center"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></div>
+						<div class="td"><span class="for-comm"><?php echo $ary['name']; ?></span> <span ng-show="data.debug"><img class="role-icon" ng-src="<?php echo base_url().'/assets/images/icons/'.$ary['mentality_icon']; ?>" alt="<?php echo $ary['mentality']; ?>" title="<?php echo $ary['mentality']; ?>" />(<?php echo $ary['bat']; ?>)</span></div>
+						<div class="td"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : ( $ary['status'] == "NOTOUT" ? "" : $ary['status']); ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : $ary['runs'].' ('.$ary['balls'].')'; ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['status'] == "DNB" ? "" : $ary['fours'].'/'.$ary['sixes']; ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['balls'] > 0 ? number_format(($ary['runs']*100/$ary['balls']), 2) : ""; ?></span></div>
 					</div>
 					<?php
 					}				
 				?>
 					<div class="tr">
 						<div class="td text-right">
-							<strong>Total: <?php echo $data['second_total'].'/'.$data['second_wickets'].' in '.$data['second_overs'].' overs ('.$data['second_run_rate'].' rpo)'; ?></strong>
+							<strong><span class="for-comm">Total: <?php echo $data['second_total'].'/'.$data['second_wickets'].' in '.$data['second_overs'].' overs ('.$data['second_run_rate'].' rpo)'; ?></span></strong>
 						</div>
 					</div>
 				</div>
@@ -317,7 +316,7 @@ if($data['status'] == "OK")
 						<div class="th">Economy</div>					
 					</div>
 				</div>
-				<div class="tbody">
+				<div class="tbody second-bowl">
 					<?php foreach($bowlers as $ary)
 					{
 						if($ary['legal_balls'] > 0)
@@ -325,24 +324,24 @@ if($data['status'] == "OK")
 						?>
 					<div class="tr">
 						<div class="td">
-							<?php echo $ary['name']; ?> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
+							<span class="for-comm"><?php echo $ary['name']; ?></span> <span ng-show="data.debug">(<?php echo $ary['rating_points']; ?>)</span>
 							<div ng-show="data.debug.hide">
 								<span style="font-size: 70%;"><strong>Ext:</strong> <?php echo $ary['noballs'] + $ary['wides']; ?> | <strong>GB:</strong> <?php echo $ary['good_balls']; ?> | <strong>BB:</strong> <?php echo $ary['bad_balls']; ?> | <strong>WB:</strong> <?php echo $ary['wicket_balls']; ?></span>
 							</div>
 						</div>
 						<div class="td text-center">
-							<?php
+						<span class="for-comm"><?php
 							echo floor($ary['legal_balls']/6).'.'.floor($ary['legal_balls'] % 6);
-							?>
+							?></span>
 						</div>
-						<div class="td text-center"><?php echo $ary['maidens'] ?></div>
-						<div class="td text-center"><?php echo $ary['runs'] ?></div>
-						<div class="td text-center"><?php echo $ary['wickets']; ?></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['maidens'] ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['runs'] ?></span></div>
+						<div class="td text-center"><span class="for-comm"><?php echo $ary['wickets']; ?></span></div>
 						<div class="td text-center">
-							<?php
+						<span class="for-comm"><?php
 								$econ = $ary['runs']*6/$ary['legal_balls'];
 								echo number_format($econ, 2);
-							?>
+							?></span>
 						</div>
 					</div>
 					<?php
@@ -419,10 +418,10 @@ if($data['status'] == "OK")
 		</div>
 
 		<div class="col-md-12 text-center" style="padding-bottom: 30px;">
-			<button ng-click="resimulate($event)" class="btn btn-primary">Resimulate Match</button>
-			<button class="btn btn-danger" ng-click="copyCommentary($event, '2nd')">Copy 2nd Innings Commentary</button>
+			<button ng-click="resimulate($event)" class="btn btn-primary">Resimulate Match</button>&nbsp;<button class="btn btn-warning" ng-click="copyScorecard($event)">Copy Scorecard</button><br /><br />
+			<button class="btn btn-danger" ng-click="copyCommentary($event, '1st')">Copy 1st Innings Commentary</button>&nbsp;<button class="btn btn-danger" ng-click="copyCommentary($event, '2nd')">Copy 2nd Innings Commentary</button>			
 		</div>
-	</div>
+	</div>	
 </div>
 <?php	
 }

@@ -51,8 +51,15 @@ class Utils extends CI_Model {
 					$row = $query->result()[0];
 					$total_rp = $this->ratingCombo((int) $row->batting_rp, (int) $row->bowling_rp, (int) $row->fielding_rp, $row->player_type);
 					if($total_rp > 0)
-					{							
-						return number_format(($total_rp*10/300), 2);
+					{
+						if($row->player_type == '3' || $row->player_type == '4')
+						{
+							return number_format(($total_rp*10/300), 2);
+						}
+						else
+						{
+							return number_format(($total_rp*10/200), 2);
+						}						
 					}					
 				}
 			}
@@ -64,11 +71,11 @@ class Utils extends CI_Model {
 	{
 		if($type == 1) // pure batsman
 		{			
-			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+			return ( (100*$bat)/100  + (100*$field)/100 );
 		}
 		else if($type == 2) // pure bowler
 		{			
-			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+			return ( (100*$bowl)/100 + (100*$field)/100 );
 		}
 		else if($type == 3) // batting allrounder
 		{			
@@ -80,7 +87,7 @@ class Utils extends CI_Model {
 		}
 		else if($type == 5) // wicket keeper
 		{			
-			return ( (100*$bat)/100  + (100*$bowl)/100 + (100*$field)/100 );
+			return ( (100*$bat)/100  + (100*$field)/100 );
 		}
 		else
 		{

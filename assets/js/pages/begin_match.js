@@ -26,16 +26,19 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 
 	$scope.resimulate = function(e){
 		var button = jQuery(e.currentTarget);
-		button.attr('disabled', 'disabled').html('Restarting match...');
-		$timeout(function(){			
-			button.html('Generating batting and bowling lineups...');
-			$timeout(function() {
-				button.html("Starting match...");
+		if(window.confirm("Are you sure you want to resimulate the match?"))
+		{
+			button.attr('disabled', 'disabled').html('Restarting match...');
+			$timeout(function(){			
+				button.html('Generating batting and bowling lineups...');
 				$timeout(function() {
-					$window.location.href = $location.absUrl();					
-				}, 2000);
-			}, 2000);			
-		}, 1500);
+					button.html("Starting match...");
+					$timeout(function() {
+						$window.location.href = $location.absUrl();					
+					}, 2000);
+				}, 2000);			
+			}, 1500);
+		}		
 	};
 
 	$scope.debug = function(e)	{
@@ -168,6 +171,131 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 		});
 	};
 
+	$scope.batting = function(selector){
+		var f_bat = jQuery(selector);
+		var cell_width = 30;
+		var str = "";
+		str += new Array((cell_width*4)+10).join("-");
+		str += "\r\n";
+		str += new Array(6*7).join(" ");
+		str += "BATTING SCORECARD";
+		str += new Array(6*7).join(" ");
+		str += "\r\n";
+		str += new Array((cell_width*4)+10).join("-");
+		str += "\r\n";
+
+		str += "PLAYER NAME"+new Array(cell_width - 10).join(" ") + "STATUS"+new Array(cell_width - 5).join(" ")+ "RUNS (BALLS)"+new Array(cell_width - 11).join(" ")+ "4/6"+new Array(cell_width - 2).join(" ")+ "SR";
+		str += "\r\n";
+		str += new Array((cell_width*4)+10).join("-");
+		str += "\r\n";
+
+		for(var i = 1; i <= f_bat.length; i++)
+		{
+			if(i == f_bat.length)
+			{
+				str += new Array((cell_width*4)+10).join("-");
+				str += "\r\n";
+			}
+			var tr = jQuery(f_bat[(i-1)]);
+			
+			var td = tr.find('.td');
+			for(var j = 0; j < td.length; j++)
+			{
+				var col = jQuery(td[j]);
+				var txt = jQuery.trim(col.find('.for-comm').text());	
+				var num_of_spaces = 0;
+				if(txt && txt.length > 0)										
+				{
+					num_of_spaces = cell_width - txt.length;
+				}
+				else
+				{
+					num_of_spaces = cell_width;
+				}
+
+				if(i == f_bat.length) // right align the total score text
+				{
+					str += new Array((cell_width*4 - txt.length) + 10).join(" ");
+					str += txt;
+				}
+				else
+				{
+					str += txt;
+					for(k = 1; k <= num_of_spaces; k++)
+					{
+						str += " ";
+					}
+				}				
+				
+			}
+			
+			str += "\r\n";
+		}
+
+		str += "\r\n";
+		return str;
+	};
+
+	$scope.bowling = function(selector){
+		var f_bat = jQuery(selector);
+		var cell_width = 25;
+		var str = "";
+		str += new Array((cell_width*5)+10).join("-");
+		str += "\r\n";
+		str += new Array(6*7).join(" ");
+		str += "BOWLING SCORECARD";
+		str += new Array(6*7).join(" ");
+		str += "\r\n";
+		str += new Array((cell_width*5)+10).join("-");
+		str += "\r\n";
+
+		str += "PLAYER NAME"+new Array(cell_width - 10).join(" ") + "OVERS"+new Array(cell_width - 4).join(" ")+ "MAIDENS"+new Array(cell_width - 6).join(" ")+ "RUNS"+new Array(cell_width - 3).join(" ")+ "WICKETS"+new Array(cell_width - 6).join(" ")+ "ECONOMY";
+		str += "\r\n";
+		str += new Array((cell_width*5)+10).join("-");
+		str += "\r\n";
+
+		for(var i = 1; i <= f_bat.length; i++)
+		{			
+			var tr = jQuery(f_bat[(i-1)]);
+			
+			var td = tr.find('.td');
+			for(var j = 0; j < td.length; j++)
+			{
+				var col = jQuery(td[j]);
+				var txt = jQuery.trim(col.find('.for-comm').text());	
+				var num_of_spaces = 0;
+				if(txt && txt.length > 0)										
+				{
+					num_of_spaces = cell_width - txt.length;
+				}
+				else
+				{
+					num_of_spaces = cell_width;
+				}
+				
+				str += txt;
+				for(k = 1; k <= num_of_spaces; k++)
+				{
+					str += " ";
+				}
+			}
+			
+			str += "\r\n";
+		}
+
+		str += "\r\n\r\n\r\n\r\n";
+		return str;
+	};
+
+	$scope.copyScorecard = function(e){
+		var button = jQuery(e.currentTarget);
+		var str = $scope.batting('.first-bat > .tr');
+		str += $scope.bowling('.first-bowl > .tr');
+		str += $scope.batting('.second-bat > .tr');
+		str += $scope.bowling('.second-bowl > .tr');
+		$scope.clipBoardCopy(str);
+	};
+
 	$scope.copyCommentary = function(e, div){
 		var button = jQuery(e.currentTarget);
 		var comm_div = jQuery('.'+div+' > div');
@@ -199,16 +327,16 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 			}
 		}
 
-		$scope.fakeTextArea(str);
+		$scope.clipBoardCopy(str);
 	};
 
-	$scope.fakeTextArea = function(str){
+	$scope.clipBoardCopy = function(str){
 		
 		$scope.clipboard = str;
 		jQuery('#copyCommentary').modal('show');
 	};
 	
 	$('#copyCommentary').on('shown.bs.modal', function () {
-	  document.getElementById('clipboard').select();
+	  //document.getElementById('clipboard').select();
 	})
 });
