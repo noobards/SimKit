@@ -65,4 +65,4 @@
 		</div>
 	</div>		
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/list_players.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/list_players.js?v=1"></script>
