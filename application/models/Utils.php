@@ -361,6 +361,48 @@ class Utils extends CI_Model {
 		}
 	}
 
+	public function isNotPlayingMatch($pid)
+	{
+		$this->db->select('mid');
+		$this->db->from('match_players');
+		$this->db->where('pid', (int) $pid);
+		$q = $this->db->get();
+		if($q->num_rows() > 0)
+		{
+			$mids = array();
+			foreach($q->result() as $r)
+			{
+				$mids[] = $r->mid;
+			}
+
+			// get match stage of the match
+			foreach($mids as $mid)
+			{
+				$this->db->select("stage");
+				$this->db->from("match_center");
+				$this->db->where('match_id', $mid);
+				$q = $this->db->get();
+				if($q->num_rows() > 0)
+				{
+					foreach($q->result() as $r)
+					{
+						$stage = $r->stage;
+						if($stage != 3) // still in progress
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			return true;
+		}
+
+		return true;
+	}
+
 	public function hasPlayerPermission($player_id)
 	{
 		$logged_in_user = (int) $this->session->logged_user;
@@ -395,10 +437,5 @@ class Utils extends CI_Model {
 	        $this->db->trans_commit();
 	        return true;
 		}
-	}
-
-	public function squadPlayers()
-	{
-		
 	}
 }

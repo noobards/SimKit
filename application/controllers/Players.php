@@ -192,45 +192,68 @@ class Players extends CI_Controller {
 
 	public function removeSeletedPlayers()
 	{
-		$this->load->model("Utils");
-		$post = json_decode(file_get_contents("php://input"), true);		
-		$to_delete = count($post);		
-		if($to_delete > 0)
+		try
 		{
-			$total_deleted = 0;
-			foreach($post as $index => $array)
+			$this->load->model("Utils");
+			$post = json_decode(file_get_contents("php://input"), true);		
+			$to_delete = count($post);		
+			$error = array();
+			if($to_delete > 0)
 			{
-				$player_id = $array['id'];
-				
-				// check if logged in user has player permission
-				if($this->Utils->hasPlayerPermission($player_id) == "YES")
+				$total_deleted = 0;
+				foreach($post as $index => $array)
 				{
-					if($this->Utils->removePlayer($player_id))
+					$player_id = (int) $array['id'];
+					
+					// check if logged in user has player permission
+					if($this->Utils->hasPlayerPermission($player_id) == "YES")
 					{
-						$total_deleted++;
+						// check if this player is currently not playing a match
+						if($this->Utils->isNotPlayingMatch($player_id))
+						{						
+							if($this->Utils->removePlayer($player_id))
+							{
+								$total_deleted++;
+							}
+							else
+							{
+								$error[] = array('name'=>$array['name'], 'id'=>$player_id, 'reason'=>'Transaction failed');	
+							}						
+						}
+						else
+						{
+							$error[] = array('name'=>$array['name'], 'id'=>$player_id, 'reason'=>'Currently playing a match');	
+						}					
+					}
+					else
+					{
+						$error[] = array('name'=>$array['name'], 'id'=>$player_id, 'reason'=>'Either "Already removed" or "No permissions"');
 					}
 				}
-			}
 
-			if($total_deleted == $to_delete)
-			{
-				$this->session->set_flashdata('flash', $total_deleted.' player(s) removed successfully.');
-				echo json_encode(array('status'=>'OK', 'redirect'=>'ListPlayers'));
-				exit;
+				if($total_deleted == $to_delete)
+				{
+					$this->session->set_flashdata('flash', $total_deleted.' player(s) removed successfully.');
+					echo json_encode(array('status'=>'OK', 'redirect'=>'ListPlayers'));
+					exit;
+				}
+				else
+				{				
+					echo json_encode(array('status'=>'ERROR', 'pending'=>($to_delete - $total_deleted), 'error'=>$error));
+					exit;
+				}
 			}
 			else
-			{
-				$this->session->set_flashdata('flash', ($to_delete - $total_deleted).' players could not be deleted due to permission issues or system failure.');
-				echo json_encode(array('status'=>'NOTOK', 'redirect'=>'ListPlayers'));
-				exit;
+			{			
+				echo json_encode(array('status'=>'NOTOK', 'msg'=>'Nothing to remove'));
+				exit;			
 			}
 		}
-		else
+		catch (Exception $err)
 		{
-			$this->session->set_flashdata('flash', 'Nothing to remove.');
-			echo json_encode(array('status'=>'NOTOK', 'redirect'=>'ListPlayers'));
-			exit;			
-		}		
+			echo json_encode(array('status'=>'NOTOK', 'msg'=>$err->getMessage()));
+			exit;
+		}
 	}
 
 	public function Edit($player_id)

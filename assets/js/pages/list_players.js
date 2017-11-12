@@ -82,10 +82,21 @@ simkit.app.controller("listPlayers", function($scope, $http, $window){
 						{
 							$window.location.href = response.data.redirect;
 						}
+						else if(response.data.status == 'ERROR')
+						{
+							var str = response.data.pending+" players could not be removed because:\n\n";
+							for(var i = 0; i < response.data.error.length; i++)
+							{
+								var item = response.data.error[i];
+								str += "("+item.id+") "+item.name+" - "+item.reason;
+								str += "\n";
+							}
+							str += "\n";
+							alert(str);
+						}
 						else
 						{
-							alert(response.data.msg);
-							$window.location.href = response.data.redirect;
+							alert(response.data.msg);							
 						}
 					}
 					else
