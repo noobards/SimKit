@@ -69,6 +69,9 @@ class Match{
 	public $noballs = array();
 	public $notout = array();
 
+	public $live = array();
+	public $live_index = 0;
+
 	public function __construct()
 	{
 		$this->CI = get_instance();
@@ -183,6 +186,8 @@ class Match{
 			$this->last_over_bowling_index = 1;
 			$this->fielders = $this->CI->Center->getFielderNames($this->match_id, $this->teams[0]);			
 			$this->bowlers = $this->CI->Center->getBowlingOptions($this->match_id, $this->bowling_team_id);
+
+			$this->live_index = 0;
 		}
 
 		foreach($this->bowlers as $index=>$array)
@@ -198,8 +203,9 @@ class Match{
 	}
 
 	public function Simulate()
-	{		
-		$number_of_deliveries = ($this->game_mode == 1 ? 300 : 120);		
+	{
+		$number_of_deliveries = ($this->game_mode == 1 ? 300 : 120);
+		
 		while($number_of_deliveries > 0)
 		{
 			if($this->game_mode == 1)
@@ -245,6 +251,8 @@ class Match{
 				$ball_result = "STOCK";
 			}
 			$this->bowlers[$this->currently_bowling_index]['last_ball_index'] = ((int) $this->bowlers[$this->currently_bowling_index]['last_ball_index'] + 1);
+
+			$this->live[$this->innings][$this->live_index]['type_of_ball'] = $ball_result;
 			
 			if($ball_result === "WIDE" || $ball_result === "NOBALL")
 			{
@@ -264,7 +272,10 @@ class Match{
 				$check_for_over = false;
 
 				$this->partnership_balls += 1;
-				$this->partnership_runs += 1;
+				$this->partnership_runs += 1;	
+
+				$this->live[$this->innings][$this->live_index]['runs'] = 1;
+				$this->live[$this->innings][$this->live_index]['outcome'] = $result;
 			}
 			else
 			{	
@@ -356,11 +367,18 @@ class Match{
 						$this->partnership_runs += (int) $result;
 					}
 					
-				}
+				}				
 				$check_for_over = true;
+
+				$this->live[$this->innings][$this->live_index]['runs'] = ( ($result === "W" || $result === "NOTOUT") ? 0 : $result );
+				$this->live[$this->innings][$this->live_index]['outcome'] = $result;
 			}
 			
-			
+			$this->live[$this->innings][$this->live_index]['batsman_id'] = $this->batsmen[$this->striker_index]['player_id'];
+			$this->live[$this->innings][$this->live_index]['batsman_name'] = $this->batsmen[$this->striker_index]['name'];
+			$this->live[$this->innings][$this->live_index]['bowler_id'] = $this->bowlers[$this->currently_bowling_index]['player_id'];
+			$this->live[$this->innings][$this->live_index]['bowler_name'] = $this->bowlers[$this->currently_bowling_index]['name'];
+
 			$this->addToCommentary($this->innings_balls_bowled, $result, $ball_result);
 
 			// change strike if single or three taken and it's not end of over
@@ -409,7 +427,7 @@ class Match{
 					break;
 				}
 			}
-			
+			$this->live_index++;
 		}
 
 		// team did not get all out so get partnership details of last batting pair
@@ -879,25 +897,30 @@ class Match{
 		}
 		else
 		{
-			$this->batsmen[$this->striker_index]['status'] = "Run Out";
+			$this->batsmen[$this->striker_index]['status'] = "Run out";
+			$this->live[$this->innings][$this->live_index]['status'] = "Run out";
 		}
 
 		if($this->out_how == 'Bowled')
 		{
 			$this->batsmen[$this->striker_index]['status'] = "b. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
+			$this->live[$this->innings][$this->live_index]['status'] = "b. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
 		}
 		else if($this->out_how == 'Hit Wicket')
 		{
 			$this->batsmen[$this->striker_index]['status'] = "hitwicket. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
+			$this->live[$this->innings][$this->live_index]['status'] = "hitwicket. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
 		}
 		else if($this->out_how == 'LBW')
 		{
 			$this->batsmen[$this->striker_index]['status'] = "lbw ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
+			$this->live[$this->innings][$this->live_index]['status'] = "lbw ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
 		}
 		else if($this->out_how == "Caught")
 		{
 			$caught_by = $this->getFielder();
 			$this->batsmen[$this->striker_index]['status'] = "c. ".$this->shortName($caught_by)." b. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
+			$this->live[$this->innings][$this->live_index]['status'] = "c. ".$this->shortName($caught_by)." b. ".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']);
 		}
 	}
 
@@ -1024,7 +1047,9 @@ class Match{
 			$text .= $this->notout[mt_rand(0, (count($this->notout) - 1))];
 		}
 
-		$this->innings_commentary[] = "<div class='clearfix comm_line'><div class='comm_over'><span class='over_number'>[".$this->innings_overs."]</span><span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+		$comm = "<div class='clearfix comm_line'><div class='comm_over'><span class='over_number'>[".$this->innings_overs."]</span><span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+
+		$this->innings_commentary[] = $comm;
 		
 		if($over)
 		{
@@ -1062,8 +1087,13 @@ class Match{
 				$rrr = " | Projected: ".$projected." runs";
 			}
 
-			$this->innings_commentary[] = "<div class='comm_end_of_over bold'>End of ".$this->ordinal($overs)." over</div><div class='bold comm_over_stat'><span class='over_stat1'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs | RR: '.$crr.$rrr.'</span><span class="over_stat2">'.$bowler_string.'</span></div>';
+			$comm2 = "<div class='comm_end_of_over bold'>End of ".$this->ordinal($overs)." over</div><div class='bold comm_over_stat'><span class='over_stat1'>".$this->batting_team_label.": ".$this->innings_total.'/'.$this->innings_wickets.' | '.$runs.' runs | RR: '.$crr.$rrr.'</span><span class="over_stat2">'.$bowler_string.'</span></div>';
+			$this->innings_commentary[] = $comm2;
+
+			$comm .= $comm2;
 		}
+
+		$this->live[$this->innings][$this->live_index]['commentary'] = $comm;
 	}
 
 	public function shortName($str)
