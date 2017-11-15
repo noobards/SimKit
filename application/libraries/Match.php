@@ -890,6 +890,8 @@ class Match{
 		$this->out_how = $this->mode_of_dismissal[mt_rand(0, (count($this->mode_of_dismissal) - 1))];
 		$this->innings_wickets = (int) $this->innings_wickets + 1;
 		$this->innings_fow[] = $this->innings_wickets.'-'.$this->innings_total.' <strong>'.$this->batsmen[$this->striker_index]['name'].'</strong> ('.$this->ballsToOvers($this->innings_balls_bowled).')';
+
+		$this->live[$this->innings][$this->live_index]['out_how'] = $this->out_how;
 		
 		if($this->out_how !== "Run Out")
 		{
