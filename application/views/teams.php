@@ -51,7 +51,7 @@
 
 				</div>
 
-				<div class="box-body">	
+				<div class="box-body box-body-max">	
 					<div class="bot10">
 						<small>Fields marked with <span class="red">*</span> are mandatory and cannot be left blank.</small>
 					</div>
