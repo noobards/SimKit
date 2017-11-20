@@ -83,15 +83,63 @@ if($data['status'] == "OK")
 							</div>							
 						</div>
 					</div>
-					<div class="text-center top10">
-						<button class="btn btn-danger" ng-click="saveBowlingOrder($event, 'save')"><i class="fa fa-rocket">&nbsp;</i>Begin Match</button>
+
+					<div class="form-horizontal top10">
+						<div class="form-group">
+							<label class="control-label col-md-6">Simulation Mode:</label>
+							<div class="col-md-6">
+								<div class="btn-group">
+									<label class="btn btn-primary">
+										<input type="radio" name="options" id="option2" ng-model="data.sim_mode" value="instant" autocomplete="off"> Instant
+									</label>
+									<label class="btn btn-primary">
+										<input type="radio" name="options" id="option3" ng-model="data.sim_mode" value="delay" autocomplete="off"> With Delay
+									</label>
+								</div>								
+							</div>
+						</div>
+
+						<div class="form-group" ng-show="data.sim_mode == 'delay'">
+							<label for="match_duration" class="control-label col-md-6">Delay between deliveries (in seconds):</label>
+							<div class="col-md-6">
+								<input type="number" ng-model="data.delay" class="form-control" min="1" step="1" maxlength="3" id="match_duration" />
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<button class="btn btn-danger" ng-disabled="isButtonDisabled()" ng-click="saveBowlingOrder($event, 'save')"><i class="fa fa-rocket">&nbsp;</i>Begin Match</button>
 					</div>
 				</div>
 				<?php
 				} else {	?>
-					<div class="alert alert-warning text-center mb0"><i class="fa fa-bolt">&nbsp;</i><strong><?php echo $data['toss_won_by']; ?></strong> have won the toss and elected to <strong><?php echo $data['decision']; ?></strong> first.</div>
-					<div class="text-center top10">
-						<button class="btn btn-danger" ng-click="saveBowlingOrder($event, 'proceed')"><i class="fa fa-rocket">&nbsp;</i>Simulate</button>
+					<div class="alert alert-warning text-center"><i class="fa fa-bolt">&nbsp;</i><strong><?php echo $data['toss_won_by']; ?></strong> have won the toss and elected to <strong><?php echo $data['decision']; ?></strong> first.</div>
+
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-md-6">Simulation Mode:</label>
+							<div class="col-md-6">
+								<div class="btn-group">
+									<label class="btn btn-primary">
+										<input type="radio" name="options" id="option2" ng-model="data.sim_mode" value="instant" autocomplete="off"> Instant
+									</label>
+									<label class="btn btn-primary">
+										<input type="radio" name="options" id="option3" ng-model="data.sim_mode" value="delay" autocomplete="off"> With Delay
+									</label>
+								</div>								
+							</div>
+						</div>
+
+						<div class="form-group" ng-show="data.sim_mode == 'delay'">
+							<label for="match_duration" class="control-label col-md-6">Delay between deliveries (in seconds):</label>
+							<div class="col-md-6">
+								<input type="number" ng-model="data.delay" class="form-control" min="1" step="1" maxlength="3" id="match_duration" />
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<button class="btn btn-danger" ng-disabled="isButtonDisabled()" ng-click="saveBowlingOrder($event, 'proceed')"><i class="fa fa-rocket">&nbsp;</i>Simulate</button>
 					</div>
 				<?php
 				}

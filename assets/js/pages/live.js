@@ -7,6 +7,7 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 	$scope.data.debug = false;
 	$scope.data.debug_text = "Show Debug Info";
 	$scope.ajax = {};
+	$scope.onload = {};
 	
 	$scope.live = {};
 	$scope.live.first_innings = {};
@@ -22,10 +23,9 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 	$scope.live.second_innings.run_rate = "0.0 rpo";
 	$scope.live.second_innings.fow = [];
 
-
-	var path = window.location.pathname;
-	path = path.split('/');
-	$scope.ajax.mid = parseInt(path.pop());
+	
+	$scope.ajax.mid = parseInt(document.getElementById('onload_mid').value, 10);
+	$scope.ajax.delay = document.getElementById('onload_delay').value;
 	
 	if($scope.ajax.mid > 0)
 	{
@@ -327,7 +327,7 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 				$interval.cancel(interval);
 			}
 			index++;
-		}, 10);
+		}, $scope.ajax.delay*1000);
 	};
 	
 	$scope.ballsToOver = function(balls, innings_number, innings_over){

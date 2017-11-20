@@ -110,7 +110,8 @@
 if($data['status'] == "OK")
 {		
 ?>
-
+  <input type="hidden" id="onload_mid" value="<?php echo $data['mid']; ?>" />
+  <input type="hidden" id="onload_delay" value="<?php echo $data['delay']; ?>" />
 	<div class="row">		
 		<div class="col-md-8">
 			<div class="text-center">
