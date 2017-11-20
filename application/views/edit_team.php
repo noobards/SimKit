@@ -40,7 +40,7 @@
 							<div class="box-main-text">{{data.tn}}</div>
 							<div class="box-helping-text">Edit your team's data.</div>
 						</div>
-						<div class="box-body">	
+						<div class="box-body box-body-max">	
 							<div class="row">
 								
 								<div class="col-md-9">
