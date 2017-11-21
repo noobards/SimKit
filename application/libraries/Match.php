@@ -1051,6 +1051,8 @@ class Match{
 
 		$comm = "<div class='clearfix comm_line'><div class='comm_over'><span class='over_number'>[".$this->innings_overs."]</span><span style='font-size:85%;' ng-show='data.debug'><br />".$type_of_ball."</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
 
+		$live_comm = "<div class='clearfix comm_line'><div class='comm_over'><span class='over_number'>[".$this->innings_overs."]</span></div><div class='comm_desc'><em>".$this->shortName($this->bowlers[$this->currently_bowling_index]['name']).'</em> to <em>'.$this->shortName($this->batsmen[$this->striker_index]['name']).'</em>, '.$text."</div></div>";
+
 		$this->innings_commentary[] = $comm;
 		
 		if($over)
@@ -1093,9 +1095,10 @@ class Match{
 			$this->innings_commentary[] = $comm2;
 
 			$comm .= $comm2;
+			$live_comm .= $comm2;
 		}
 
-		$this->live[$this->innings][$this->live_index]['commentary'] = $comm;
+		$this->live[$this->innings][$this->live_index]['commentary'] = $live_comm;
 	}
 
 	public function shortName($str)

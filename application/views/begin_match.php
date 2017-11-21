@@ -402,8 +402,7 @@ if($data['status'] == "OK")
 	<div class="row top10" ng-show="data.showSecondInningsScorecard">
 		<div class="col-md-12">
 			<div class="alert alert-danger text-center">
-				<h2 class="match_result_title">
-					<?php
+				<h2 class="match_result_title comm_result"><?php
 						if($data['result']['is_tie'] == 'YES')
 						{
 							echo $data['result']['margin'];
@@ -412,7 +411,7 @@ if($data['status'] == "OK")
 						{
 							echo '<strong>'.$data['result']['team_label'].'</strong> have won by <strong>'.$data['result']['margin'].'</strong>';
 						}
-					?>
+					?>	
 				</h2>
 			</div>
 		</div>
@@ -441,4 +440,4 @@ else
 
 
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/begin_match.js?v=1"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/begin_match.js?v=2"></script>

@@ -189,8 +189,9 @@ if($data['status'] == "OK")
 			
 		</div>
 		<div class="col-md-4">
+      <div class="clearfix"><div class="next_delivery_in pull-right">Next delivery in: <span id="first_countdown"></span> seconds</div></div>
 			<div class="alert alert-success mb0 text-center bold">Innings Commentary</div>
-			<div class="commentary 1st" style="height: 850px; overflow-y: scroll;">
+			<div class="commentary 1st" style="height: 600px; overflow-y: scroll;">
 				
 			</div>
 		</div>
@@ -271,8 +272,9 @@ if($data['status'] == "OK")
       
     </div>
     <div class="col-md-4">
+      <div class="clearfix"><div class="next_delivery_in pull-right">Next delivery in: <span id="second_countdown"></span> seconds</div></div>
       <div class="alert alert-success mb0 text-center bold">Innings Commentary</div>
-      <div class="commentary 2nd" style="height: 850px; overflow-y: scroll;">
+      <div class="commentary 2nd" style="height: 600px; overflow-y: scroll;">
         
       </div>
     </div>
@@ -296,4 +298,4 @@ else
 
 
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/live.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/pages/live.js?v=2"></script>

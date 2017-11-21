@@ -283,6 +283,14 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 			str += "\r\n";
 		}
 
+		str += new Array((cell_width*5)+10).join("-")+"\r\n";
+		str += "FOW: ";
+		var fow = f_bat.closest('.table-mockup').siblings('.fow').find('span');		
+		jQuery.each(fow, function(i, span){
+			str += jQuery(span).text();
+			str += new Array(8).join(" ");
+		});
+
 		str += "\r\n\r\n\r\n\r\n";
 		return str;
 	};
@@ -293,6 +301,9 @@ simkit.app.controller("beginMatch", function($scope, $http, $element, $timeout, 
 		str += $scope.bowling('.first-bowl > .tr');
 		str += $scope.batting('.second-bat > .tr');
 		str += $scope.bowling('.second-bowl > .tr');
+
+		str += jQuery('.comm_result').text();
+
 		$scope.clipBoardCopy(str);
 	};
 

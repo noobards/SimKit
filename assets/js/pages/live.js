@@ -25,7 +25,12 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 
 	
 	$scope.ajax.mid = parseInt(document.getElementById('onload_mid').value, 10);
-	$scope.ajax.delay = document.getElementById('onload_delay').value;
+	$scope.ajax.delay = parseInt(document.getElementById('onload_delay').value, 10);
+	if($scope.ajax.delay == 0)
+	{
+		$scope.ajax.delay = 3;
+	}
+
 	
 	if($scope.ajax.mid > 0)
 	{
@@ -41,9 +46,9 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 				if(response.statusText == 'OK')
 				{
 					if(response.data.status == 'OK')
-					{
-						console.log(response.data);					
-						$scope.live.response = response.data;					
+					{						
+						$scope.live.response = response.data;
+						$scope.startInOverlay();					
 						$scope.startInnings('first');
 						
 					}
@@ -68,6 +73,39 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 		alert("Match ID not found");
 	}
 
+	$scope.startInOverlay = function(){
+		var div = jQuery('<div id="feedback"><span></span></div>');
+		div.css({
+			position:'fixed',
+			width:'100%',
+			height:'100%',
+			backgroundColor:'rgba(0,0,0,0.7)',
+			color:'#fff',
+			fontSize:'120px',
+			textAlign:'center',			
+			top:0,
+			left:0,
+			display:'table'
+		});
+
+		var countdown = $scope.ajax.delay;
+		div.find('span').css({display:'table-cell', verticalAlign:'middle'}).html(countdown);
+		jQuery('body').append(div);
+
+		var cd = setInterval(function(){
+			countdown--;
+
+			if(countdown > 0)
+			{
+				jQuery('#feedback').find('span').html(countdown);	
+			}
+			else
+			{
+				clearInterval(cd);
+			}
+		}, 1000);
+	};
+
 	$scope.startSecondInnings = function(e){
 		var button = jQuery(e.currentTarget);
 		button.attr('disabled', 'disabled').html('Changing Innings');
@@ -80,6 +118,7 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 			        	scrollTop: jQuery("#secondInnings").offset().top},
 			        'medium');
 
+					$scope.startInOverlay();
 			        $scope.startInnings('second');
 				});				
 			}, 1000);			
@@ -113,221 +152,253 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 		var last_bowler_id = 0;
 		var runs_in_over = 0;
 		var obj = null;
+		var obj2 = null;
 		var bowl_tr, bat_tr = null;
+		var countdown_span = "";		
+		var countdown_seconds = 0;
 
 		if(innings_string == 'first')
 		{
 			number_of_deliveries = $scope.live.response.live.first.length;
+			countdown_span = jQuery('#first_countdown');
 		}
 		else if(innings_string == 'second')
 		{
 			number_of_deliveries = $scope.live.response.live.second.length;
-		}		  
+			countdown_span = jQuery('#second_countdown');
+		}
+		countdown_span.html($scope.ajax.delay);
 		
 
-		var interval = $interval(function() {
-			if(index < number_of_deliveries)
+		var cd = $interval(function(){
+			var cd_num = parseInt(countdown_span.text(), 10);
+			if(cd_num > 1)
 			{
-				if(innings_string == 'first')
+				cd_num--;
+				countdown_span.html(cd_num);
+			}
+			else
+			{
+				cd_num = $scope.ajax.delay;
+				countdown_span.html(cd_num);
+				if(index < number_of_deliveries)
 				{
-					obj = $scope.live.response.live.first[index];
-					bowl_tr = jQuery('.first-bowl > .tr[data-id="'+obj.bowler_id+'"]');
-					bat_tr = jQuery('.first-bat > .tr[data-id="'+obj.batsman_id+'"]');
-					jQuery('.first-bowl > .tr, .first-bat > .tr').removeClass('highlight');
-				}
-				else if(innings_string == 'second')
-				{
-					obj = $scope.live.response.live.second[index];
-					bowl_tr = jQuery('.second-bowl > .tr[data-id="'+obj.bowler_id+'"]');
-					bat_tr = jQuery('.second-bat > .tr[data-id="'+obj.batsman_id+'"]');
-					jQuery('.second-bowl > .tr, .second-bat > .tr').removeClass('highlight');
-				}
-				
-				bat_tr.addClass('highlight');
-				bowl_tr.addClass('highlight');
-				
-				if(! $scope.live[obj.batsman_id])
-				{
-					$scope.live[obj.batsman_id] = {};
-					$scope.live[obj.batsman_id].sixes = 0;
-					$scope.live[obj.batsman_id].fours = 0;
-					$scope.live[obj.batsman_id].balls_faced = 0;
-					$scope.live[obj.batsman_id].runs = 0;
-					$scope.live[obj.batsman_id].legal_balls_bowled = 0;
-					$scope.live[obj.batsman_id].overs_bowled = "0.0";
-					$scope.live[obj.batsman_id].maidens = 0;
-					$scope.live[obj.batsman_id].runs_conceded = 0;
-					$scope.live[obj.batsman_id].wickets_taken = 0;
-					$scope.live[obj.batsman_id].econ = "0.0";							
-				}
+					if(innings_string == 'first')
+					{
+						obj = $scope.live.response.live.first[index];
+						obj2 = $scope.live.response.live.first[(index+1)];
 
-				if(! $scope.live[obj.bowler_id])
-				{
-					$scope.live[obj.bowler_id] = {};
-					$scope.live[obj.bowler_id].sixes = 0;
-					$scope.live[obj.bowler_id].fours = 0;
-					$scope.live[obj.bowler_id].balls_faced = 0;
-					$scope.live[obj.bowler_id].runs = 0;								
-					$scope.live[obj.bowler_id].legal_balls_bowled = 0;
-					$scope.live[obj.bowler_id].overs_bowled = "0.0";
-					$scope.live[obj.bowler_id].maidens = 0;
-					$scope.live[obj.bowler_id].runs_conceded = 0;
-					$scope.live[obj.bowler_id].wickets_taken = 0;
-					$scope.live[obj.bowler_id].econ = "0.0";
-				}
+						bowl_tr = jQuery('.first-bowl > .tr[data-id="'+obj.bowler_id+'"]');
+						bat_tr = jQuery('.first-bat > .tr[data-id="'+obj.batsman_id+'"]');
+						jQuery('.first-bowl > .tr, .first-bat > .tr').removeClass('highlight');
+					}
+					else if(innings_string == 'second')
+					{
+						obj = $scope.live.response.live.second[index];
+						obj2 = $scope.live.response.live.second[(index+1)];
+						bowl_tr = jQuery('.second-bowl > .tr[data-id="'+obj.bowler_id+'"]');
+						bat_tr = jQuery('.second-bat > .tr[data-id="'+obj.batsman_id+'"]');
+						jQuery('.second-bowl > .tr, .second-bat > .tr').removeClass('highlight');
+					}
 
-				// check if maiden
-				if(index == 0) // first ball of the innings
-				{
-					last_bowler_id = obj.bowler_id;
+					if(index == 0)
+					{
+						jQuery('#feedback').remove();
+					}
+					
+					bat_tr.addClass('highlight');
+					bowl_tr.addClass('highlight');
+					
+					if(! $scope.live[obj.batsman_id])
+					{
+						$scope.live[obj.batsman_id] = {};
+						$scope.live[obj.batsman_id].sixes = 0;
+						$scope.live[obj.batsman_id].fours = 0;
+						$scope.live[obj.batsman_id].balls_faced = 0;
+						$scope.live[obj.batsman_id].runs = 0;
+						$scope.live[obj.batsman_id].legal_balls_bowled = 0;
+						$scope.live[obj.batsman_id].overs_bowled = "0.0";
+						$scope.live[obj.batsman_id].maidens = 0;
+						$scope.live[obj.batsman_id].runs_conceded = 0;
+						$scope.live[obj.batsman_id].wickets_taken = 0;
+						$scope.live[obj.batsman_id].econ = "0.0";							
+					}
+
+					if(! $scope.live[obj.bowler_id])
+					{
+						$scope.live[obj.bowler_id] = {};
+						$scope.live[obj.bowler_id].sixes = 0;
+						$scope.live[obj.bowler_id].fours = 0;
+						$scope.live[obj.bowler_id].balls_faced = 0;
+						$scope.live[obj.bowler_id].runs = 0;								
+						$scope.live[obj.bowler_id].legal_balls_bowled = 0;
+						$scope.live[obj.bowler_id].overs_bowled = "0.0";
+						$scope.live[obj.bowler_id].maidens = 0;
+						$scope.live[obj.bowler_id].runs_conceded = 0;
+						$scope.live[obj.bowler_id].wickets_taken = 0;
+						$scope.live[obj.bowler_id].econ = "0.0";
+					}
+
+					// check if maiden
+					if(index == 0) // first ball of the innings
+					{
+						last_bowler_id = obj.bowler_id;
+					}
+					else
+					{
+						if(innings_string == 'first')
+						{
+							last_bowler_id = $scope.live.response.live.first[(index - 1)]
+						}
+						else if(innings_string == 'second')
+						{
+							last_bowler_id = $scope.live.response.live.second[(index - 1)]
+						}					
+					}
+
+					if(last_bowler_id == obj.bowler_id)
+					{
+						runs_in_over += obj.runs;
+					}
+					else
+					{
+						// over complete
+						if(runs_in_over == 0)
+						{
+							if(innings_string == 'first')
+							{
+								$scope.live.response.live.first[(index - 1)].bowler_id.maidens += 1;
+							}
+							else if(innings_string == 'second')
+							{
+								$scope.live.response.live.second[(index - 1)].bowler_id.maidens += 1;
+							}						
+						}
+						runs_in_over = obj.runs;
+					}
+					
+					
+					var to_add_balls = 0;
+					var total_add_runs = 0;
+					var batsman_add_runs = 0;
+					var wickets_to_add = 0;
+					if(obj.type_of_ball == 'NOBALL' || obj.type_of_ball == 'WIDE')
+					{								
+						total_add_runs = 1;
+						$scope.live[obj.bowler_id].runs_conceded += 1;
+					}
+					else
+					{
+						legal_balls++;
+						to_add_balls = 1;
+
+						$scope.live[obj.bowler_id].legal_balls_bowled++;
+						$scope.live[obj.bowler_id].overs_bowled = $scope.bowlerOvers($scope.live[obj.bowler_id].legal_balls_bowled);
+
+						if(obj.outcome == 'W')
+						{
+							$scope.live[obj.batsman_id].status = obj.status;
+							wickets_to_add = 1;
+
+							if(obj.out_how !== 'Run Out')
+							{
+								$scope.live[obj.bowler_id].wickets_taken += 1;
+							}
+
+							if(innings_string == 'first')
+							{
+								$scope.live.first_innings.fow.push(($scope.live.first_innings.wickets + 1)+"-"+$scope.live.first_innings.total+"  "+obj.batsman_name+" ("+$scope.bowlerOvers(legal_balls)+")");
+							}
+							else if(innings_string == 'second')
+							{
+								$scope.live.second_innings.fow.push(($scope.live.second_innings.wickets + 1)+"-"+$scope.live.second_innings.total+"  "+obj.batsman_name+" ("+$scope.bowlerOvers(legal_balls)+")");
+							}
+							total_add_runs = 0;
+							batsman_add_runs = 0;
+						}
+						else if(obj.outcome == '4')
+						{
+							$scope.live[obj.batsman_id].fours += 1;
+							total_add_runs = 4;
+							batsman_add_runs = 4;
+							$scope.live[obj.bowler_id].runs_conceded += 4;
+						}
+						else if(obj.outcome == '6')
+						{
+							$scope.live[obj.batsman_id].sixes += 1;
+							total_add_runs = 6;
+							batsman_add_runs = 6;
+							$scope.live[obj.bowler_id].runs_conceded += 6;
+						}
+						else
+						{
+							total_add_runs = parseInt(obj.runs, 10);
+							batsman_add_runs = parseInt(obj.runs, 10);
+							$scope.live[obj.bowler_id].runs_conceded += parseInt(obj.runs);
+						}
+
+					}
+												
+					$scope.live[obj.batsman_id].runs += batsman_add_runs;
+					$scope.live[obj.batsman_id].balls_faced += to_add_balls;
+					$scope.live[obj.batsman_id].runsballs = $scope.live[obj.batsman_id].runs+" ("+$scope.live[obj.batsman_id].balls_faced+")";
+
+					$scope.live[obj.bowler_id].econ = ($scope.live[obj.bowler_id].runs_conceded*6/$scope.live[obj.bowler_id].legal_balls_bowled).toFixed(2);
+					
+					if(innings_string == 'first')
+					{
+						$scope.live.first_innings.total += total_add_runs;
+						$scope.live.first_innings.wickets += wickets_to_add;
+						$scope.live.first_innings.overs = $scope.ballsToOver(legal_balls, innings_string, (index + 1) == number_of_deliveries);
+						
+						jQuery('.1st').append(obj.commentary);
+						jQuery('.1st')[0].scrollTop = jQuery('.1st')[0].scrollHeight;
+					}
+					else if(innings_string == 'second')
+					{
+						$scope.live.second_innings.total += total_add_runs;
+						$scope.live.second_innings.wickets += wickets_to_add;
+						$scope.live.second_innings.overs = $scope.ballsToOver(legal_balls, innings_string, (index + 1) == number_of_deliveries);
+
+						jQuery('.2nd').append(obj.commentary);
+						jQuery('.2nd')[0].scrollTop = jQuery('.1st')[0].scrollHeight;
+					}
+					
+
+
+					// boundaries
+					$scope.live[obj.batsman_id].boundaries = $scope.live[obj.batsman_id].fours+"/"+$scope.live[obj.batsman_id].sixes;
+
+					// calculating SR
+					$scope.live[obj.batsman_id].sr = ( ($scope.live[obj.batsman_id].runs*100)/$scope.live[obj.batsman_id].balls_faced ).toFixed(2);
+					
 				}
 				else
 				{
 					if(innings_string == 'first')
 					{
-						last_bowler_id = $scope.live.response.live.first[(index - 1)]
+						$scope.live.first_innings_completed = true;
+						$scope.live.to_win = $scope.live.response.to_win;
+						$scope.live.rrr = $scope.live.response.rrr;
+						$scope.live.in_overs = $scope.live.response.in_overs;
+						jQuery('#first_countdown').parent().remove();
 					}
 					else if(innings_string == 'second')
 					{
-						last_bowler_id = $scope.live.response.live.second[(index - 1)]
-					}					
-				}
-
-				if(last_bowler_id == obj.bowler_id)
-				{
-					runs_in_over += obj.runs;
-				}
-				else
-				{
-					// over complete
-					if(runs_in_over == 0)
-					{
-						if(innings_string == 'first')
-						{
-							$scope.live.response.live.first[(index - 1)].bowler_id.maidens += 1;
-						}
-						else if(innings_string == 'second')
-						{
-							$scope.live.response.live.second[(index - 1)].bowler_id.maidens += 1;
-						}						
-					}
-					runs_in_over = obj.runs;
-				}
-				
-				
-				var to_add_balls = 0;
-				var total_add_runs = 0;
-				var batsman_add_runs = 0;
-				var wickets_to_add = 0;
-				if(obj.type_of_ball == 'NOBALL' || obj.type_of_ball == 'WIDE')
-				{								
-					total_add_runs = 1;
-					$scope.live[obj.bowler_id].runs_conceded += 1;
-				}
-				else
-				{
-					legal_balls++;
-					to_add_balls = 1;
-
-					$scope.live[obj.bowler_id].legal_balls_bowled++;
-					$scope.live[obj.bowler_id].overs_bowled = $scope.bowlerOvers($scope.live[obj.bowler_id].legal_balls_bowled);
-
-					if(obj.outcome == 'W')
-					{
-						$scope.live[obj.batsman_id].status = obj.status;
-						wickets_to_add = 1;
-
-						if(obj.out_how !== 'Run Out')
-						{
-							$scope.live[obj.bowler_id].wickets_taken += 1;
-						}
-
-						if(innings_string == 'first')
-						{
-							$scope.live.first_innings.fow.push(($scope.live.first_innings.wickets + 1)+"-"+$scope.live.first_innings.total+"  "+obj.batsman_name+" ("+$scope.bowlerOvers(legal_balls)+")");
-						}
-						else if(innings_string == 'second')
-						{
-							$scope.live.second_innings.fow.push(($scope.live.second_innings.wickets + 1)+"-"+$scope.live.second_innings.total+"  "+obj.batsman_name+" ("+$scope.bowlerOvers(legal_balls)+")");
-						}
-					}
-					else if(obj.outcome == '4')
-					{
-						$scope.live[obj.batsman_id].fours += 1;
-						total_add_runs = 4;
-						batsman_add_runs = 4;
-						$scope.live[obj.bowler_id].runs_conceded += 4;
-					}
-					else if(obj.outcome == '6')
-					{
-						$scope.live[obj.batsman_id].sixes += 1;
-						total_add_runs = 6;
-						batsman_add_runs = 6;
-						$scope.live[obj.bowler_id].runs_conceded += 6;
-					}
-					else
-					{
-						total_add_runs = parseInt(obj.runs);
-						batsman_add_runs = parseInt(obj.runs);
-						$scope.live[obj.bowler_id].runs_conceded += parseInt(obj.runs);
+						$scope.live.second_innings_completed = true;
+						$scope.live.winning_team_label = $scope.live.response.result.team_label;
+						$scope.live.winning_margin = $scope.live.response.result.margin;
+						jQuery('#second_countdown').parent().remove();
 					}
 
+					$interval.cancel(cd);
 				}
-											
-				$scope.live[obj.batsman_id].runs += batsman_add_runs;
-				$scope.live[obj.batsman_id].balls_faced += to_add_balls;
-				$scope.live[obj.batsman_id].runsballs = $scope.live[obj.batsman_id].runs+" ("+$scope.live[obj.batsman_id].balls_faced+")";
-
-				$scope.live[obj.bowler_id].econ = ($scope.live[obj.bowler_id].runs_conceded*6/$scope.live[obj.bowler_id].legal_balls_bowled).toFixed(2);
-				
-				if(innings_string == 'first')
-				{
-					$scope.live.first_innings.total += total_add_runs;
-					$scope.live.first_innings.wickets += wickets_to_add;
-					$scope.live.first_innings.overs = $scope.ballsToOver(legal_balls, innings_string, (index + 1) == number_of_deliveries);
-					
-					jQuery('.1st').append(obj.commentary);
-					jQuery('.1st')[0].scrollTop = jQuery('.1st')[0].scrollHeight;
-				}
-				else if(innings_string == 'second')
-				{
-					$scope.live.second_innings.total += total_add_runs;
-					$scope.live.second_innings.wickets += wickets_to_add;
-					$scope.live.second_innings.overs = $scope.ballsToOver(legal_balls, innings_string, (index + 1) == number_of_deliveries);
-
-					jQuery('.2nd').append(obj.commentary);
-					jQuery('.2nd')[0].scrollTop = jQuery('.1st')[0].scrollHeight;
-				}
-				
-
-
-				// boundaries
-				$scope.live[obj.batsman_id].boundaries = $scope.live[obj.batsman_id].fours+"/"+$scope.live[obj.batsman_id].sixes;
-
-				// calculating SR
-				$scope.live[obj.batsman_id].sr = ( ($scope.live[obj.batsman_id].runs*100)/$scope.live[obj.batsman_id].balls_faced ).toFixed(2);
-
-				
+				index++;
 			}
-			else
-			{
-				if(innings_string == 'first')	
-				{
-					$scope.live.first_innings_completed = true;
-					$scope.live.to_win = $scope.live.response.to_win;
-					$scope.live.rrr = $scope.live.response.rrr;
-					$scope.live.in_overs = $scope.live.response.in_overs;
-				}
-				else
-				{
-					$scope.live.second_innings_completed = true;
-					$scope.live.winning_team_label = $scope.live.response.result.team_label;
-					$scope.live.winning_margin = $scope.live.response.result.margin;
-				}
-				$interval.cancel(interval);
-			}
-			index++;
-		}, $scope.ajax.delay*1000);
+		}, 1000);
+
+
+		
 	};
 	
 	$scope.ballsToOver = function(balls, innings_number, innings_over){
@@ -343,14 +414,7 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 
 		if(balls % 6 == 0)
 		{
-			if(innings_over)
-			{
-				return (Math.floor(balls/6))+'.0';
-			}
-			else
-			{
-				return (Math.floor(balls/6) - 1)+'.6';	
-			}			
+			return (Math.floor(balls/6))+'.0';				
 		}
 		else
 		{
