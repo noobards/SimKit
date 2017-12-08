@@ -136,6 +136,16 @@ if($data['status'] == "OK")
 								<input type="number" ng-model="data.delay" class="form-control" min="1" step="1" maxlength="3" id="match_duration" />
 							</div>
 						</div>
+
+						<div class="form-group" ng-show="data.sim_mode == 'delay'">
+							<label for="is_stream" class="control-label col-md-6">Do you want to live stream this match?</label>
+							<div class="col-md-6">
+								<select ng-init="data.is_stream = 'n'" class="form-control" id="is_stream" ng-model="data.is_stream">
+									<option value="n">No</option>
+									<option value="y">Yes</option>
+								</select>
+							</div>
+						</div>
 					</div>
 
 					<div class="text-center">

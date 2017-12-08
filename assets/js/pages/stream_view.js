@@ -1,0 +1,1 @@
+simkit.app.controller("stream", function($scope, $http, $element, $location){	$scope.ajax = {};	if(jQuery('.hasError').length == 0)	{		$scope.loading();		var url = window.location.href;		var idx = url.indexOf("key");				$scope.ajax.key = url.substring(idx).split("/")[1];			}	});

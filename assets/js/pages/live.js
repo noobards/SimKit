@@ -23,9 +23,17 @@ simkit.app.controller("liveMatch", function($scope, $http, $element, $timeout, $
 	$scope.live.second_innings.run_rate = "0.0 rpo";
 	$scope.live.second_innings.fow = [];
 
+	var url = window.location.href;
+	var idx = url.indexOf("mid");
+	$scope.ajax.mid = parseInt(url.substring(idx).split("/")[1], 10);
+	idx = url.indexOf("delay");
+	$scope.ajax.delay = parseInt(url.substring(idx).split("/")[1], 10);
+	idx = url.indexOf("stream");
+	$scope.ajax.stream = url.substring(idx).split("/")[1];
+
 	
-	$scope.ajax.mid = parseInt(document.getElementById('onload_mid').value, 10);
-	$scope.ajax.delay = parseInt(document.getElementById('onload_delay').value, 10);
+	//$scope.ajax.mid = parseInt(document.getElementById('onload_mid').value, 10);
+	//$scope.ajax.delay = parseInt(document.getElementById('onload_delay').value, 10);
 	if($scope.ajax.delay == 0)
 	{
 		$scope.ajax.delay = 3;

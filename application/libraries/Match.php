@@ -6,6 +6,7 @@ class Match{
 
 	private $match_id;
 	public $CI;
+	public $stream = false;
 	
 	public $game_mode = 0;
 	public $innings = "first";
@@ -1099,6 +1100,12 @@ class Match{
 		}
 
 		$this->live[$this->innings][$this->live_index]['commentary'] = $live_comm;
+
+		// save this delivery details in db
+		if($this->stream)		
+		{
+
+		}
 	}
 
 	public function shortName($str)
