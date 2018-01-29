@@ -3,6 +3,14 @@
 <html lang="en-us" ng-app="SimKit">
 
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113226846-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113226846-1');
+</script>
 
 <meta charset="utf-8" />
 
