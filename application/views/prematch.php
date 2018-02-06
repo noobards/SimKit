@@ -137,7 +137,7 @@ if($data['status'] == "OK")
 							</div>
 						</div>
 
-						<div class="form-group" ng-show="data.sim_mode == 'delay'">
+						<div class="form-group hide" ng-show="data.sim_mode == 'delay'">
 							<label for="is_stream" class="control-label col-md-6">Do you want to live stream this match?</label>
 							<div class="col-md-6">
 								<select ng-init="data.is_stream = 'n'" class="form-control" id="is_stream" ng-model="data.is_stream">
