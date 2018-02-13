@@ -42,7 +42,7 @@
 							<li><a href="<?php echo site_url(); ?>/Dashboard" class="<?php echo ($page == 'dashboard' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-home">&nbsp;</i>Home</a></li>
 							<li><a href="<?php echo site_url(); ?>/Players" class="<?php echo (($page == 'players' || $page == 'confirm_file_upload' || $page == 'list_players' || $page == 'edit_player') ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-users">&nbsp;</i>Players</a></li>
 							<li><a href="<?php echo site_url(); ?>/Teams" class="<?php echo (($page == 'teams' || $page == 'edit_team') ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-flag">&nbsp;</i>Teams</a></li>
-							<li><a href="<?php echo site_url(); ?>/MatchCenter" class="<?php echo ($page == 'match_center' || $page == 'prematch' || $page == 'begin_match' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-gavel">&nbsp;</i>Match Center</a></li>
+							<li><a href="<?php echo site_url(); ?>/MatchCenter" class="<?php echo (in_array($page, array('match_center', 'prematch', 'begin_match', 'single_match', 'tournament_home')) ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-gavel">&nbsp;</i>Match Center</a></li>
 							<?php if($this->session->is_admin == "1") {	?>							
 							<li><a href="<?php echo site_url(); ?>/Admin/SiteMembers" class="<?php echo ($page == 'admin/site_members' ? 'menu_active' : 'menu_inactive'); ?>"><i class="fa fa-user">&nbsp;</i>Members</a></li>
 							<?php }	?>

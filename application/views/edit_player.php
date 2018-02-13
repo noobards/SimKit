@@ -260,7 +260,7 @@
 							<div class="form-group">
 								<label class="control-label col-md-6">Batting: <span class="red">*</span></label>
 								<div class="col-md-6">
-									<div class="input-group">
+									<div class="input-group noleftborder">
 									  <span ng-click="minusRP($event)" data-type="batting" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
 									  <input type="text" class="form-control text-center" data-type="batting" ng-blur="checkRPValidity($event)" ng-change="recalculateRP()" ng-model="data.batting_rp" />
 									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="batting" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
@@ -271,7 +271,7 @@
 							<div class="form-group">
 								<label class="control-label col-md-6">Bowling: <span class="red">*</span></label>
 								<div class="col-md-6">
-									<div class="input-group">
+									<div class="input-group noleftborder">
 									  <span ng-click="minusRP($event)" data-type="bowling" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
 									  <input type="text" class="form-control text-center" data-type="bowling" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.bowling_rp" />
 									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="bowling" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>
@@ -282,7 +282,7 @@
 							<div class="form-group">
 								<label class="control-label col-md-6">Fielding: <span class="red">*</span></label>
 								<div class="col-md-6">
-									<div class="input-group">
+									<div class="input-group noleftborder">
 									  <span ng-click="minusRP($event)" data-type="fielding" class="input-group-addon cursor" style="border-right: 1px solid #ccc;"><i class="fa fa-minus">&nbsp;</i></span>
 									  <input type="text" class="form-control text-center" data-type="fielding" ng-blur="checkRPValidity($event)" ng-change="recalculateRP($event)" ng-model="data.fielding_rp" />
 									  <span ng-hide="data.available_rp == 0" ng-click="plusRP($event)" data-type="fielding" class="input-group-addon cursor"><i class="fa fa-plus">&nbsp;</i></span>

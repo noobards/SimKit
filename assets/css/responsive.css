@@ -32,19 +32,26 @@
 
 /* Large Devices, Wide Screens */
 @media only screen and (max-width : 1200px) {
-
+	.action_box{
+		width: 100%;
+	}
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (max-width : 992px) {
-
+	.action_box{
+		width: 100%;
+	}
+	.action_box_content{
+		min-height: 200px;		
+	}
 }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
 	.mobile_menu_bars{
 		display: inline;
-	}
+	}	
 }
 
 /* Extra Small Devices, Phones */ 
