@@ -48,6 +48,38 @@ class Center extends CI_Model {
 		}
 		return $teams;
 	}
+
+	public function isValidTournamentName($str)
+	{
+		if(trim($str) != '' && (int) $this->session->logged_user > 0)
+		{
+			$this->db->select('id');
+			$this->db->from('tournament');
+			$this->db->where(array('tournament_name'=>$str, 'owner'=>$this->session->logged_user));
+			$q = $this->db->get();
+			if($q->num_rows() == 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function isTournamentOwner($tid)
+	{
+		if( (int) $tid > 0)
+		{
+			$this->db->select('id');
+			$this->db->from('tournament');
+			$this->db->where(array('id'=>$tid, 'owner'=>$this->session->logged_user));
+			$q = $this->db->get();
+			if($q->num_rows() == 1)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public function getPlayerCount($tid)
 	{

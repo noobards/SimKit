@@ -17,45 +17,64 @@
 					<div class="box-helping-text">Start a brand new tournament.</div>
 				</div>
 				<div class="box-body box-body-max">
+					<div class="extra-info text-right">Fields marked with <span class="red">*</span> are mandatory</div>
 					<div class="form-horizontal">
 						<div class="form-group">
-							<label for="t_name" class="control-label col-md-4">Tournament Name</label>
+							<label for="t_name" class="control-label col-md-4">Tournament Name <span class="red">*</span></label>
 							<div class="col-md-8">
 								<input type="text" class="form-control" id="t_name" ng-model="data.t_name" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="t_not" class="control-label col-md-4">Number of Teams</label>
+							<label for="t_not" class="control-label col-md-4">Number of Teams <span class="red">*</span></label>
 							<div class="col-md-8">
 								<input type="number" class="form-control" id="t_not" min="2" max="10" ng-model="data.t_not" />
 								<span class="extra-info">Min 2, Max 10 teams</span>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="t_noo" class="control-label col-md-4">Number of Overs</label>
+							<label for="t_type" class="control-label col-md-4">Tournament Type <span class="red">*</span></label>
+							<div class="col-md-8">								
+								<select class="form-control" id="t_type" ng-change="setNoO()" ng-model="data.t_type">
+									<option value="-1">Select One</option>
+									<option value="ODI">ODI</option>
+									<option value="T20">T20</option>
+									<option value="CUSTOM">Custom</option>
+								</select>
+								<span class="extra-info">If you choose "Custom", you will need to specify the number of overs that each innings in a match will comprise of.</span>
+							</div>
+						</div>
+						<div class="form-group" ng-show="data.t_type == 'CUSTOM'">
+							<label for="t_noo" class="control-label col-md-4">Number of Overs <span class="red">*</span></label>
 							<div class="col-md-8">
 								<input type="number" class="form-control" id="t_noo" min="1" ng-model="data.t_noo" ng-change="calculatePPAndDeath()" />
 								<span class="extra-info">Min 10, Max 50 overs</span>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="data.t_type != '-1'">
 							<label for="t_pp" class="control-label col-md-4">Powerplay Until</label>
 							<div class="col-md-8">
 								<div class="input-group">
 									<input readonly="readonly" type="number" class="form-control" id="t_pp" min="1" max="50" ng-model="data.t_pp" />
 									<span class="input-group-addon font-fix">overs</span>
 								</div>
-								<span class="extra-info">The number of overs upto which the Power Play is <strong>active</strong> (For ex: 10 overs in a 50-over match). This value affects the way the players behave in terms of scoring opportunities.</span>
+								<span class="extra-info">The number of overs upto which the Power Play is <strong>active</strong> (For ex: 10 overs in a 50-over match). This period encourages batsmen to play in a manner that will up the run rate.</span>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="data.t_type != '-1'">
 							<label for="t_do" class="control-label col-md-4">Death Overs From</label>
 							<div class="col-md-8">
 								<div class="input-group">
 									<input readonly="readonly" type="number" class="form-control" id="t_do" min="1" max="50" ng-model="data.t_do" />
 									<span class="input-group-addon font-fix">overs</span>
 								</div>	
-								<span class="extra-info">The number of overs after which death overs <strong>begin</strong> (For ex: 40 over onwards in a 50-over match). This value affects the way the players behave in terms of scoring opportunities.</span>
+								<span class="extra-info">The number of overs after which death overs <strong>begin</strong> (For ex: 40 over onwards in a 50-over match). This period encourages batsmen to play in a manner that will up the run rate.</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4">&nbsp;</label>
+							<div class="col-md-8">
+								<button ng-click="goToStep2($event)" class="btn btn-danger">Proceed</button>
 							</div>
 						</div>
 					</div>

@@ -29,7 +29,113 @@ class MatchCenter extends CI_Controller {
 			$this->db->insert('commentary', $line);
 
 		}
-    }
+	}
+
+	public function SelectTeams()
+	{
+		$tour_id = (int) $this->uri->segment(4);
+		$data['status'] = 'NOTOK';
+
+		if($tour_id == 0)
+		{
+			$data['msg'] = 'Invalid tournament. Please go back and try again.';
+		}
+		else
+		{
+			if($this->Center->isTournamentOwner($tour_id))
+			{
+				$data['status'] = 'OK';
+				$data['teams'] = $this->Team->getMyTeams();
+			}
+			else
+			{
+				$data['msg'] = 'You do not have permissions to view/edit this tournament. The tournament ID is '.$tour_id;
+			}
+		}
+
+		$this->load->view('templates/logged_in', array('page'=>'select_teams', 'data'=>$data));
+	}
+	
+	public function setTournamentName()
+	{
+		$data = array('status'=>'NOTOK');
+
+		$post = json_decode(file_get_contents("php://input"));
+		$errors = array();
+
+		if(! isset($post->t_name) || trim($post->t_name) == '')
+		{
+			$errors[] = "Tournament Name is required.";
+		}
+
+		if(! isset($post->t_not) || (int) $post->t_not == 0)
+		{
+			$errors[] = "Number of Teams is required.";
+		}
+
+		if(! isset($post->t_type) || ! in_array($post->t_type, array('ODI', 'T20', 'CUSTOM')))
+		{
+			$errors[] = 'Tournament Type is required.';
+		}
+
+		if(! isset($post->t_noo) || (int) $post->t_noo == 0)
+		{
+			$errors[] = 'Number of overs cannot be empty.';
+		}
+
+		if(count($errors) == 0)
+		{
+			if($this->Center->isValidTournamentName($post->t_name))
+			{
+				if($post->t_noo < 25)
+				{
+					$pp = (30*( (int) $post->t_noo)/100);
+					$do = (75*( (int) $post->t_noo)/100);
+				}
+				else
+				{
+					$pp = (20*( (int) $post->t_noo)/100);
+					$do = (80*( (int) $post->t_noo)/100);
+				}
+
+				date_default_timezone_set("UTC");
+				$created = date("Y-m-d H:i:s");
+
+				$insert = array(
+					'tournament_name'	=>	$post->t_name,
+					'number_of_teams'	=>	$post->t_not,
+					'tournament_type'	=>	$post->t_type,
+					'number_of_overs'	=>	$post->t_noo,
+					'powerplay'			=>	$pp,
+					'death'				=>	$do,
+					'owner'				=>	$this->session->logged_user,
+					'status'			=>	1,
+					'created_on'		=> $created,
+					'updated_on'		=> $created
+				);
+
+				if($this->db->insert('tournament', $insert))
+				{
+					$data['status'] = 'OK';
+					$data['id']	= $this->db->insert_id();
+				}
+				else
+				{
+					$data['msg'] = $this->db->error()['message'];					
+				}
+			}
+			else
+			{
+				$data['msg'] = 'A tournament with the same name already exists.';
+			}
+		}
+		else
+		{
+			$data['msg'] = implode("\n", $errors);
+		}
+		echo json_encode($data);
+		exit;
+	}
 
 
 	public function index()
